@@ -1,0 +1,18 @@
+{
+  "MONGODB": {
+    "GLOBAL": {
+      "DATABASE": {
+        "LEADER_BRIDGE": {
+          "COLLECTION": {
+            "CODE_REGISTRATION": "code_registration",
+            "CODE_VERIFICATION": "code_verification",
+            "USER": "user"
+          },
+          "NAME": "leaderBridge"
+        }
+      },
+      "URI": "mongodb://localhost:27017/leader_bridge",
+      "USE_TEST_PIN": "false"
+    }
+  }
+}

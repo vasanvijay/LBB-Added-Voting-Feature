@@ -1,0 +1,49 @@
+const mongoose = require("mongoose");
+const logger = require("../logger");
+const ConnectionFactory = require("./connection-factory");
+const config = require("../../config.json");
+
+module.exports = async () => {
+  mongoose.pluralize(null); // So that mongoose doesn't try to pluralize the schema and map accordingly.
+  let models;
+  try {
+    const connectionFactory = new ConnectionFactory(config);
+    // GLOBAL Connections
+    const connection_IN_LEADER_BRIDGE = await connectionFactory.getConnection(
+      "GLOBAL",
+      config.MONGODB.GLOBAL.DATABASE.LEADER_BRIDGE
+    );
+
+    const mongooseConnections = {
+      GLOBAL: {
+        LEADER_BRIDGE: connection_IN_LEADER_BRIDGE,
+      },
+    };
+
+    /* All the (mongoose) models to be defined here */
+    models = {
+      GLOBAL: {
+        LOG: require("../schema/log/log")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
+        USER: require("../schema/user/user")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
+        CODE_REGISTRATION: require("../schema/code/code-registration")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
+        CODE_VERIFICATION: require("../schema/code/code-verification")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
+      },
+    };
+
+    return models;
+  } catch (error) {
+    logger.error(
+      "Error encountered while trying to create database connections and models:\n" +
+        error.stack
+    );
+    return null;
+  }
+};

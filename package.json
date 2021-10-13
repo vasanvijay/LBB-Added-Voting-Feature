@@ -1,0 +1,39 @@
+{
+  "name": "leaderbridge-backend",
+  "version": "1.0.0",
+  "description": "Backend for the Leader Bridge",
+  "main": "app.js",
+  "scripts": {
+    "build": "npm install",
+    "start": "node app.js",
+    "start-local": "nodemon --inspect app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "flat": "^5.0.2",
+    "helmet": "^4.6.0",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.33",
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.13.0",
+    "nodemailer": "^6.7.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "shortid": "^2.2.16",
+    "winston": "^3.3.3",
+    "yargs": "^17.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9",
+    "sonarqube-scanner": "^2.8.1"
+  }
+}
