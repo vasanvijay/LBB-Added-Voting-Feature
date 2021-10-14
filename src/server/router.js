@@ -5,11 +5,13 @@ module.exports = (app, logger) => {
   // imports all route here
 
   const userRoute = require("../routes/user/index");
+  const filterRoute = require("../routes/filter/index");
 
   // define all routes here
   const { createResponseObject } = require("../utils");
 
   app.use(["/api/v1/user"], userRoute);
+  app.use("/api/v1/filter", filterRoute);
 
   /* Catch all */
   app.all("*", function (req, res) {

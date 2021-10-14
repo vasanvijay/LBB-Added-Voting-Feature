@@ -27,7 +27,7 @@ module.exports = exports = {
     });
     // console.log("user------>", findUser);
     try {
-      if (String(findUser?.email) === String(email)) {
+      if (String(findUser.email) === String(email)) {
         if (!email) {
           const data4createResponseObject = {
             req: req,
@@ -63,7 +63,7 @@ module.exports = exports = {
 
     // When USE_TEST_PIN is true (config.json)
 
-    if (String(findUser?.email) === String(email)) {
+    if (String(findUser.email) === String(email)) {
       console.log("MAIL SENDING");
       let transporter = nodemailer.createTransport({
         service: "gmail",
