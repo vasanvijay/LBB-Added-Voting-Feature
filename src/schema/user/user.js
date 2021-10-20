@@ -4,6 +4,7 @@ module.exports = (connection) => {
     name: String,
     email: String,
     password: String,
+    phone: String,
     userType: { type: String, default: "user" },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
@@ -17,6 +18,7 @@ module.exports = (connection) => {
     },
     lastLogin: { type: Date, default: Date.now },
     token: { type: String, default: null },
+    status: { type: String, default: "active" }
   });
   return connection.model("user", userSchema, "user");
 };

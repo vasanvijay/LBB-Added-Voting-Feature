@@ -17,6 +17,11 @@ module.exports = exports = {
       };
     }
     if (user.userType === enums.USER_TYPE.ADMIN) {
+      if (!userId) {
+        criteria = {
+          userType: enums.USER_TYPE.USER,
+        };
+      }
       if (userId) {
         criteria = {
           _id: userId,
@@ -26,6 +31,7 @@ module.exports = exports = {
     console.log("criteria---->", criteria);
     try {
       let findUser = await global.models.GLOBAL.USER.find(criteria);
+      let count = await global.models.GLOBAL.USER.count(criteria);
       if (!findUser) {
         const data4createResponseObject = {
           req: req,
@@ -44,7 +50,7 @@ module.exports = exports = {
           req: req,
           result: 0,
           message: messages.USER_FETCH_SUCCESS,
-          payload: { findUser },
+          payload: { findUser, count },
           logPayload: false,
         };
         res

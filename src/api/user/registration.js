@@ -11,12 +11,13 @@ module.exports = exports = {
   validation: Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
+    phone: Joi.string().required(),
     password: Joi.string().required(),
   }),
 
   handler: async (req, res) => {
-    const { email, name, password } = req.body;
-    if (!email || !name || !password) {
+    const { email, name, phone,password } = req.body;
+    if (!email || !name ||!phone|| !password) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -28,6 +29,7 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
+     console.log("newbody", req.body)
 
     try {
       let findUser = await global.models.GLOBAL.USER.find({
@@ -62,6 +64,7 @@ module.exports = exports = {
           email: email,
           name: name,
           password: password,
+          phone:phone,
           token: jwt.sign(data4token, jwtOptions.secretOrKey),
         };
 

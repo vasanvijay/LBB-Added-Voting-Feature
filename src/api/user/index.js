@@ -3,6 +3,7 @@ const userLogin = require("./login");
 const getUser = require("./get-user");
 const verifyCode = require("./verify-code");
 const verifyEmail = require("./verify-email");
+const updateUSer = require("./update-user");
 
 module.exports = exports = {
   userRegistration,
@@ -10,4 +11,5 @@ module.exports = exports = {
   getUser,
   verifyCode,
   verifyEmail,
+  updateUSer,
 };

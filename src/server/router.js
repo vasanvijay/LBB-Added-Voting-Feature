@@ -6,13 +6,11 @@ module.exports = (app, logger) => {
 
   const userRoute = require("../routes/user/index");
   const filterRoute = require("../routes/filter/index");
-
   // define all routes here
   const { createResponseObject } = require("../utils");
 
   app.use(["/api/v1/user"], userRoute);
-  app.use("/api/v1/filter", filterRoute);
-
+  app.use(["/api/v1/filter"], filterRoute);
   /* Catch all */
   app.all("*", function (req, res) {
     res.status(enums.HTTP_CODES.BAD_REQUEST).json(
