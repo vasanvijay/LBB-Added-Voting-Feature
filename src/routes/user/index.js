@@ -34,5 +34,16 @@ router.put(
   validate("body", api4User.verifyCode.validation),
   api4User.verifyCode.handler
 );
+router.put(
+  "/id=:userId",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4User.updateUSer.validation),
+  api4User.updateUSer.handler
+);
+
+router.put("/update-user", 
+passport.authenticate(["jwt"], { session: false }),
+api4User.updateUser.handler
+)
 
 module.exports = exports = router;
