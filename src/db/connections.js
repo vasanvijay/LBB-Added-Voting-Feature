@@ -35,6 +35,9 @@ module.exports = async () => {
         USER: require("../schema/user/user")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        QUESTION: require("../schema/question/question")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
         CODE_REGISTRATION: require("../schema/code/code-registration")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),

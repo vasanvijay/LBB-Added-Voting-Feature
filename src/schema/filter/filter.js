@@ -7,6 +7,7 @@ module.exports = (connection) => {
     options: [{
       optionId: mongoose.Schema.Types.ObjectId,
       optionName: String,
+      status: Boolean
     }],
   });
   return connection.model("filter", filterSchema, "filter");

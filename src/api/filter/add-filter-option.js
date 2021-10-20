@@ -10,14 +10,15 @@ const utils = require("../../utils");
 module.exports = exports = {
     // route validation
     validation: Joi.object({
-        filterTypeId: Joi.string().required(),
-        name: Joi.string().required(),
-        // options: Joi.array().required(),
+        filterId: Joi.string().required(),
+        optionName: Joi.string().required(),
+        status: Joi.string(),
     }),
 
     handler: async (req, res) => {
-        const { filterTypeId, name, options } = req.body;
-        if (!filterTypeId || !name) {
+        const { filterId }= req.query;
+        const { optionName, status } = req.body;
+        if (!filterId || !optionName) {
             const data4createResponseObject = {
                 req: req,
                 result: -1,
@@ -28,12 +29,12 @@ module.exports = exports = {
             return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
         }
 
-        const filterExist = await global.models.GLOBAL.FILTER_TYPE.findById(filterTypeId);
+        const filterExist = await global.models.GLOBAL.FILTER.findById(filterId);
         if(!filterExist){
             const data4createResponseObject = {
                 req: req,
                 result: -1,
-                message: "filter type does not exist",
+                message: "filter does not exist",
                 payload: {},
                 logPayload: false
             };
@@ -41,17 +42,12 @@ module.exports = exports = {
         }
 
         try {
-            let filterCreate = {
-                filterTypeId: filterTypeId,
-                name: name,
-            };
-            const newFilter = await global.models.GLOBAL.FILTER(filterCreate);
-            newFilter.save();
+            const newOption = await global.models.GLOBAL.FILTER.update({ _id: filterId }, { $push: { options: { optionName: optionName, status: status || true } } });
             const data4createResponseObject = {
                 req: req,
                 result: 0,
                 message: messages.ITEM_INSERTED,
-                payload: { newFilter },
+                payload: { newOption },
                 logPayload: false
             };
             res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
