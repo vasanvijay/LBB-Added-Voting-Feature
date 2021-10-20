@@ -10,14 +10,16 @@ const utils = require("../../utils");
 module.exports = exports = {
     // route validation
     validation: Joi.object({
-        filterTypeId: Joi.string().required(),
-        name: Joi.string().required(),
-        // options: Joi.array().required(),
+        question: Joi.string().required(),
+        displayProfile: Joi.boolean().allow(),
+        allowConnectionRequest: Joi.boolean().allow(),
+        filter: Joi.array().allow(),
     }),
 
     handler: async (req, res) => {
-        const { filterTypeId, name, options } = req.body;
-        if (!filterTypeId || !name) {
+        const { user } = req;
+        const { question, displayProfile, allowConnectionRequest, filter } = req.body;
+        if (!question) {
             const data4createResponseObject = {
                 req: req,
                 result: -1,
@@ -28,30 +30,22 @@ module.exports = exports = {
             return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
         }
 
-        const filterExist = await global.models.GLOBAL.FILTER_TYPE.findById(filterTypeId);
-        if(!filterExist){
-            const data4createResponseObject = {
-                req: req,
-                result: -1,
-                message: "filter type does not exist",
-                payload: {},
-                logPayload: false
-            };
-            return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
-        }
-
         try {
-            let filterCreate = {
-                filterTypeId: filterTypeId,
-                name: name,
+            let questionCreate = {
+                question: question,
+                displayProfile: displayProfile,
+                allowConnectionRequest: allowConnectionRequest,
+                filter: filter,
+                createdAt: Date.now(),
+                createdBy: user._id,
             };
-            const newFilter = await global.models.GLOBAL.FILTER(filterCreate);
-            newFilter.save();
+            const newQuestion = await global.models.GLOBAL.QUESTION(questionCreate);
+            newQuestion.save();
             const data4createResponseObject = {
                 req: req,
                 result: 0,
                 message: messages.ITEM_INSERTED,
-                payload: { newFilter },
+                payload: { newQuestion },
                 logPayload: false
             };
             res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));

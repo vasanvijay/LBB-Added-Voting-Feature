@@ -4,6 +4,7 @@ const getFilterType = require("./get-filter-type");
 const getFilter = require("./get-filter");
 const updateFilterType = require("./update-filter-type");
 const updateFilter = require("./update-filter");
+const addFilterOption = require("./add-filter-option");
 const deleteFilterType = require("./delete-filter-type");
 const deleteFilter = require("./delete-filter");
 module.exports = exports = {
@@ -14,5 +15,6 @@ module.exports = exports = {
   updateFilterType,
   updateFilter,
   deleteFilterType,
-  deleteFilter
+  deleteFilter,
+  addFilterOption
 };

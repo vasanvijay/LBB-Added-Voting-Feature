@@ -13,11 +13,12 @@ module.exports = exports = {
         name: Joi.string(),
         optionId: Joi.string(),
         optionName: Joi.string(),
+        status: Joi.string(),
     }),
 
     handler: async (req, res) => {
         const { filterId } = req.query;
-        const { name, optionId, optionName } = req.body;
+        const { name, optionId, optionName, status } = req.body;
         const filterExists = await global.models.GLOBAL.FILTER.findById(filterId);
         if(!filterExists) {
             const data4createResponseObject = {
@@ -48,6 +49,17 @@ module.exports = exports = {
             } else if(optionId && optionName) {
                 // updateData.$.optionName = optionName;
                 set = { $set : {"options.$.optionName" : optionName}};
+                const updatefilterType = await global.models.GLOBAL.FILTER.update({ _id: filterId, "options._id": optionId}, set, { new: true });
+                const data4createResponseObject = {
+                    req: req,
+                    result: 0,
+                    message: messages.ITEM_UPDATED,
+                    payload: { },
+                    logPayload: false
+                };
+                res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
+            } else if(status !== undefined || null || "") {
+                set = { $set : {"options.$.status" : status}};
                 const updatefilterType = await global.models.GLOBAL.FILTER.update({ _id: filterId, "options._id": optionId}, set, { new: true });
                 const data4createResponseObject = {
                     req: req,

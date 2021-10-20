@@ -9,14 +9,19 @@
  
      // route handler
      handler: async (req, res) => {
-         const { type } = req.query;
+         const { type, id } = req.query;
          let criteria = {}
-         if(type) {
-             let filterType = await global.models.GLOBAL.FILTER_TYPE.findOne({ name: type }, { _id: 1 });
-             console.log("filterType", filterType)
-             if(filterType) {
-                 criteria["filterTypeId"] = filterType._id;
-             }
+         if (type) {
+           let filterType = await global.models.GLOBAL.FILTER_TYPE.findOne(
+             { name: type },
+             { _id: 1 }
+           );
+           if (filterType) {
+             criteria["filterTypeId"] = filterType._id;
+           }
+         }
+         if (id) {
+           criteria["_id"] = id;
          }
          try {
              let filter = await global.models.GLOBAL.FILTER.find(criteria);

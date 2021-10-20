@@ -13,39 +13,43 @@ router.get(
 
 router.get(
   "/get-filter-type",
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
   api4Filter.getFilterType.handler
 );
 
 // POST Method
 router.post(
   "/create-filter",
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
   api4Filter.createFilter.handler
 );
 
 router.post(
   "/create-filter-type",
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
   api4Filter.createFilterType.handler
 );
 
 // PUT method
+router.put("/add-filter-option", 
+  // passport.authenticate(["jwt"], { session: false }),
+  api4Filter.addFilterOption.handler);
+
 router.put("/update-filter-type", 
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
 api4Filter.updateFilterType.handler);
 
 router.put("/update-filter", 
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
 api4Filter.updateFilter.handler);
 
 router.put("/delete-filter", 
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
 api4Filter.deleteFilter.handler);
 
 // DELETE method
 router.delete("/delete-filter-type", 
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
 api4Filter.deleteFilterType.handler);
 
 

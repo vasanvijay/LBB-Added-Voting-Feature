@@ -9,15 +9,10 @@ const utils = require("../../utils");
 // Add category by admin
 module.exports = exports = {
     // route validation
-    validation: Joi.object({
-        filterTypeId: Joi.string().required(),
-        name: Joi.string().required(),
-        // options: Joi.array().required(),
-    }),
 
     handler: async (req, res) => {
-        const { filterTypeId, name, options } = req.body;
-        if (!filterTypeId || !name) {
+        const { questionId, status } = req.query;
+        if(!questionId || !status) {
             const data4createResponseObject = {
                 req: req,
                 result: -1,
@@ -28,12 +23,12 @@ module.exports = exports = {
             return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
         }
 
-        const filterExist = await global.models.GLOBAL.FILTER_TYPE.findById(filterTypeId);
-        if(!filterExist){
+        const questionExists = await global.models.GLOBAL.QUESTION.findById(questionId);
+        if(!questionExists) {
             const data4createResponseObject = {
                 req: req,
                 result: -1,
-                message: "filter type does not exist",
+                message: "question does not exists in system",
                 payload: {},
                 logPayload: false
             };
@@ -41,20 +36,28 @@ module.exports = exports = {
         }
 
         try {
-            let filterCreate = {
-                filterTypeId: filterTypeId,
-                name: name,
-            };
-            const newFilter = await global.models.GLOBAL.FILTER(filterCreate);
-            newFilter.save();
-            const data4createResponseObject = {
-                req: req,
-                result: 0,
-                message: messages.ITEM_INSERTED,
-                payload: { newFilter },
-                logPayload: false
-            };
-            res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
+            if(questionId && status) {
+                const question = await global.models.GLOBAL.QUESTION.findByIdAndUpdate(questionId, {status: status}, {new: true});
+                if(question) {
+                    const data4createResponseObject = {
+                        req: req,
+                        result: 1,
+                        message: messages.SUCCESS,
+                        payload: {question} ,
+                        logPayload: false
+                    };
+                    return res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
+                }
+            } else {
+                const data4createResponseObject = {
+                    req: req,
+                    result: -1,
+                    message: "Provide necessary data for updation.",
+                    payload: {},
+                    logPayload: false
+                };
+                res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
+            }
         } catch (error) {
             logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
             const data4createResponseObject = {
