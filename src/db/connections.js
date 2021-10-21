@@ -26,6 +26,9 @@ module.exports = async () => {
         LOG: require("../schema/log/log")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        CONTACT: require("../schema/contact/contact")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
         FILTER: require("../schema/filter/filter")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
