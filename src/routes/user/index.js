@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const api4User = require("../../api/user/index");
+const updateStatus = require("../../api/user/index");
 const { validate } = require("../../middlewares");
 const passport = require("passport");
 
@@ -41,9 +42,9 @@ router.put(
   api4User.updateUSer.handler
 );
 
-router.put("/update-user", 
+router.put("/update-status/id=:userId&status=:status", 
 passport.authenticate(["jwt"], { session: false }),
-api4User.updateUser.handler
+api4User.updateStatus.handler
 )
 
 module.exports = exports = router;

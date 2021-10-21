@@ -18,7 +18,7 @@ module.exports = (connection) => {
     },
     lastLogin: { type: Date, default: Date.now },
     token: { type: String, default: null },
-    status: { type: String, default: "active" }
+    status: { type: Boolean, default: true }
   });
   return connection.model("user", userSchema, "user");
 };
