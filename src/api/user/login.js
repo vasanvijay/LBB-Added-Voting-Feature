@@ -44,7 +44,7 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
+        return res
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
@@ -56,7 +56,7 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          res
+          return res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
         } else {
@@ -84,7 +84,7 @@ module.exports = exports = {
             },
             logPayload: false,
           };
-          res
+          return res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
         }
@@ -100,7 +100,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
+      return res
         .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
         .json(utils.createResponseObject(data4createResponseObject));
     }

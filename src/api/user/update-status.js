@@ -20,9 +20,10 @@ module.exports = exports = {
     console.log("user------->>", user);
     
     try {
+      let updateUser;
         if(user.userType === enums.USER_TYPE.ADMIN){
       
-            let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+           updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
                 { _id: userId },
                 {
                     $set: {

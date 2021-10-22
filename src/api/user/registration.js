@@ -11,13 +11,12 @@ module.exports = exports = {
   validation: Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
-    phone: Joi.string().required(),
     password: Joi.string().required(),
   }),
 
   handler: async (req, res) => {
-    const { email, name, phone,password } = req.body;
-    if (!email || !name ||!phone|| !password) {
+    const { email, name,password } = req.body;
+    if (!email || !name || !password) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -64,7 +63,6 @@ module.exports = exports = {
           email: email,
           name: name,
           password: password,
-          phone:phone,
           token: jwt.sign(data4token, jwtOptions.secretOrKey),
         };
 
