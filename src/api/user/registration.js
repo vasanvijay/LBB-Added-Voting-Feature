@@ -47,7 +47,7 @@ module.exports = exports = {
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+          .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4token = {
