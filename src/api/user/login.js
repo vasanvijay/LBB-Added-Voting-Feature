@@ -77,7 +77,7 @@ module.exports = exports = {
           const data4createResponseObject = {
             req: req,
             result: 0,
-            message: messages.USER_LOGIN_SUCESSFULLY,
+            message: messages.USER_LOGIN_SUCCESSFULLY,
             payload: {
               user: findUser,
               token: jwt.sign(data4token, jwtOptions.secretOrKey),

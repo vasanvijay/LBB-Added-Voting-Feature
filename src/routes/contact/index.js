@@ -31,9 +31,9 @@ router.post(
 // );
 
 // PUT method
-// router.put("/add-filter-option", 
-//   // passport.authenticate(["jwt"], { session: false }),
-//   api4Filter.addFilterOption.handler);
+router.put("/updatestatus/id=:userId&status=:status", 
+  // passport.authenticate(["jwt"], { session: false }),
+  api4Filter.statusContact.handler);
 
 // router.put("/update-filter-type", 
 //   // passport.authenticate(["jwt"], { session: false }),
@@ -48,9 +48,9 @@ router.post(
 // api4Filter.deleteFilter.handler);
 
 // // DELETE method
-// router.delete("/delete-filter-type", 
-//   // passport.authenticate(["jwt"], { session: false }),
-// api4Filter.deleteFilterType.handler);
+router.delete("/deletecontact/id=:userId", 
+  passport.authenticate(["jwt"], { session: false }),
+api4Filter.deleteContact.handler);
 
 
 

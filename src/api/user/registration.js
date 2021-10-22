@@ -28,7 +28,7 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-     console.log("newbody", req.body)
+     console.log("new body--->", req.body)
 
     try {
       let findUser = await global.models.GLOBAL.USER.find({
