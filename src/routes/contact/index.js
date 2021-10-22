@@ -13,26 +13,28 @@ const passport = require("passport");
 
 router.get(
   "/getcontact",
-  // passport.authenticate(["jwt"], { session: false }),
+  passport.authenticate(["jwt"], { session: false }),
   api4Filter.getContact.handler
 );
 
 // POST Method
 router.post(
   "/createcontact",
-  // passport.authenticate(["jwt"], { session: false }),
+  passport.authenticate(["jwt"], { session: false }),
   api4Filter.createContact.handler
 );
 
-// router.post(
-//   "/create-filter-type",
-//   // passport.authenticate(["jwt"], { session: false }),
-//   api4Filter.createFilterType.handler
-// );
+// nodemail to send email
+
+router.post(
+  "/emailcontact",
+  // passport.authenticate(["jwt"], { session: false }),
+  api4Filter.emailContact.handler
+);
 
 // PUT method
 router.put("/updatestatus/id=:userId&status=:status", 
-  // passport.authenticate(["jwt"], { session: false }),
+  passport.authenticate(["jwt"], { session: false }),
   api4Filter.statusContact.handler);
 
 // router.put("/update-filter-type", 
