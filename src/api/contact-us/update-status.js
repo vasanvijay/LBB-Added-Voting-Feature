@@ -15,28 +15,31 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    let { user } = req;
+
+    console.log("vijayvasan")
+  
     let { userId, status } = req.params;
-    console.log("user------->>", user);
+    const { email } = req.body;
+ 
 
     let updateUser;
     
     try {
-        if(user.userType === enums.USER_TYPE.ADMIN){
+  
       
-            updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+            updateUser = await global.models.GLOBAL.CONTACT.findByIdAndUpdate(
                 { _id: userId },
                 {
                     $set: {
                         
                         updatedAt: new Date(),
-                        updatedBy: user.email,
+                       
                         status:status
                     },
                 },
                 { new: true }
                 );
-            }
+       
 
       if (!updateUser) {
         const data4createResponseObject = {

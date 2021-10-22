@@ -5,6 +5,7 @@ module.exports = (connection) => {
     email: String,
     subject: String,
     message:String,
+    status: { type: Boolean, default: true },
     userType: { type: String, default: "user" },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

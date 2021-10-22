@@ -53,7 +53,7 @@ module.exports = exports = {
             } else {
                 const data4createResponseObject = {
                     req: req,
-                    result: -1        ,
+                    result: -1 ,
                     message: "Provide necessary data for updation.",
                     payload: {},
                     logPayload: false
