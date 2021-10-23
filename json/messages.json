@@ -16,6 +16,7 @@
   "EXPIRED_VERIFICATION": "Sorry! Your Email couldn't be verified.\nBecause the verification took too long. Please try again.",
   "FAILED_VERIFICATION": "Sorry, your Email could not be verified.\nPlease try again. If the problem persists, kindly call support.",
   "VERIFICATION_SUCCESS": "Your Email is Verified Successfully.",
+  "USER_NOT_VERIFIED": "Sorry! Your Email couldn't be verified. So Please Verified First then try again.",
   "FAILED_OTP": "You entered wrong code.",
   "GENERAL": "Sorry! Something went wrong with the request. Please try again later.",
   "INVALID_PARAMETERS": "Sorry, the request could not be processed as because of invalid parameters.",

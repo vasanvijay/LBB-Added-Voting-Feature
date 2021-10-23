@@ -172,20 +172,27 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
           .json(utils.createResponseObject(data4createResponseObject));
       }
-      const data4createResponseObject = {
-        req: req,
-        result: 0,
-        message: messages.VERIFICATION_SUCCESS,
-        payload: {
-          userExist: false,
-          verified: true,
-          token: token,
-        },
-        logPayload: false,
-      };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+      let verified = await global.models.GLOBAL.USER.findOneAndUpdate(
+        { email: email },
+        { $set: { verified: true } },
+        { new: true }
+      );
+      if (verified.length > 0) {
+        const data4createResponseObject = {
+          req: req,
+          result: 0,
+          message: messages.VERIFICATION_SUCCESS,
+          payload: {
+            userExist: false,
+            verified: true,
+            token: token,
+          },
+          logPayload: false,
+        };
+        res
+          .status(enums.HTTP_CODES.OK)
+          .json(utils.createResponseObject(data4createResponseObject));
+      }
     }
   },
 };

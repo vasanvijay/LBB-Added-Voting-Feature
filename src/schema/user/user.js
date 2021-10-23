@@ -5,6 +5,7 @@ module.exports = (connection) => {
     email: String,
     password: String,
     phone: String,
+    verified : { type: Boolean, default: false },
     userType: { type: String, default: "user" },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

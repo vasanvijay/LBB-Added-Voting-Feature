@@ -60,33 +60,47 @@ module.exports = exports = {
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
         } else {
-          // User found - create JWT and return it
-          const data4token = {
-            id: findUser._id,
-            date: new Date(),
-            environment: process.env.APP_ENVIRONMENT,
-            email: email,
-            userType: findUser.userType,
-            scope: "login",
-          };
+          // User found - Check is verified or not
+          if (findUser.verified === true) {
+            // User found - create JWT and return it
+            const data4token = {
+              id: findUser._id,
+              date: new Date(),
+              environment: process.env.APP_ENVIRONMENT,
+              email: email,
+              userType: findUser.userType,
+              scope: "login",
+            };
 
-          await global.models.GLOBAL.USER.findByIdAndUpdate(findUser._id, {
-            $set: { lastLogin: new Date() },
-          });
-          delete findUser.password;
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.USER_LOGIN_SUCCESSFULLY,
-            payload: {
-              user: findUser,
-              token: jwt.sign(data4token, jwtOptions.secretOrKey),
-            },
-            logPayload: false,
-          };
-          return res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+            await global.models.GLOBAL.USER.findByIdAndUpdate(findUser._id, {
+              $set: { lastLogin: new Date() },
+            });
+            delete findUser.password;
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.USER_LOGIN_SUCCESSFULLY,
+              payload: {
+                user: findUser,
+                token: jwt.sign(data4token, jwtOptions.secretOrKey),
+              },
+              logPayload: false,
+            };
+            return res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            const data4createResponseObject = {
+              req: req,
+              result: -1,
+              message: messages.USER_NOT_VERIFIED,
+              payload: {},
+              logPayload: false,
+            };
+            return res
+              .status(enums.HTTP_CODES.UNAUTHORIZED)
+              .json(utils.createResponseObject(data4createResponseObject));
+          }
         }
       }
     } catch (error) {
