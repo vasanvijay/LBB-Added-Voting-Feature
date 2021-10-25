@@ -112,6 +112,12 @@ module.exports = exports = {
     // Find the email no in user data if it exists or not.
     let user = await global.models.GLOBAL.USER.findOne({ email: email });
     if (user !== null) {
+      let verified = await global.models.GLOBAL.USER.findOneAndUpdate(
+        { email: email },
+        { $set: { verified: true } },
+        { new: true }
+      );
+      console.log("verification---->", verified);
       // User found - create JWT and return it
       const data4token = {
         id: user._id,
@@ -172,12 +178,13 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
           .json(utils.createResponseObject(data4createResponseObject));
       }
-      let verified = await global.models.GLOBAL.USER.findOneAndUpdate(
-        { email: email },
-        { $set: { verified: true } },
-        { new: true }
-      );
       if (verified.length > 0) {
+        let verified = await global.models.GLOBAL.USER.findOneAndUpdate(
+          { email: email },
+          { $set: [{ verified: true }] },
+          { new: true }
+        );
+        console.log("verification---->", verified);
         const data4createResponseObject = {
           req: req,
           result: 0,
