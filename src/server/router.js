@@ -8,6 +8,7 @@ module.exports = (app, logger) => {
   const filterRoute = require("../routes/filter/index");
   const questionRoute = require("../routes/question/index");
   const contactRoute = require("../routes/contact/index")
+  const cmsRoute = require("../routes/cms/index")
 
   // define all routes here
   const { createResponseObject } = require("../utils");
@@ -16,6 +17,7 @@ module.exports = (app, logger) => {
   app.use(["/api/v1/filter"], filterRoute);
   app.use(["/api/v1/question"], questionRoute);
   app.use(["/api/v1/contact"],contactRoute)
+  app.use(["/api/v1/cms"],cmsRoute)
 
   /* Catch all */
   app.all("*", function (req, res) {

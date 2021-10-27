@@ -29,6 +29,9 @@ module.exports = async () => {
         CONTACT: require("../schema/contact/contact")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        CMS: require("../schema/cms/cms")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
         FILTER: require("../schema/filter/filter")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
