@@ -3,6 +3,7 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
+const moment = require("moment");
 
 // Get User by ID
 module.exports = exports = {
@@ -11,11 +12,24 @@ module.exports = exports = {
     let { userId } = req.query;
     console.log("user------->>", user);
     let criteria = {};
+    let criteriaTodays = {};
+    let Todaytdate = new Date();
+
     if (user.userType === enums.USER_TYPE.USER) {
       criteria = {
         _id: user._id,
       };
     }
+    if (user.userType === enums.USER_TYPE.USER) {
+      if (user.createdAt === Todaytdate) {
+        criteriaTodays = {
+          _id: user._id,
+        };
+      }
+    }
+
+    console.log(Todaytdate, "user.createdAt-----------");
+
     if (user.userType === enums.USER_TYPE.ADMIN) {
       if (!userId) {
         criteria = {
@@ -32,6 +46,35 @@ module.exports = exports = {
     try {
       let findUser = await global.models.GLOBAL.USER.find(criteria);
       let count = await global.models.GLOBAL.USER.count(criteria);
+
+      // let TodayUser = await global.models.GLOBAL.USER.find(
+
+      //   { //query today up to tonight
+      //     created_on: {
+      //         $lt: new Date(2021, 10, 23),
+      //         $gte: new Date(2021, 10, 20)
+
+      //     }
+      // }
+
+      let TodayUser = await global.models.GLOBAL.USER.find({
+        createdAt: {
+          $gte: moment(new Date()).format("YYYY-MM-DD"),
+        },
+      });
+      console.log("TodayUser", TodayUser.length);
+      const user = await global.models.GLOBAL.USER.aggregate([
+        {
+          $group: {
+            _id: { "$month": "$createdAt"},
+            users: { $sum: 1 },
+          },
+        },
+      ]).sort({_id:1});
+      
+
+      console.log("user---->",user);
+
       if (!findUser) {
         const data4createResponseObject = {
           req: req,
@@ -50,7 +93,7 @@ module.exports = exports = {
           req: req,
           result: 0,
           message: messages.USER_FETCH_SUCCESS,
-          payload: { findUser, count },
+          payload: { findUser, count, todaysCount: TodayUser.length, totalmonth:user },
           logPayload: false,
         };
         res

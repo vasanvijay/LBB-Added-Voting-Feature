@@ -67,6 +67,7 @@ module.exports = exports = {
         };
 
         const newUser = await global.models.GLOBAL.USER(userRegistration);
+        const contregister = await global.models.GLOBAL.USER.count(userRegistration);
         try {
           await newUser.save();
         } catch (error) {
@@ -103,6 +104,7 @@ module.exports = exports = {
           result: 0,
           message: messages.USER_REGISTRATION_SUCCESS,
           payload: responseObj,
+        
           logPayload: false,
         };
         res

@@ -28,7 +28,7 @@ module.exports = exports = {
         }
 
         const filterExists = await global.models.GLOBAL.FILTER_TYPE.findOne({ name: name });
-        if(!filterExists) {
+        if(filterExists) {
             const data4createResponseObject = {
                 req: req,
                 result: -1,
