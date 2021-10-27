@@ -7,7 +7,7 @@ const passport = require("passport");
 // GET methods
 router.get(
   "/get-cms",
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
   api4Cms.getCms.handler
 );
 
