@@ -20,7 +20,7 @@ router.get(
 // POST Method
 router.post(
   "/createcontact",
-  passport.authenticate(["jwt"], { session: false }),
+  // passport.authenticate(["jwt"], { session: false }),
   api4Filter.createContact.handler
 );
 
