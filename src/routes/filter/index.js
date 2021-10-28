@@ -17,6 +17,12 @@ router.get(
   api4Filter.getFilterType.handler
 );
 
+router.get(
+  "/",
+  // passport.authenticate(["jwt"], { session: false }),
+  api4Filter.mostUsedFilter.handler
+);
+
 // POST Method
 router.post(
   "/create-filter",
@@ -31,27 +37,35 @@ router.post(
 );
 
 // PUT method
-router.put("/add-filter-option", 
+router.put(
+  "/add-filter-option",
   // passport.authenticate(["jwt"], { session: false }),
-  api4Filter.addFilterOption.handler);
+  api4Filter.addFilterOption.handler
+);
 
-router.put("/update-filter-type", 
+router.put(
+  "/update-filter-type",
   // passport.authenticate(["jwt"], { session: false }),
-api4Filter.updateFilterType.handler);
+  api4Filter.updateFilterType.handler
+);
 
-router.put("/update-filter", 
+router.put(
+  "/update-filter",
   // passport.authenticate(["jwt"], { session: false }),
-api4Filter.updateFilter.handler);
+  api4Filter.updateFilter.handler
+);
 
-router.put("/delete-filter", 
+router.put(
+  "/delete-filter",
   // passport.authenticate(["jwt"], { session: false }),
-api4Filter.deleteFilter.handler);
+  api4Filter.deleteFilter.handler
+);
 
 // DELETE method
-router.delete("/delete-filter-type", 
+router.delete(
+  "/delete-filter-type",
   // passport.authenticate(["jwt"], { session: false }),
-api4Filter.deleteFilterType.handler);
-
-
+  api4Filter.deleteFilterType.handler
+);
 
 module.exports = exports = router;

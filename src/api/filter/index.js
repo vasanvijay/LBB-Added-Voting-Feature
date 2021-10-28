@@ -7,6 +7,8 @@ const updateFilter = require("./update-filter");
 const addFilterOption = require("./add-filter-option");
 const deleteFilterType = require("./delete-filter-type");
 const deleteFilter = require("./delete-filter");
+const mostUsedFilter = require("./get-most-used-filter");
+
 module.exports = exports = {
   createFilter,
   createFilterType,
@@ -16,5 +18,6 @@ module.exports = exports = {
   updateFilter,
   deleteFilterType,
   deleteFilter,
-  addFilterOption
+  addFilterOption,
+  mostUsedFilter,
 };

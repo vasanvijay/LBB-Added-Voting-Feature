@@ -24,7 +24,11 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.updateQuestion.handler
 );
-
-
+router.put(
+  "/id=:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4Question.questionUpdate.validation),
+  api4Question.questionUpdate.handler
+);
 
 module.exports = exports = router;

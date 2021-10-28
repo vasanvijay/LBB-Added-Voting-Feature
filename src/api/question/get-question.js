@@ -3,28 +3,39 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const moment = require('moment')
+const moment = require("moment");
 
-
-// Retrieve and return all Category from the database.
+// Retrieve and return all Question from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
+    const { user } = req;
     const { id } = req.query;
+    const { byUser } = req.query;
+    const { filterId } = req.query;
+    let criteria = {};
+    if (byUser) {
+      criteria = {
+        createdBy: user._id,
+      };
+    }
+    console.log("Criteria---->", criteria);
     try {
-      let question = await global.models.GLOBAL.QUESTION.find().populate({
-        path: "createdBy",
-        model: "user",
-        select: "name",
-      });
-      // All Question Count
-
-      let count = await global.models.GLOBAL.QUESTION.count(question);
-
+      req.query.page = req.query.page ? req.query.page : 1;
+      let page = parseInt(req.query.page);
+      req.query.limit = req.query.limit ? req.query.limit : 10;
+      let limit = parseInt(req.query.limit);
+      let skip = (parseInt(req.query.page) - 1) * limit;
+      let question = await global.models.GLOBAL.QUESTION.find(criteria)
+        .populate({
+          path: "createdBy",
+          model: "user",
+          select: "name",
+        })
+        .skip(skip)
+        .limit(limit);
 
       // today's Questions Count
-
-
       let TodayQuestion = await global.models.GLOBAL.QUESTION.find({
         createdAt: {
           $gte: moment(new Date()).format("YYYY-MM-DD"),
@@ -32,29 +43,30 @@ module.exports = exports = {
       });
 
       //Questions Profile access
-
       let QuestionProfileAccess = await global.models.GLOBAL.QUESTION.find({
-        displayProfile:true
+        criteria,
+        displayProfile: true,
       });
 
-    // Questions without profile Access
-   
-    
-    let QuestionProfileWithoutAccess = await global.models.GLOBAL.QUESTION.find({
-        displayProfile:false
-      });
-
-
-    //   console.log(QuestionProfileWithoutAccess, "TodayQuestion")
-    
-
- 
+      // Questions without profile Access
+      let QuestionProfileWithoutAccess =
+        await global.models.GLOBAL.QUESTION.find({
+          displayProfile: false,
+        });
 
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.SUCCESS,
-        payload: { question, count, todaysCount: TodayQuestion.length, profileaccess:QuestionProfileAccess.length, withoutprofileaccess:QuestionProfileWithoutAccess.length },
+        payload: {
+          question,
+          count: question.length,
+          todaysCount: TodayQuestion.length,
+          profileaccess: QuestionProfileAccess.length,
+          withoutprofileaccess: QuestionProfileWithoutAccess.length,
+          page,
+          limit,
+        },
         logPayload: false,
       };
       res

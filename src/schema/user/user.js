@@ -5,7 +5,7 @@ module.exports = (connection) => {
     email: String,
     password: String,
     phone: String,
-    verified : { type: Boolean, default: false },
+    verified: { type: Boolean, default: false },
     userType: { type: String, default: "user" },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
@@ -17,9 +17,10 @@ module.exports = (connection) => {
       type: String,
       default: "Admin",
     },
+    answerLater: [{ type: mongoose.Schema.Types.ObjectId }],
     lastLogin: { type: Date, default: Date.now },
     token: { type: String, default: null },
-    status: { type: Boolean, default: true }
+    status: { type: Boolean, default: true },
   });
   return connection.model("user", userSchema, "user");
 };

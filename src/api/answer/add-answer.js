@@ -6,23 +6,19 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 
-// Add category by admin
+// Add Answer
 module.exports = exports = {
   // route validation
   validation: Joi.object({
-    question: Joi.string().allow(),
-    displayProfile: Joi.boolean().allow(),
-    allowConnectionRequest: Joi.boolean().allow(),
-    filter: Joi.array().allow(),
+    answer: Joi.string().required(),
   }),
 
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { questionId } = req.params;
-    const { question, displayProfile, allowConnectionRequest, filter } =
-      req.body;
-    if (!question) {
+    const { question } = req.params;
+    const { answer } = req.body;
+    if (!question || !answer) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -36,26 +32,32 @@ module.exports = exports = {
     }
 
     try {
-      const updateQuestion =
-        await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
-          { _id: questionId },
-          {
-            $set: {
-              question: question,
-              displayProfile: displayProfile,
-              allowConnectionRequest: allowConnectionRequest,
-              filter: filter,
-              updatedAt: Date.now(),
-              updatedBy: user._id,
-            },
+      let addAnswer = {
+        answer: answer,
+        answerBy: user._id,
+        question: question,
+        answerAt: Date.now(),
+      };
+      const newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
+      newAnswer.save();
+      await global.models.GLOBAL.QUESTION.updateOne(
+        { _id: question },
+        { $inc: { response: 1 } },
+        { new: true }
+      );
+      await global.models.GLOBAL.USER.findOneAndUpdate(
+        { _id: user._id },
+        {
+          $pull: {
+            answerLater: question,
           },
-          { new: true }
-        );
+        }
+      );
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.ITEM_INSERTED,
-        payload: { updateQuestion },
+        payload: { newAnswer },
         logPayload: false,
       };
       res

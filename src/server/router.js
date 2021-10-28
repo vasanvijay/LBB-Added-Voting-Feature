@@ -7,8 +7,9 @@ module.exports = (app, logger) => {
   const userRoute = require("../routes/user/index");
   const filterRoute = require("../routes/filter/index");
   const questionRoute = require("../routes/question/index");
-  const contactRoute = require("../routes/contact/index")
-  const cmsRoute = require("../routes/cms/index")
+  const contactRoute = require("../routes/contact/index");
+  const cmsRoute = require("../routes/cms/index");
+  const answerRoute = require("../routes/answer/index");
 
   // define all routes here
   const { createResponseObject } = require("../utils");
@@ -16,8 +17,9 @@ module.exports = (app, logger) => {
   app.use(["/api/v1/user"], userRoute);
   app.use(["/api/v1/filter"], filterRoute);
   app.use(["/api/v1/question"], questionRoute);
-  app.use(["/api/v1/contact"],contactRoute)
-  app.use(["/api/v1/cms"],cmsRoute)
+  app.use(["/api/v1/contact"], contactRoute);
+  app.use(["/api/v1/cms"], cmsRoute);
+  app.use(["/api/v1/answer"], answerRoute);
 
   /* Catch all */
   app.all("*", function (req, res) {

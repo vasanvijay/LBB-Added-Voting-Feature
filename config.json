@@ -4,9 +4,16 @@
       "DATABASE": {
         "LEADER_BRIDGE": {
           "COLLECTION": {
+            "LOG": "log",
+            "CONTACT": "contact",
+            "CMS": "cms",
+            "FILTER": "filter",
+            "FILTER_TYPE": "filterType",
+            "QUESTION": "question",
             "CODE_REGISTRATION": "code_registration",
             "CODE_VERIFICATION": "code_verification",
-            "USER": "user"
+            "USER": "user",
+            "ANSWER": "answer"
           },
           "NAME": "leaderBridge"
         }
