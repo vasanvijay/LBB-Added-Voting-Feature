@@ -3,32 +3,34 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
+const ObjectId = require("mongodb").ObjectId;
 
-// Retrieve and return all Most Used Filter from the database.
+// Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
+    const { user } = req;
     try {
-      let mostUsed = await global.models.GLOBAL.QUESTION.aggregate([
-        { $project: { _id: 0, filter: 1 } },
-        { $unwind: "$filter" },
-        { $group: { _id: "$filter.filterId", use: { $sum: 1 } } },
-        { $project: { _id: 0, filterId: "$_id", use: 1 } },
-        { $sort: { use: -1 } },
-      ]);
-      console.log("Most Used---->>>", mostUsed);
-      let newTopSubject = [];
-      for (let i = 0; i < mostUsed.length; i++) {
-        let topSubject = await global.models.GLOBAL.FILTER.find({
-          _id: mostUsed[i].filterId,
+      let allChats;
+      allChats = await global.models.GLOBAL.CHAT.find({
+        userId: ObjectId(user._id),
+      })
+        .populate({
+          path: "sender",
+          model: "user",
+          select: "name phone email",
+        })
+        .populate({
+          path: "userId",
+          model: "user",
+          select: "name phone email",
         });
-        newTopSubject.push(topSubject);
-      }
+
       const data4createResponseObject = {
         req: req,
         result: 0,
-        message: messages.ITEM_FETCHED,
-        payload: { newTopSubject },
+        message: messages.SUCCESS,
+        payload: { allChats },
         logPayload: false,
       };
       res

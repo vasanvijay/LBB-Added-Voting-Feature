@@ -4,31 +4,17 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 
-// Retrieve and return all Most Used Filter from the database.
+// Add category by admin
 module.exports = exports = {
-  // route handler
   handler: async (req, res) => {
     try {
-      let mostUsed = await global.models.GLOBAL.QUESTION.aggregate([
-        { $project: { _id: 0, filter: 1 } },
-        { $unwind: "$filter" },
-        { $group: { _id: "$filter.filterId", use: { $sum: 1 } } },
-        { $project: { _id: 0, filterId: "$_id", use: 1 } },
-        { $sort: { use: -1 } },
-      ]);
-      console.log("Most Used---->>>", mostUsed);
-      let newTopSubject = [];
-      for (let i = 0; i < mostUsed.length; i++) {
-        let topSubject = await global.models.GLOBAL.FILTER.find({
-          _id: mostUsed[i].filterId,
-        });
-        newTopSubject.push(topSubject);
-      }
+      const newChat = await global.models.GLOBAL.CHAT(req);
+      newChat.save();
       const data4createResponseObject = {
         req: req,
         result: 0,
-        message: messages.ITEM_FETCHED,
-        payload: { newTopSubject },
+        message: messages.ITEM_INSERTED,
+        payload: { newChat },
         logPayload: false,
       };
       res

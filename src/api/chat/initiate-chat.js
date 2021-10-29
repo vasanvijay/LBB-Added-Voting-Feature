@@ -1,56 +1,62 @@
+const Joi = require("joi");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const moment = require("moment");
+const ObjectId = require("mongodb").ObjectId;
 
-// Retrieve and return all Answer from the database.
+// Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
+  //  route validation
+  validation: Joi.object({
+    id: Joi.string().required(),
+  }),
+
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
     try {
-      req.query.page = req.query.page ? req.query.page : 1;
-      let page = parseInt(req.query.page);
-      req.query.limit = req.query.limit ? req.query.limit : 10;
-      let limit = parseInt(req.query.limit);
-      let skip = (parseInt(req.query.page) - 1) * limit;
-      let question = await global.models.GLOBAL.USER.find({ _id: user._id })
-        .populate({
-          path: "answerLater",
-          model: "question",
-          select: "_id question response filter view displayProfile",
-        })
-        .skip(skip)
-        .limit(limit);
-      if (question) {
-        question = JSON.parse(JSON.stringify(question));
+      const { id } = req.body;
+      const { user } = req;
+
+      let participateIds = [];
+      console.log("userr", user);
+      // check user type
+      if (user.type === enums.USER_TYPE.USER) {
+        participateIds.push(user._id);
+        participateIds.push(id);
+      }
+      let chatRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
+        participateIds: {
+          $size: participateIds.length,
+          $all: [...participateIds],
+        },
+      });
+      if (chatRoom) {
         const data4createResponseObject = {
           req: req,
           result: 0,
-          message: messages.ITEM_FETCHED,
-          payload: {
-            questions: question[0]?.answerLater,
-            count: question[0]?.answerLater.length,
-            page,
-            limit,
-          },
+          message: messages.INITIATION_SUCCESS,
+          payload: { chatRoom },
           logPayload: false,
         };
         res
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
+        const newChatRoom = await global.models.GLOBAL.CHAT_ROOM({
+          participateIds: participateIds,
+        });
+        newChatRoom.save();
         const data4createResponseObject = {
           req: req,
-          result: -1,
-          message: messages.NOT_FOUND,
-          payload: {},
+          result: 0,
+          message: messages.INITIATION_SUCCESS,
+          payload: { newChatRoom },
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.NOT_FOUND)
+          .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {

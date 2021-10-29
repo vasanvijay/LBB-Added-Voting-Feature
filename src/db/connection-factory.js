@@ -33,7 +33,7 @@ module.exports = function (config) {
     } else {
       let connection = await mongoose.createConnection(
         `${process.env.MONGOURI_LIVE}`, //* Change to dynamic when database will be live
-        // "mongodb://localhost:27017/leader_bridge",
+        // "mongodb://192.168.29.53:27017/leader_bridge",
         {
           autoReconnect: true,
           promiseLibrary: Promise,

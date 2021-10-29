@@ -13,7 +13,9 @@
             "CODE_REGISTRATION": "code_registration",
             "CODE_VERIFICATION": "code_verification",
             "USER": "user",
-            "ANSWER": "answer"
+            "ANSWER": "answer",
+            "CHAT": "chat",
+            "CHAT_ROOM": "chat_room"
           },
           "NAME": "leaderBridge"
         }

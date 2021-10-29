@@ -8,6 +8,7 @@ const os = require("os");
 const initMiddleware = require("./middlewares");
 const initRouter = require("./router");
 const http = require("http");
+const webSocket = require("./socket-io");
 
 global.config = {};
 global.limits = {};
@@ -39,6 +40,9 @@ const runServer = async () => {
   initRouter(app, logger);
 
   const server = http.createServer(app);
+
+  // Init Socket.io
+  await webSocket(server, logger);
 
   server.listen(process.env.APP_PORT, async () => {
     logger.info(

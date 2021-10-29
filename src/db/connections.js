@@ -53,6 +53,12 @@ module.exports = async () => {
         CODE_VERIFICATION: require("../schema/code/code-verification")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        CHAT: require("../schema/chat/chat")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
+        CHAT_ROOM: require("../schema/chat/chat-room")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
       },
     };
 
