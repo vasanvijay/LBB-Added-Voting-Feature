@@ -59,6 +59,9 @@ module.exports = async () => {
         CHAT_ROOM: require("../schema/chat/chat-room")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        CONNECTION: require("../schema/connection/connection")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
       },
     };
 

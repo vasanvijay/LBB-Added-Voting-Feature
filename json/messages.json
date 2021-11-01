@@ -1,4 +1,5 @@
 {
+  "CONNECTION_WITHDRAW": "Connection Withdraw Successfully",
   "STATUS_CHANGED": "Status Changed Successfully.",
   "PRODUCT_FETCH_SUCCESS": "Product fetched successfully.",
   "CATEGORY_DELETED": "Category Deleted Successfully.",
@@ -49,6 +50,5 @@
   "INVALID_ROLE_FOR_ORDER_CREATE": "Sorry, only VARS can place order for their customers.",
   "CONTACT_EXIST": "Sorry, the specified phone number is already registered in the system. Please try with different",
   "NAVIGATION_EXIST": "Sorry, the specified Navigation is already Assigned to this Role. Please try with different",
-  "CONTACT_USER" : "Thank you for   "
+  "CONTACT_USER": "Thank you for   "
 }
-

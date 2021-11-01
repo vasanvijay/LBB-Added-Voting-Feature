@@ -3,7 +3,6 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const moment = require("moment");
 
 // Retrieve and return all Answer from the database.
 module.exports = exports = {

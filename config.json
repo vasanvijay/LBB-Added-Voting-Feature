@@ -15,7 +15,8 @@
             "USER": "user",
             "ANSWER": "answer",
             "CHAT": "chat",
-            "CHAT_ROOM": "chat_room"
+            "CHAT_ROOM": "chat_room",
+            "CONNECTION": "connection"
           },
           "NAME": "leaderBridge"
         }
