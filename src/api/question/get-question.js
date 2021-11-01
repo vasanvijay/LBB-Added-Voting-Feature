@@ -10,13 +10,23 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { id } = req.query;
+    const { question } = req.query;
     const { byUser } = req.query;
-    const { filterId } = req.query;
     let criteria = {};
     if (byUser) {
       criteria = {
         createdBy: user._id,
+      };
+      if (question) {
+        criteria = {
+          _id: question,
+          createdBy: user._id,
+        };
+      }
+    }
+    if (question) {
+      criteria = {
+        _id: question,
       };
     }
     console.log("Criteria---->", criteria);

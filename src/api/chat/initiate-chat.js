@@ -22,10 +22,9 @@ module.exports = exports = {
       let participateIds = [];
       console.log("userr", user);
       // check user type
-      if (user.type === enums.USER_TYPE.USER) {
-        participateIds.push(user._id);
-        participateIds.push(id);
-      }
+      participateIds.push(user._id);
+      participateIds.push(id);
+
       let chatRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
         participateIds: {
           $size: participateIds.length,
@@ -33,6 +32,7 @@ module.exports = exports = {
         },
       });
       if (chatRoom) {
+        console.log("Chat room---<>", chatRoom);
         const data4createResponseObject = {
           req: req,
           result: 0,
@@ -44,15 +44,16 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
-        const newChatRoom = await global.models.GLOBAL.CHAT_ROOM({
+        chatRoom = await global.models.GLOBAL.CHAT_ROOM({
           participateIds: participateIds,
         });
-        newChatRoom.save();
+        chatRoom.save();
+        console.log("New Chats room---<>", chatRoom);
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.INITIATION_SUCCESS,
-          payload: { newChatRoom },
+          payload: { chatRoom },
           logPayload: false,
         };
         res

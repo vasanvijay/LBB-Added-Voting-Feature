@@ -10,14 +10,24 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { answerByMe } = req.query;
-    const { filterId } = req.query;
+    const { question } = req.query;
     let criteria = {};
     if (answerByMe) {
       criteria = {
         answerBy: user._id,
       };
+      if (question) {
+        criteria = {
+          _id: question,
+          createdBy: user._id,
+        };
+      }
     }
-
+    if (question) {
+      criteria = {
+        _id: question,
+      };
+    }
     console.log("Criteria---->", criteria);
     try {
       let { filters } = req.body;
