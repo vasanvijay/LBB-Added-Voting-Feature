@@ -25,6 +25,7 @@ module.exports = exports = {
     if (findUser) {
       try {
         const request = {
+          message: req.body,
           senderId: user._id,
           receiverId: receiverId,
         };
