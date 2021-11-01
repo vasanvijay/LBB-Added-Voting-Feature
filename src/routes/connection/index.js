@@ -10,6 +10,12 @@ router.get(
   api4Connection.getConnection.handler
 );
 
+router.get(
+  "/conected",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Connection.getConnected.handler
+);
+
 // PUT Method
 router.put(
   "/id=:receiverId",

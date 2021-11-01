@@ -11,6 +11,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4User.getUser.handler
 );
+router.get(
+  "/all-user",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.getAllUser.handler
+);
 
 // Post Methods
 router.post(
@@ -42,9 +47,10 @@ router.put(
   api4User.updateUSer.handler
 );
 
-router.put("/update-status/id=:userId&status=:status", 
-passport.authenticate(["jwt"], { session: false }),
-api4User.updateStatus.handler
-)
+router.put(
+  "/update-status/id=:userId&status=:status",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.updateStatus.handler
+);
 
 module.exports = exports = router;

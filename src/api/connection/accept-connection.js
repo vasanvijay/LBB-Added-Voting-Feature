@@ -34,7 +34,7 @@ module.exports = exports = {
               { _id: user._id },
               {
                 $addToSet: {
-                  conected: receiverId,
+                  accepted: receiverId,
                 },
               },
               { new: true }

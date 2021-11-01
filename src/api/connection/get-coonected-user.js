@@ -9,27 +9,23 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { sent } = req.query;
-    const { received } = req.query;
-
     try {
-      let findConnection;
-      if (sent) {
-        findConnection = await global.models.GLOBAL.CONNECTION.find({
-          senderId: user._id,
-        });
-      }
-
-      if (received) {
-        findConnection = await global.models.GLOBAL.CONNECTION.find({
-          receiverId: user._id,
-        });
-      }
+      let findConnection = await global.models.GLOBAL.USER.find({
+        _id: user._id,
+      }).populate({
+        path: "accepted",
+        model: "user",
+        select: "_id name email phone image",
+      });
+      findConnection = JSON.parse(JSON.stringify(findConnection));
+      console.log("findConnection----->>", findConnection);
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.SUCCESS,
-        payload: { findConnection },
+        payload: {
+          connection: findConnection[0]?.accepted,
+        },
         logPayload: false,
       };
       res

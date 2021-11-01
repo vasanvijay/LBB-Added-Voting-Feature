@@ -3,33 +3,28 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
+const moment = require("moment");
 
-// Retrieve and return all Answer from the database.
+// Retrieve and return all Question from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { sent } = req.query;
-    const { received } = req.query;
-
+    const { userId } = req.query;
+    let criteria = {};
+    if (userId) {
+      criteria = {
+        _id: userId,
+      };
+    }
+    console.log("Criteria---->", criteria);
     try {
-      let findConnection;
-      if (sent) {
-        findConnection = await global.models.GLOBAL.CONNECTION.find({
-          senderId: user._id,
-        });
-      }
-
-      if (received) {
-        findConnection = await global.models.GLOBAL.CONNECTION.find({
-          receiverId: user._id,
-        });
-      }
+      let user = await global.models.GLOBAL.USER.find(criteria);
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.SUCCESS,
-        payload: { findConnection },
+        payload: user,
         logPayload: false,
       };
       res

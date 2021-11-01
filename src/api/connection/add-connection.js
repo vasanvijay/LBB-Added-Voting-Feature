@@ -28,7 +28,9 @@ module.exports = exports = {
           senderId: user._id,
           receiverId: receiverId,
         };
-        const updatedReceiverData = await global.models.GLOBAL.USER(request);
+        const updatedReceiverData = await global.models.GLOBAL.CONNECTION(
+          request
+        );
         updatedReceiverData.save();
         const data4createResponseObject = {
           req: req,
