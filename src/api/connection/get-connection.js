@@ -17,12 +17,20 @@ module.exports = exports = {
       if (sent) {
         findConnection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
+        }).populate({
+          path: "receiverId",
+          model: "user",
+          select: "_id name email phone image",
         });
       }
 
       if (received) {
         findConnection = await global.models.GLOBAL.CONNECTION.find({
           receiverId: user._id,
+        }).populate({
+          path: "senderId",
+          model: "user",
+          select: "_id name email phone image",
         });
       }
       const data4createResponseObject = {

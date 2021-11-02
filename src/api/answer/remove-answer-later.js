@@ -8,8 +8,8 @@ module.exports = exports = {
   //Router Handler
   handler: async (req, res) => {
     const { user } = req;
-    const { receiverId } = req.params;
-    if (!receiverId) {
+    const { questionId } = req.params;
+    if (!questionId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -21,24 +21,24 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    let findUser = await global.models.GLOBAL.USER.findById(receiverId);
-    if (findUser) {
+    let findQuestion = await global.models.GLOBAL.QUESTION.findById(questionId);
+    if (findQuestion) {
       try {
-        const { message } = req.body;
-        const request = {
-          message: message,
-          senderId: user._id,
-          receiverId: receiverId,
-        };
-        const updatedReceiverData = await global.models.GLOBAL.CONNECTION(
-          request
-        );
-        updatedReceiverData.save();
+        const updatedAnswerLaterData =
+          await global.models.GLOBAL.USER.findOneAndUpdate(
+            { _id: user._id },
+            {
+              $pull: {
+                answerLater: questionId,
+              },
+            },
+            { new: true }
+          );
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.ITEM_UPDATED,
-          payload: { updatedReceiverData },
+          payload: { answerLater: updatedAnswerLaterData.answerLater },
           logPayload: false,
         };
         res

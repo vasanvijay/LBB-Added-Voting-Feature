@@ -22,6 +22,11 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4Connection.acceptConnection.handler
 );
+router.put(
+  "/decline/id=:senderId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Connection.diclineConnection.handler
+);
 
 // POST Method
 router.post(

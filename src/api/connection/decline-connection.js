@@ -8,9 +8,9 @@ module.exports = exports = {
   //Router Handler
   handler: async (req, res) => {
     const { user } = req;
-    const { accepted } = req.query;
-    const { receiverId } = req.params;
-    if (!receiverId) {
+    const { decline } = req.query;
+    const { senderId } = req.params;
+    if (!senderId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -22,7 +22,7 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    if (accepted) {
+    if (decline) {
       let findUser = await global.models.GLOBAL.USER.find({
         _id: user._id,
       });
@@ -30,31 +30,20 @@ module.exports = exports = {
       if (findUser.length > 0) {
         try {
           const { connectionId } = req.body;
-          let updatedConnectedData =
+          let declineConnection =
             await global.models.GLOBAL.USER.findOneAndUpdate(
-              { _id: user._id },
+              { _id: senderId },
               {
-                $addToSet: {
-                  accepted: receiverId,
+                $pull: {
+                  accepted: user._id,
                 },
               },
               { new: true }
             );
-          await global.models.GLOBAL.USER.findOneAndUpdate(
-            { _id: receiverId },
-            {
-              $addToSet: {
-                accepted: user._id,
-              },
-            },
-            { new: true }
-          );
           await global.models.GLOBAL.CONNECTION.findByIdAndRemove({
             _id: connectionId,
           });
-          updatedConnectedData = JSON.parse(
-            JSON.stringify(updatedConnectedData)
-          );
+          declineConnection = JSON.parse(JSON.stringify(declineConnection));
           console.log(
             "updatedConnectedData.conected---->",
             updatedConnectedData[0]?.conected
@@ -63,7 +52,7 @@ module.exports = exports = {
             req: req,
             result: 0,
             message: messages.ITEM_UPDATED,
-            payload: { myConnection: updatedConnectedData[0]?.conected },
+            payload: {},
             logPayload: false,
           };
           res

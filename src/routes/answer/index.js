@@ -23,6 +23,11 @@ router.put(
   validate("body", api4Answer.updateAnswer.validation),
   api4Answer.updateAnswer.handler
 );
+router.put(
+  "/:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.removeAnswerLater.handler
+);
 
 // POST Method
 router.post(

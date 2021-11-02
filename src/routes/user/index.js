@@ -16,6 +16,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4User.getAllUser.handler
 );
+router.get(
+  "/:searchData",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.searchUser.handler
+);
 
 // Post Methods
 router.post(

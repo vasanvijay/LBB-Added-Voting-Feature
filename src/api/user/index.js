@@ -6,6 +6,7 @@ const verifyEmail = require("./verify-email");
 const updateUSer = require("./update-user");
 const updateStatus = require("./update-status");
 const getAllUser = require("./get-all-user");
+const searchUser = require("./search-user");
 
 module.exports = exports = {
   userRegistration,
@@ -16,4 +17,5 @@ module.exports = exports = {
   updateUSer,
   updateStatus,
   getAllUser,
+  searchUser,
 };

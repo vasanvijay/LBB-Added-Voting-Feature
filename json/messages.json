@@ -53,5 +53,6 @@
   "CONTACT_USER": "Thank you for   ",
   "INITIATION_SUCCESS": "Chats initiated successfully",
   "MESSAGE_SENT": "Message has been sent successfully",
+  "MAIL_SENT": "E-mail has been send successfully.",
   "MESSAGES_FETCH_SUCCESS": "Messages fetched successfully."
 }

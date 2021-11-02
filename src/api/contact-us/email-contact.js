@@ -18,9 +18,7 @@ module.exports = exports = {
   // }),
 
   handler: async (req, res) => {
-    console.log("nodemailer");
     const { id, email, subject, message } = req.body;
-    console.log(email, "newemail");
     if (!email || !subject || !message) {
       const Datanodemailererror = {
         req: req,
@@ -35,84 +33,76 @@ module.exports = exports = {
         .json(utils.createResponseObject(Datanodemailererror));
     }
     try {
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: "vijay085.rejoice@gmail.com",
-          pass: "Vijay42497884+++",
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
+      let findEmailuser = await global.models.GLOBAL.CONTACT.find({
+        email: email,
       });
-
-      let mailOptions = {
-        from: "vijay085.rejoice@gmail.com",
-        to: email,
-        subject: subject,
-        text: message,
-      };
-
-      let info = await transporter.sendMail(mailOptions);
-
-      console.log(info, "infoemail");
-      if (info.accepted.length > 0) {
-        // message sent
-
-        let findEmailuser = await global.models.GLOBAL.CONTACT.find({
-          email: email,
+      if (findEmailuser.length > 0) {
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD,
+          },
         });
+        let info = await transporter.sendMail({
+          from: process.env.EMAIL,
+          to: email,
+          subject: subject,
+          text: message,
+        });
+        console.log("Message sent: %s", info.messageId);
+        const Replayfiledtrue =
+          await global.models.GLOBAL.CONTACT.findByIdAndUpdate(id, {
+            reply: true,
+          });
+        console.log("Replayfiledtrue", Replayfiledtrue);
+        if (Replayfiledtrue) {
+          await Replayfiledtrue.save();
 
-        if (findEmailuser.length == 0) {
+          const emailsendsuccessfully = {
+            id: id,
+            email: email,
+            subject: subject,
+            message: message,
+          };
+
           const data4createResponseObject = {
             req: req,
-            result: -1,
-            message: "email does not exist",
-         
+            result: 0,
+            message: messages.MAIL_SENT,
+            payload: { emailsendsuccessfully },
+            logPayload: false,
           };
           return res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
-            
         } else {
-          try {
-          const Replayfiledtrue =
-            await global.models.GLOBAL.CONTACT.findByIdAndUpdate(id, {
-              reply: true,
-            });
-            console.log("Replayfiledtrue",Replayfiledtrue);
-            if (Replayfiledtrue) {
-              await Replayfiledtrue.save();
-
-              const emailsendsuccessfully = {
-                id: id,
-                email: email,
-                subject: subject,
-                message: message,
-              };
-
-              const data4createResponseObject = {
-                req: req,
-                result: -1,
-                message: "Email successfully sent",
-                payload: { emailsendsuccessfully },
-                logPayload: false,
-              };
-              return res
-                .status(enums.HTTP_CODES.OK)
-                .json(utils.createResponseObject(data4createResponseObject));
-            } else {
-              console.log("email not Exits");
-            }
-          } catch (error) {}
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.GENERAL,
+            payload: {},
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
-        // message not sent
+        const data4createResponseObject = {
+          req: req,
+          result: -1,
+          message: messages.NOT_FOUND,
+          payload: {},
+          logPayload: false,
+        };
+        return res
+          .status(enums.HTTP_CODES.NOT_FOUND)
+          .json(utils.createResponseObject(data4createResponseObject));
       }
-    } catch (error) {
-      console.log("ERR")
-    }
+    } catch (error) {}
   },
 };
