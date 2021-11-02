@@ -29,6 +29,7 @@ module.exports = exports = {
           message: message,
           senderId: user._id,
           receiverId: receiverId,
+          status: "Pending",
         };
         const updatedReceiverData = await global.models.GLOBAL.CONNECTION(
           request

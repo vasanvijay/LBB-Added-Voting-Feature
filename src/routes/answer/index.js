@@ -15,6 +15,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.getAnswerLater.handler
 );
+router.get(
+  "/:question",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.getAnswerByQuestion.handler
+);
 
 // PUT Method
 router.put(

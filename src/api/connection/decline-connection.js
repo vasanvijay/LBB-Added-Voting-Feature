@@ -44,10 +44,7 @@ module.exports = exports = {
             _id: connectionId,
           });
           declineConnection = JSON.parse(JSON.stringify(declineConnection));
-          console.log(
-            "updatedConnectedData.conected---->",
-            updatedConnectedData[0]?.conected
-          );
+
           const data4createResponseObject = {
             req: req,
             result: 0,
