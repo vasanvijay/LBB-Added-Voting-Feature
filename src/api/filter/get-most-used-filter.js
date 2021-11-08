@@ -24,11 +24,15 @@ module.exports = exports = {
         });
         newTopSubject.push(topSubject);
       }
+      let topSubjects = newTopSubject.filter(function (el) {
+        return el.length >= 1;
+      });
+      console.log("topSubjects--->", topSubjects);
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.ITEM_FETCHED,
-        payload: { newTopSubject },
+        payload: { topSubjects },
         logPayload: false,
       };
       res
