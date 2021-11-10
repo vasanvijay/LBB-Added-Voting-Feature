@@ -8,10 +8,9 @@ const utils = require("../../utils");
 // Get User by ID
 module.exports = exports = {
   // route validation
-    validation: Joi.object({
+  validation: Joi.object({
     name: Joi.string().allow(""),
-    phone: Joi.string().allow(""),
-    status: Joi.string()
+    status: Joi.string(),
   }),
 
   handler: async (req, res) => {
@@ -20,24 +19,22 @@ module.exports = exports = {
     console.log("user------->>", user);
 
     let updateUser;
-    
+
     try {
       let updateUser;
-        if(user.userType === enums.USER_TYPE.ADMIN){
-      
-            updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
-                { _id: userId },
-                {
-                    $set: {
-                        
-                        updatedAt: new Date(),
-                        updatedBy: user.email,
-                        status:status
-                    },
-                },
-                { new: true }
-                );
-            }
+      if (user.userType === enums.USER_TYPE.ADMIN) {
+        updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+          { _id: userId },
+          {
+            $set: {
+              updatedAt: new Date(),
+              updatedBy: user.email,
+              status: status,
+            },
+          },
+          { new: true }
+        );
+      }
 
       if (!updateUser) {
         const data4createResponseObject = {

@@ -7,6 +7,7 @@ const updateUSer = require("./update-user");
 const updateStatus = require("./update-status");
 const getAllUser = require("./get-all-user");
 const searchUser = require("./search-user");
+const userData = require("./user-data");
 
 module.exports = exports = {
   userRegistration,
@@ -18,4 +19,5 @@ module.exports = exports = {
   updateStatus,
   getAllUser,
   searchUser,
+  userData,
 };

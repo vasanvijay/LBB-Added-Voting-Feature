@@ -46,6 +46,11 @@ router.put(
   api4User.verifyCode.handler
 );
 router.put(
+  "/verification-form",
+  validate("body", api4User.userData.validation),
+  api4User.userData.handler
+);
+router.put(
   "/id=:userId",
   passport.authenticate(["jwt"], { session: false }),
   validate("body", api4User.updateUSer.validation),

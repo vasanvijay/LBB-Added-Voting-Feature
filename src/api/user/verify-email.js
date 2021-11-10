@@ -118,8 +118,7 @@ module.exports = exports = {
           const data4createResponseObject = {
             req: req,
             result: 0,
-            message:
-              "[USE_TEST_PIN = False] Mail was sent out to the Email Address.",
+            message: "Mail was sent out to the Email Address.",
             payload: {},
             logPayload: false,
           };

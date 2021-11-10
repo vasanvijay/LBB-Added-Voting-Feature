@@ -8,38 +8,31 @@ const utils = require("../../utils");
 // Get User by ID
 module.exports = exports = {
   // route validation
-    validation: Joi.object({
+  validation: Joi.object({
     name: Joi.string().allow(""),
-    phone: Joi.string().allow(""),
-    status: Joi.string()
+    status: Joi.string(),
   }),
 
   handler: async (req, res) => {
+    console.log("vijayvasan");
 
-    console.log("vijayvasan")
-  
     let { userId, status } = req.params;
     const { email } = req.body;
- 
 
     let updateUser;
-    
+
     try {
-  
-      
-            updateUser = await global.models.GLOBAL.CONTACT.findByIdAndUpdate(
-                { _id: userId },
-                {
-                    $set: {
-                        
-                        updatedAt: new Date(),
-                       
-                        status:status
-                    },
-                },
-                { new: true }
-                );
-       
+      updateUser = await global.models.GLOBAL.CONTACT.findByIdAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            updatedAt: new Date(),
+
+            status: status,
+          },
+        },
+        { new: true }
+      );
 
       if (!updateUser) {
         const data4createResponseObject = {

@@ -15,7 +15,7 @@ module.exports = exports = {
       }).populate({
         path: "accepted",
         model: "user",
-        select: "_id name email phone image",
+        select: "_id name email image region currentRole",
       });
       findConnection = JSON.parse(JSON.stringify(findConnection));
       console.log("findConnection----->>", findConnection);

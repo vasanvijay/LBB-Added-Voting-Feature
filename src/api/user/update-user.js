@@ -10,25 +10,22 @@ module.exports = exports = {
   // route validation
   validation: Joi.object({
     name: Joi.string().allow(""),
-    phone: Joi.string().allow(""),
-    status: Joi.string()
+    status: Joi.string(),
   }),
 
   handler: async (req, res) => {
     let { user } = req;
     let { userId } = req.params;
     console.log("user------->>", user);
-    if(user.userType === enums.USER_TYPE.ADMIN){
-      
+    if (user.userType === enums.USER_TYPE.ADMIN) {
     }
     try {
-      let { name, phone } = req.body;
+      let { name } = req.body;
       let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
         { _id: userId },
         {
           $set: {
             name: name,
-            phone: phone,
             updatedAt: new Date(),
             updatedBy: user.email,
           },

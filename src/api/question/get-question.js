@@ -12,6 +12,7 @@ module.exports = exports = {
     const { user } = req;
     const { question } = req.query;
     const { byUser } = req.query;
+    const { search } = req.query;
     let criteria = {};
     if (byUser) {
       criteria = {
@@ -30,31 +31,54 @@ module.exports = exports = {
       };
     }
     console.log("Criteria---->", criteria);
-    const { filter } = req.body;
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      let question = await global.models.GLOBAL.QUESTION.find(criteria)
-        .populate({
-          path: "createdBy",
-          model: "user",
-          select: "name",
+      let question;
+      if (search) {
+        question = await global.models.GLOBAL.QUESTION.find({
+          ...criteria,
+          question: { $regex: search, $options: "i" },
         })
-        .skip(skip)
-        .limit(limit);
+          .populate({
+            path: "createdBy",
+            model: "user",
+            select: "name",
+          })
+          .skip(skip)
+          .limit(limit);
+      } else {
+        question = await global.models.GLOBAL.QUESTION.find({
+          ...criteria,
+        })
+          .populate({
+            path: "createdBy",
+            model: "user",
+            select: "name",
+          })
+          .skip(skip)
+          .limit(limit);
+      }
       console.log("useruser", user.accepted);
+      console.log("question--->", question);
       let findConection = await global.models.GLOBAL.QUESTION.find({
         senderId: user._id,
       });
+      const sentIdExist = (id) => {
+        var check = findConection.filter(function (elc) {
+          return elc.receiverId.toString() === id.toString();
+        });
+        return check.length;
+      };
+
       const pandingIdExist = (id) => {
-        return findConection.length
-          ? findConection.receiverId.some(function (el) {
-              return el.toString() === id.toString();
-            })
-          : false;
+        var check = findConection.filter(function (elc) {
+          return elc.senderId.toString() === id.toString();
+        });
+        return check.length;
       };
       const conectIdExist = (id) => {
         return user.accepted.length
@@ -80,7 +104,23 @@ module.exports = exports = {
             filter: question[i].filter,
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
-            isFriend: true,
+            isFriend: "true",
+          };
+          questionDetais.push(questionDetaisObj);
+        } else if (sentIdExist(question[i].createdBy?._id)) {
+          console.log("Id--->", question[i].createdBy?._id);
+          const questionDetaisObj = {
+            _id: question[i]._id,
+            displayProfile: question[i].displayProfile,
+            allowConnectionRequest: question[i].allowConnectionRequest,
+            view: question[i].view,
+            response: question[i].response,
+            status: question[i].status,
+            question: question[i].question,
+            filter: question[i].filter,
+            createdAt: question[i].createdAt,
+            createdBy: question[i].createdBy,
+            isFriend: "sent",
           };
           questionDetais.push(questionDetaisObj);
         } else if (pandingIdExist(question[i].createdBy?._id)) {
@@ -96,7 +136,7 @@ module.exports = exports = {
             filter: question[i].filter,
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
-            isFriend: panding,
+            isFriend: "pending",
           };
           questionDetais.push(questionDetaisObj);
         } else {
@@ -112,7 +152,7 @@ module.exports = exports = {
             filter: question[i].filter,
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
-            isFriend: false,
+            isFriend: "false",
           };
           questionDetais.push(questionDetaisObj);
         }
@@ -154,48 +194,6 @@ module.exports = exports = {
       res
         .status(enums.HTTP_CODES.OK)
         .json(utils.createResponseObject(data4createResponseObject));
-      if (filter) {
-        console.log(
-          "Filter--->",
-          await global.models.GLOBAL.QUESTION.find(
-            { criteria },
-            { filter: { $in: { filterId: [...filter] } } }
-          )
-        );
-        req.query.page = req.query.page ? req.query.page : 1;
-        let page = parseInt(req.query.page);
-        req.query.limit = req.query.limit ? req.query.limit : 10;
-        let limit = parseInt(req.query.limit);
-        let skip = (parseInt(req.query.page) - 1) * limit;
-        let question = await global.models.GLOBAL.QUESTION.find(
-          { criteria },
-          { filter: { $in: { filterId: [...filter] } } }
-        )
-          .populate({
-            path: "createdBy",
-            model: "user",
-            select: "name",
-          })
-          .skip(skip)
-          .limit(limit);
-
-        console.log("Question by filter---->", question);
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.SUCCESS,
-          payload: {
-            question,
-            count: question.length,
-            page,
-            limit,
-          },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
-      }
     } catch (error) {
       logger.error(
         `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`

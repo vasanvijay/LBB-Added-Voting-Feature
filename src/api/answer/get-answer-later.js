@@ -10,6 +10,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
+    const { search } = req.query;
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -20,27 +21,51 @@ module.exports = exports = {
         .populate({
           path: "answerLater",
           model: "question",
-          select: "_id question response filter view displayProfile",
+          select: "_id question response filter view displayProfile createdAt",
         })
         .skip(skip)
         .limit(limit);
+      console.log("QUESTION", question[0]?.answerLater);
       if (question) {
         question = JSON.parse(JSON.stringify(question));
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.ITEM_FETCHED,
-          payload: {
-            questions: question[0]?.answerLater,
-            count: question[0]?.answerLater.length,
-            page,
-            limit,
-          },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        if (search) {
+          let abcd = question[0]?.answerLater.filter((question) => {
+            if (question.question.search(search) > 0) {
+              return question;
+            }
+          });
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_FETCHED,
+            payload: {
+              questions: abcd,
+              count: abcd.length,
+              page,
+              limit,
+            },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_FETCHED,
+            payload: {
+              questions: question[0]?.answerLater,
+              count: question[0]?.answerLater.length,
+              page,
+              limit,
+            },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
       } else {
         const data4createResponseObject = {
           req: req,

@@ -18,12 +18,12 @@ module.exports = exports = {
         .populate({
           path: "sender",
           model: "user",
-          select: "name phone email",
+          select: "name email",
         })
         .populate({
           path: "userId",
           model: "user",
-          select: "name phone email",
+          select: "name email",
         });
 
       const data4createResponseObject = {

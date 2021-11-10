@@ -30,7 +30,6 @@ module.exports = exports = {
     }
     console.log("Criteria---->", criteria);
     try {
-      let { filters } = req.body;
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
@@ -40,45 +39,11 @@ module.exports = exports = {
         .populate({
           path: "question",
           model: "question",
-          select: "_id question response filter view displayProfile",
+          select: "_id question response filter view displayProfile createdAt",
         })
         .skip(skip)
         .limit(limit);
 
-      if (filters) {
-        let answersObj = [];
-        for (let i = 0; i < answer.length; i++) {
-          if (filters.toString().includes(answer[i]._id.toString())) {
-            const newAnswer = {
-              _id: answer[i]._id,
-              question: answer[i].question,
-              filter: answer[i].filter,
-              displayProfile: answer[i].displayProfile,
-              allowConnectionRequest: answer[i].allowConnectionRequest,
-              view: answer[i].view,
-              response: answer[i].response,
-              status: answer[i].status,
-            };
-            answersObj.push(newAnswer);
-          }
-        }
-        console.log("Answer------>>", answersObj);
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.SUCCESS,
-          payload: {
-            answersObj,
-            count: answersObj,
-            page,
-            limit,
-          },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
-      }
       if (answer) {
         answer = JSON.parse(JSON.stringify(answer));
         const data4createResponseObject = {

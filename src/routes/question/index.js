@@ -10,11 +10,6 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.getQuestion.handler
 );
-router.get(
-  "/:questionData",
-  passport.authenticate(["jwt"], { session: false }),
-  api4Question.searchQuestion.handler
-);
 
 // POST Method
 router.post(

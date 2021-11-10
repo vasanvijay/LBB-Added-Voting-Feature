@@ -61,35 +61,7 @@ module.exports = exports = {
             .json(utils.createResponseObject(data4createResponseObject));
         } else {
           // User found - Check is verified or not
-          if (findUser.verified === true) {
-            // User found - create JWT and return it
-            const data4token = {
-              id: findUser._id,
-              date: new Date(),
-              environment: process.env.APP_ENVIRONMENT,
-              email: email,
-              userType: findUser.userType,
-              scope: "login",
-            };
-
-            await global.models.GLOBAL.USER.findByIdAndUpdate(findUser._id, {
-              $set: { lastLogin: new Date() },
-            });
-            delete findUser.password;
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.USER_LOGIN_SUCCESSFULLY,
-              payload: {
-                user: findUser,
-                token: jwt.sign(data4token, jwtOptions.secretOrKey),
-              },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
+          if (findUser.verified === false) {
             const data4createResponseObject = {
               req: req,
               result: -1,
@@ -98,8 +70,48 @@ module.exports = exports = {
               logPayload: false,
             };
             return res
-              .status(enums.HTTP_CODES.UNAUTHORIZED)
+              .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
               .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            if (findUser.formFilled === false) {
+              const data4createResponseObject = {
+                req: req,
+                result: -1,
+                message: messages.EMPTY,
+                payload: {},
+                logPayload: false,
+              };
+              return res
+                .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
+                .json(utils.createResponseObject(data4createResponseObject));
+            } else {
+              const data4token = {
+                id: findUser._id,
+                date: new Date(),
+                environment: process.env.APP_ENVIRONMENT,
+                email: email,
+                userType: findUser.userType,
+                scope: "login",
+              };
+
+              await global.models.GLOBAL.USER.findByIdAndUpdate(findUser._id, {
+                $set: { lastLogin: new Date() },
+              });
+              delete findUser.password;
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.USER_LOGIN_SUCCESSFULLY,
+                payload: {
+                  user: findUser,
+                  token: jwt.sign(data4token, jwtOptions.secretOrKey),
+                },
+                logPayload: false,
+              };
+              return res
+                .status(enums.HTTP_CODES.OK)
+                .json(utils.createResponseObject(data4createResponseObject));
+            }
           }
         }
       }

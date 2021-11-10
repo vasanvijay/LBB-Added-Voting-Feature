@@ -20,7 +20,7 @@ module.exports = exports = {
         }).populate({
           path: "receiverId",
           model: "user",
-          select: "_id name email phone image",
+          select: "_id name email image region currentRole",
         });
       }
 
@@ -30,7 +30,7 @@ module.exports = exports = {
         }).populate({
           path: "senderId",
           model: "user",
-          select: "_id name email phone image",
+          select: "_id name email image region currentRole",
         });
       }
       const data4createResponseObject = {
