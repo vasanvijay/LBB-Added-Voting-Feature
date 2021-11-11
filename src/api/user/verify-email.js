@@ -22,10 +22,8 @@ module.exports = exports = {
     // const locale = utils.getLocale(req);
     let entry;
     // If codes already exists for this email in the database delete them
-    let findUser = await global.models.GLOBAL.USER.findOne({
-      $or: [{ email: { $eq: email } }],
-    });
-    // console.log("user------>", findUser);
+    let findUser = await global.models.GLOBAL.USER.find({ email: email });
+    console.log("user------>", findUser);
     try {
       if (String(findUser.email) === String(email)) {
         if (!email) {
