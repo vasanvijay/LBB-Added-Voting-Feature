@@ -10,22 +10,47 @@ module.exports = exports = {
   // route validation
   validation: Joi.object({
     name: Joi.string().allow(""),
-    status: Joi.string(),
+    organizationName: Joi.string().allow(""),
+    currentRole: Joi.string().allow(""),
+    region: Joi.string().allow(""),
+    organizationEmail: Joi.string().allow(""),
+    linkedinProfile: Joi.string().allow(""),
+    organizationWebsite: Joi.string().allow(""),
+    otherLink: Joi.string().allow(""),
+    subject: Joi.array().allow(""),
   }),
 
   handler: async (req, res) => {
     let { user } = req;
-    let { userId } = req.params;
+
     console.log("user------->>", user);
     if (user.userType === enums.USER_TYPE.ADMIN) {
     }
     try {
-      let { name } = req.body;
+      let {
+        name,
+        organizationName,
+        currentRole,
+        region,
+        organizationEmail,
+        linkedinProfile,
+        organizationWebsite,
+        otherLink,
+        subject,
+      } = req.body;
       let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
-        { _id: userId },
+        { _id: user._id },
         {
           $set: {
             name: name,
+            organizationName: organizationName,
+            currentRole: currentRole,
+            region: region,
+            organizationEmail: organizationEmail,
+            linkedinProfile: linkedinProfile,
+            organizationWebsite: organizationWebsite,
+            otherLink: otherLink,
+            subject: subject,
             updatedAt: new Date(),
             updatedBy: user.email,
           },

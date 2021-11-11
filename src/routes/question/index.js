@@ -31,4 +31,10 @@ router.put(
   api4Question.questionUpdate.handler
 );
 
+// DELETE METHOD
+router.delete(
+  "/:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.deletedQuestion.handler
+);
 module.exports = exports = router;
