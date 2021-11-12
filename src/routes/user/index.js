@@ -33,6 +33,16 @@ router.post(
   validate("body", api4User.userLogin.validation),
   api4User.userLogin.handler
 );
+router.post(
+  "/reset",
+  validate("body", api4User.resetPassword.validation),
+  api4User.resetPassword.handler
+);
+router.post(
+  "/de-activate",
+  validate("body", api4User.deactivateAccount.validation),
+  api4User.deactivateAccount.handler
+);
 
 // Put Method
 router.put(
@@ -51,9 +61,8 @@ router.put(
   api4User.userData.handler
 );
 router.put(
-  "/id=:userId",
+  "/",
   passport.authenticate(["jwt"], { session: false }),
-  validate("body", api4User.updateUSer.validation),
   api4User.updateUSer.handler
 );
 

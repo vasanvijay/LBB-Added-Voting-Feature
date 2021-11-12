@@ -30,7 +30,7 @@ module.exports = exports = {
         _id: question,
       };
     }
-    console.log("Criteria---->", criteria);
+    // console.log("Criteria---->", criteria);
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -44,55 +44,105 @@ module.exports = exports = {
           question: { $regex: search, $options: "i" },
         })
           .populate({
-            path: "createdBy",
-            model: "user",
-            select: "name",
+            path: "filter.filterId",
+            populate: {
+              path: "options",
+              model: "filter",
+              select: "_id",
+            },
+            model: "filter",
+            select: "_id name",
           })
-          .skip(skip)
-          .limit(limit);
-      } else {
-        question = await global.models.GLOBAL.QUESTION.find({
-          ...criteria,
-        })
           .populate({
             path: "createdBy",
             model: "user",
             select: "name",
           })
           .skip(skip)
-          .limit(limit);
+          .limit(limit)
+          .exec();
+      } else {
+        question = await global.models.GLOBAL.QUESTION.find({
+          ...criteria,
+        })
+          .populate({
+            path: "filter.filterId",
+            populate: {
+              path: "options",
+              model: "filter",
+              select: "_id",
+            },
+            model: "filter",
+            select: "_id name",
+          })
+          .populate({
+            path: "createdBy",
+            model: "user",
+            select: "name",
+          })
+          .skip(skip)
+          .limit(limit)
+          .exec();
       }
-      console.log("useruser", user.accepted);
-      console.log("question--->", question);
-      let findConection = await global.models.GLOBAL.QUESTION.find({
+      question.map((quest, i) => {
+        return quest?.filter.map((filt, j) => {
+          return filt?.options.map(async (opt, k) => {
+            return filt?.filterId?.options?.filter((o) => {
+              if (o._id.toString() === opt._id.toString()) {
+                allQuestion = [
+                  ...question,
+                  (question[i].filter[j].options[k] = o),
+                ];
+              }
+            });
+          });
+        });
+      });
+
+      let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
       });
+
       const sentIdExist = (id) => {
+        console.log("ID--->>", id);
         var check = findConection.filter(function (elc) {
-          return elc.receiverId.toString() === id.toString();
+          return elc.receiverId.toString() == id.toString();
         });
         return check.length;
       };
-
       const pandingIdExist = (id) => {
-        var check = findConection.filter(function (elc) {
-          return elc.senderId.toString() === id.toString();
+        console.log("ID--->>", id);
+        var panding = findConection.filter(function (elf) {
+          return elf.senderId.toString() == id.toString();
         });
-        return check.length;
+        return panding.length;
       };
       const conectIdExist = (id) => {
+        console.log("ID--->>", id);
+
         return user.accepted.length
           ? user.accepted.some(function (el) {
-              return el.toString() === id.toString();
+              return el.toString() == id.toString();
             })
           : false;
       };
+      console.log("QUESTION----->>>", question);
       let questionDetais = [];
       for (let i = 0; i < question.length; i++) {
-        console.log("question.length---->>", i);
-        console.log("Id--->", question[i]);
+        console.log(
+          "IF----->>>",
+          conectIdExist(question[i].createdBy?._id).length
+        );
+        console.log(
+          "ELSE IF----->>>",
+          sentIdExist(question[i].createdBy?._id).length
+        );
+        console.log(
+          "ELSE IF 2----->>>",
+          pandingIdExist(question[i].createdBy?._id).length
+        );
         if (conectIdExist(question[i].createdBy?._id)) {
-          console.log("Id--->", question[i].createdBy?._id);
+          console.log("IF--------------<>");
           const questionDetaisObj = {
             _id: question[i]._id,
             displayProfile: question[i].displayProfile,
@@ -101,14 +151,19 @@ module.exports = exports = {
             response: question[i].response,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i].filter,
+            filter: question[i]?.filter?.map((fil) => {
+              return {
+                filterId: fil?.filterId?._id,
+                options: fil?.options,
+              };
+            }),
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
             isFriend: "true",
           };
           questionDetais.push(questionDetaisObj);
         } else if (sentIdExist(question[i].createdBy?._id)) {
-          console.log("Id--->", question[i].createdBy?._id);
+          console.log("IN ELSE IF----------->>>>>>");
           const questionDetaisObj = {
             _id: question[i]._id,
             displayProfile: question[i].displayProfile,
@@ -117,14 +172,19 @@ module.exports = exports = {
             response: question[i].response,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i].filter,
+            filter: question[i]?.filter?.map((fil) => {
+              return {
+                filterId: fil?.filterId?._id,
+                options: fil?.options,
+              };
+            }),
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
             isFriend: "sent",
           };
           questionDetais.push(questionDetaisObj);
         } else if (pandingIdExist(question[i].createdBy?._id)) {
-          console.log("Id--->", question[i].createdBy?._id);
+          console.log("ELSE IF--------->>>>");
           const questionDetaisObj = {
             _id: question[i]._id,
             displayProfile: question[i].displayProfile,
@@ -133,14 +193,19 @@ module.exports = exports = {
             response: question[i].response,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i].filter,
+            filter: question[i]?.filter?.map((fil) => {
+              return {
+                filterId: fil?.filterId?._id,
+                options: fil?.options,
+              };
+            }),
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
             isFriend: "pending",
           };
           questionDetais.push(questionDetaisObj);
         } else {
-          console.log("Id--->", question[i].createdBy?._id);
+          console.log("ELSE------->>>", question[i].createdBy?._id);
           const questionDetaisObj = {
             _id: question[i]._id,
             displayProfile: question[i].displayProfile,
@@ -149,7 +214,12 @@ module.exports = exports = {
             response: question[i].response,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i].filter,
+            filter: question[i]?.filter?.map((fil) => {
+              return {
+                filterId: fil?.filterId?._id,
+                options: fil?.options,
+              };
+            }),
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
             isFriend: "false",

@@ -38,11 +38,11 @@ module.exports = exports = {
       };
 
       const pandingIdExist = (id) => {
-        let check = findConection.filter(function (elf) {
+        let panding = findConection.filter(function (elf) {
           return elf.senderId.toString() === id.toString();
         });
-        console.log("length---->", check.length);
-        return check.length;
+        console.log("length---->", panding.length);
+        return panding.length;
       };
 
       const conectIdExist = (id) => {
@@ -82,6 +82,7 @@ module.exports = exports = {
           console.log("ID---->>>", searchUser[i]?._id);
           const searchUserObj = {
             searchUser: searchUser[i],
+            connect: connect,
             isFriend: "pending",
           };
           allUser.push(searchUserObj);

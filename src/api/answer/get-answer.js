@@ -39,7 +39,8 @@ module.exports = exports = {
         .populate({
           path: "question",
           model: "question",
-          select: "_id question response filter view displayProfile createdAt",
+          select:
+            "_id question response filter view displayProfile createdAt createdBy",
         })
         .skip(skip)
         .limit(limit);
