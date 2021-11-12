@@ -62,27 +62,52 @@ module.exports = exports = {
           .limit(limit)
           .exec();
       } else {
-        question = await global.models.GLOBAL.QUESTION.find({
-          ...criteria,
-        })
-          .populate({
-            path: "filter.filterId",
-            populate: {
-              path: "options",
+        if (byUser) {
+          question = await global.models.GLOBAL.QUESTION.find({
+            ...criteria,
+          })
+            .populate({
+              path: "filter.filterId",
+              populate: {
+                path: "options",
+                model: "filter",
+                select: "_id",
+              },
               model: "filter",
-              select: "_id",
-            },
-            model: "filter",
-            select: "_id name",
+              select: "_id name",
+            })
+            .populate({
+              path: "createdBy",
+              model: "user",
+              select: "name",
+            })
+            .skip(skip)
+            .limit(limit)
+            .exec();
+        } else {
+          question = await global.models.GLOBAL.QUESTION.find({
+            ...criteria,
+            createdBy: { $not: { $eq: user._id } },
           })
-          .populate({
-            path: "createdBy",
-            model: "user",
-            select: "name",
-          })
-          .skip(skip)
-          .limit(limit)
-          .exec();
+            .populate({
+              path: "filter.filterId",
+              populate: {
+                path: "options",
+                model: "filter",
+                select: "_id",
+              },
+              model: "filter",
+              select: "_id name",
+            })
+            .populate({
+              path: "createdBy",
+              model: "user",
+              select: "name",
+            })
+            .skip(skip)
+            .limit(limit)
+            .exec();
+        }
       }
       question.map((quest, i) => {
         return quest?.filter.map((filt, j) => {

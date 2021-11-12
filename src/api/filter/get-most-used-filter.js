@@ -22,8 +22,10 @@ module.exports = exports = {
         let topSubject = await global.models.GLOBAL.FILTER.find({
           _id: mostUsed[i].filterId,
         });
+        topSubject = [...topSubject, { use: mostUsed[i].use }];
         newTopSubject.push(topSubject);
       }
+      console.log("newTopSubject", newTopSubject);
       let topSubjects = newTopSubject.filter(function (el) {
         return el.length >= 1;
       });
