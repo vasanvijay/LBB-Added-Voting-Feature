@@ -55,5 +55,7 @@
   "MAIL_SENT": "E-mail has been send successfully.",
   "MESSAGES_FETCH_SUCCESS": "Messages fetched successfully.",
   "INCORRECT_PASSWORD": "Please Enter Correct Password and Try Again",
-  "USER_DEACTIVATE": "Your Account Deactivated Successfully"
+  "USER_DEACTIVATE": "Your Account Deactivated Successfully",
+  "USER_BLOCK": "User Block Successfully",
+  "USER_UNBLOCK": "User Un-Block Successfully"
 }

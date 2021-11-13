@@ -128,6 +128,19 @@ module.exports = exports = {
         senderId: user._id,
       });
 
+      let findUser = await global.models.GLOBAL.USER.find({
+        _id: user._id,
+      });
+
+      const blockIdExist = (id) => {
+        console.log("ID--->>", id);
+        return findUser.blockUser?.length
+          ? findUser.blockUser.some(function (eld) {
+              return eld.toString() == id.toString();
+            })
+          : false;
+      };
+
       const sentIdExist = (id) => {
         console.log("ID--->>", id);
         var check = findConection.filter(function (elc) {
@@ -165,6 +178,10 @@ module.exports = exports = {
         console.log(
           "ELSE IF 2----->>>",
           pandingIdExist(question[i].createdBy?._id).length
+        );
+        console.log(
+          "ELSE IF BLOCK----->>>",
+          blockIdExist(question[i].createdBy?._id).length
         );
         if (conectIdExist(question[i].createdBy?._id)) {
           console.log("IF--------------<>");
@@ -227,6 +244,27 @@ module.exports = exports = {
             createdAt: question[i].createdAt,
             createdBy: question[i].createdBy,
             isFriend: "pending",
+          };
+          questionDetais.push(questionDetaisObj);
+        } else if (blockIdExist(question[i].createdBy?._id)) {
+          console.log("BLOCK ELSE IF----->>>> ", question[i].createdBy?._id);
+          const questionDetaisObj = {
+            _id: question[i]._id,
+            displayProfile: question[i].displayProfile,
+            allowConnectionRequest: question[i].allowConnectionRequest,
+            view: question[i].view,
+            response: question[i].response,
+            status: question[i].status,
+            question: question[i].question,
+            filter: question[i]?.filter?.map((fil) => {
+              return {
+                filterId: fil?.filterId?._id,
+                options: fil?.options,
+              };
+            }),
+            createdAt: question[i].createdAt,
+            createdBy: question[i].createdBy,
+            isFriend: "block",
           };
           questionDetais.push(questionDetaisObj);
         } else {

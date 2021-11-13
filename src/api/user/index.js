@@ -10,6 +10,10 @@ const searchUser = require("./search-user");
 const userData = require("./user-data");
 const resetPassword = require("./reset-password");
 const deactivateAccount = require("./deactivate-account");
+const blockUser = require("./block-user");
+const unBlockUser = require("./unblock-user");
+const getBlockuser = require("./get-block-user");
+const topUser = require("./top-user");
 
 module.exports = exports = {
   userRegistration,
@@ -24,4 +28,8 @@ module.exports = exports = {
   userData,
   resetPassword,
   deactivateAccount,
+  blockUser,
+  unBlockUser,
+  getBlockuser,
+  topUser,
 };

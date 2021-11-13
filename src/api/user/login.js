@@ -52,7 +52,7 @@ module.exports = exports = {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: "Your account is inactivate. Please contact to Admin",
+            message: "Your account is inactivate. Please contact to Admin.",
             payload: {},
             logPayload: false,
           };

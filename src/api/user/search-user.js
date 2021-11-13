@@ -28,7 +28,7 @@ module.exports = exports = {
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
       });
-      console.log("connection---->", findConection);
+      console.log("connection->", findConection);
 
       const sentIdExist = (id) => {
         let check = findConection.filter(function (elc) {
