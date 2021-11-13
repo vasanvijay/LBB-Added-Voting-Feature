@@ -45,6 +45,7 @@ router.post(
 );
 router.post(
   "/reset",
+  passport.authenticate(["jwt"], { session: false }),
   validate("body", api4User.resetPassword.validation),
   api4User.resetPassword.handler
 );
