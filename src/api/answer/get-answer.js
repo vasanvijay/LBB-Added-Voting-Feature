@@ -40,7 +40,7 @@ module.exports = exports = {
           path: "question",
           model: "question",
           select:
-            "_id question response filter view displayProfile createdAt createdBy",
+            "_id question response filter status view displayProfile createdAt createdBy",
         })
         .skip(skip)
         .limit(limit);

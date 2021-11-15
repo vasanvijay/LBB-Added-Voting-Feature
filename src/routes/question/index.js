@@ -30,6 +30,11 @@ router.put(
   validate("body", api4Question.questionUpdate.validation),
   api4Question.questionUpdate.handler
 );
+router.put(
+  "/remove/id=:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.removeForUser.handler
+);
 
 // DELETE METHOD
 router.delete(

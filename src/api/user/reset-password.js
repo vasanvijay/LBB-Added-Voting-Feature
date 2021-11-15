@@ -41,7 +41,7 @@ module.exports = exports = {
           logPayload: false,
         };
         return res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
           .json(utils.createResponseObject(data4createResponseObject));
       } else if (findUser.password !== password) {
         const data4createResponseObject = {
@@ -52,7 +52,7 @@ module.exports = exports = {
           logPayload: false,
         };
         return res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
         await global.models.GLOBAL.USER.findByIdAndUpdate(

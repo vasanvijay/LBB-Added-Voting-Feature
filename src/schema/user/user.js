@@ -18,6 +18,7 @@ module.exports = (connection) => {
       default: "Admin",
     },
     answerLater: [{ type: mongoose.Schema.Types.ObjectId }],
+    removeQuestion: [{ type: mongoose.Schema.Types.ObjectId }],
     blockUser: [{ type: mongoose.Schema.Types.ObjectId }],
     accepted: [{ type: mongoose.Schema.Types.ObjectId }],
     lastLogin: { type: Date, default: Date.now },

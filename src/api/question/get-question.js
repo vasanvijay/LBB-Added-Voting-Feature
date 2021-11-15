@@ -167,22 +167,22 @@ module.exports = exports = {
       console.log("QUESTION----->>>", question);
       let questionDetais = [];
       for (let i = 0; i < question.length; i++) {
-        console.log(
-          "IF----->>>",
-          conectIdExist(question[i].createdBy?._id).length
-        );
-        console.log(
-          "ELSE IF----->>>",
-          sentIdExist(question[i].createdBy?._id).length
-        );
-        console.log(
-          "ELSE IF 2----->>>",
-          pandingIdExist(question[i].createdBy?._id).length
-        );
-        console.log(
-          "ELSE IF BLOCK----->>>",
-          blockIdExist(question[i].createdBy?._id).length
-        );
+        //   console.log(
+        //     "IF----->>>",
+        //     conectIdExist(question[i].createdBy?._id).length
+        //   );
+        //   console.log(
+        //     "ELSE IF----->>>",
+        //     sentIdExist(question[i].createdBy?._id).length
+        //   );
+        //   console.log(
+        //     "ELSE IF 2----->>>",
+        //     pandingIdExist(question[i].createdBy?._id).length
+        //   );
+        //   console.log(
+        //     "ELSE IF BLOCK----->>>",
+        //     blockIdExist(question[i].createdBy?._id).length
+        //   );
         if (conectIdExist(question[i].createdBy?._id)) {
           console.log("IF--------------<>");
           const questionDetaisObj = {
