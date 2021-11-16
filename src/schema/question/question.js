@@ -16,6 +16,7 @@ module.exports = (connection) => {
     allowConnectionRequest: { type: Boolean, default: false },
     view: { type: Number, default: 0 },
     response: { type: Number, default: 0 },
+    reaches: { type: Number, default: 0 },
     status: { type: String, default: "active" },
   });
   return connection.model("question", questionSchema, "question");

@@ -30,6 +30,7 @@ module.exports = exports = {
     }
     console.log("Criteria---->", criteria);
     try {
+      let Answer = [];
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
@@ -44,16 +45,96 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
-
       if (answer) {
-        answer = JSON.parse(JSON.stringify(answer));
+        let findConection = await global.models.GLOBAL.CONNECTION.find({
+          senderId: user._id,
+        });
+
+        let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
+          receiverId: user._id,
+        });
+        const conectIdExist = (id) => {
+          console.log("ID--->>", id);
+
+          return user.accepted.length
+            ? user.accepted.some(function (el) {
+                return el.toString() == id.toString();
+              })
+            : false;
+        };
+
+        const sentIdExist = (id) => {
+          let check = findConection.filter(function (elc) {
+            return elc.receiverId.toString() === id.toString();
+          });
+          return check.length;
+        };
+
+        const pandingIdExist = (id) => {
+          let panding = pandingConnection.filter(function (elf) {
+            return elf.senderId.toString() === id.toString();
+          });
+          console.log("length---->", panding.length);
+          return panding.length;
+        };
+        for (let i = 0; i < answer.length; i++) {
+          console.log("IN FOR---->");
+          if (conectIdExist(answer[i]?.question?.createdBy)) {
+            console.log("IN IF----->>>");
+            let answerObj = {
+              answer: answer[i]?.question,
+              isFriend: "true",
+            };
+            Answer.push(answerObj);
+          } else if (sentIdExist(answer[i]?.question?.createdBy)) {
+            console.log("IN ELSE IF 1 -------> ");
+            const connect = findConection.filter((connection) => {
+              if (
+                connection?.senderId.toString() ==
+                answer[i]?.question?.createdBy.toString()
+              ) {
+                return connection;
+              }
+            });
+            let answerObj = {
+              question: answer[i]?.question,
+              connection: connect,
+              isFriend: "sent",
+            };
+            Answer.push(answerObj);
+          } else if (pandingIdExist(answer[i]?.question?.createdBy)) {
+            console.log("IN ELSE IF 2 -------> ");
+            const connect = pandingConnection.filter((connection) => {
+              if (
+                connection?.senderId.toString() ==
+                answer[i]?.question?.createdBy.toString()
+              ) {
+                return connection;
+              }
+            });
+            let answerObj = {
+              question: answer[i]?.question,
+              connection: connect,
+              isFriend: "pending",
+            };
+            Answer.push(answerObj);
+          } else {
+            let answerObj = {
+              question: answer[i]?.question,
+              isFriend: "false",
+            };
+            Answer.push(answerObj);
+          }
+        }
+
+        Answer = JSON.parse(JSON.stringify(Answer));
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.SUCCESS,
           payload: {
-            answer,
-            count: answer.length,
+            answer: Answer,
+            count: Answer.length,
             page,
             limit,
           },

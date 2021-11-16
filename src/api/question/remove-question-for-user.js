@@ -32,7 +32,7 @@ module.exports = exports = {
             _id: user._id,
           },
           {
-            $$addToSet: {
+            $addToSet: {
               removeQuestion: questionId,
             },
           },

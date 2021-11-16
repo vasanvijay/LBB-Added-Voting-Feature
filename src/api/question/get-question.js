@@ -41,6 +41,10 @@ module.exports = exports = {
       if (search) {
         question = await global.models.GLOBAL.QUESTION.find({
           ...criteria,
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+          ],
           question: { $regex: search, $options: "i" },
         })
           .populate({
@@ -65,6 +69,10 @@ module.exports = exports = {
         if (byUser) {
           question = await global.models.GLOBAL.QUESTION.find({
             ...criteria,
+            $and: [
+              { _id: { $nin: user.answerLater } },
+              { _id: { $nin: user.removeQuestion } },
+            ],
           })
             .populate({
               path: "filter.filterId",
@@ -88,6 +96,10 @@ module.exports = exports = {
           question = await global.models.GLOBAL.QUESTION.find({
             ...criteria,
             createdBy: { $not: { $eq: user._id } },
+            $and: [
+              { _id: { $nin: user.answerLater } },
+              { _id: { $nin: user.removeQuestion } },
+            ],
           })
             .populate({
               path: "filter.filterId",
@@ -132,6 +144,10 @@ module.exports = exports = {
         _id: user._id,
       });
 
+      let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
+        receiverId: user._id,
+      });
+
       const blockIdExist = (id) => {
         console.log("ID--->>", id);
         return findUser.blockUser?.length
@@ -149,10 +165,10 @@ module.exports = exports = {
         return check.length;
       };
       const pandingIdExist = (id) => {
-        console.log("ID--->>", id);
-        var panding = findConection.filter(function (elf) {
-          return elf.senderId.toString() == id.toString();
+        let panding = pandingConnection.filter(function (elf) {
+          return elf.senderId.toString() === id.toString();
         });
+        console.log("length---->", panding.length);
         return panding.length;
       };
       const conectIdExist = (id) => {
@@ -167,22 +183,6 @@ module.exports = exports = {
       console.log("QUESTION----->>>", question);
       let questionDetais = [];
       for (let i = 0; i < question.length; i++) {
-        //   console.log(
-        //     "IF----->>>",
-        //     conectIdExist(question[i].createdBy?._id).length
-        //   );
-        //   console.log(
-        //     "ELSE IF----->>>",
-        //     sentIdExist(question[i].createdBy?._id).length
-        //   );
-        //   console.log(
-        //     "ELSE IF 2----->>>",
-        //     pandingIdExist(question[i].createdBy?._id).length
-        //   );
-        //   console.log(
-        //     "ELSE IF BLOCK----->>>",
-        //     blockIdExist(question[i].createdBy?._id).length
-        //   );
         if (conectIdExist(question[i].createdBy?._id)) {
           console.log("IF--------------<>");
           const questionDetaisObj = {
@@ -193,6 +193,7 @@ module.exports = exports = {
             response: question[i].response,
             status: question[i].status,
             question: question[i].question,
+            reaches: question[i].reaches,
             filter: question[i]?.filter?.map((fil) => {
               return {
                 filterId: fil?.filterId?._id,
@@ -212,6 +213,7 @@ module.exports = exports = {
             allowConnectionRequest: question[i].allowConnectionRequest,
             view: question[i].view,
             response: question[i].response,
+            reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
             filter: question[i]?.filter?.map((fil) => {
@@ -233,6 +235,7 @@ module.exports = exports = {
             allowConnectionRequest: question[i].allowConnectionRequest,
             view: question[i].view,
             response: question[i].response,
+            reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
             filter: question[i]?.filter?.map((fil) => {
@@ -254,6 +257,7 @@ module.exports = exports = {
             allowConnectionRequest: question[i].allowConnectionRequest,
             view: question[i].view,
             response: question[i].response,
+            reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
             filter: question[i]?.filter?.map((fil) => {
@@ -275,6 +279,7 @@ module.exports = exports = {
             allowConnectionRequest: question[i].allowConnectionRequest,
             view: question[i].view,
             response: question[i].response,
+            reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
             filter: question[i]?.filter?.map((fil) => {
@@ -314,7 +319,7 @@ module.exports = exports = {
         result: 0,
         message: messages.SUCCESS,
         payload: {
-          questionDetais,
+          questions: questionDetais,
           count: question.length,
           todaysCount: TodayQuestion.length,
           profileaccess: QuestionProfileAccess.length,

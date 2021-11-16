@@ -11,6 +11,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { search } = req.query;
+    let Question = [];
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -22,13 +23,96 @@ module.exports = exports = {
           path: "answerLater",
           model: "question",
           select:
-            "_id question response filter status view displayProfile createdAt",
+            "_id question response filter status view displayProfile createdAt createdBy",
         })
         .skip(skip)
         .limit(limit);
-      console.log("QUESTION", question[0]?.answerLater);
+      // console.log("QUESTION", question[0]?.answerLater);
       if (question) {
-        question = JSON.parse(JSON.stringify(question));
+        let findConection = await global.models.GLOBAL.CONNECTION.find({
+          senderId: user._id,
+        });
+
+        let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
+          receiverId: user._id,
+        });
+        const conectIdExist = (id) => {
+          console.log("ID--->>", id);
+
+          return user.accepted.length
+            ? user.accepted.some(function (el) {
+                return el.toString() == id.toString();
+              })
+            : false;
+        };
+
+        const sentIdExist = (id) => {
+          let check = findConection.filter(function (elc) {
+            return elc.receiverId.toString() === id.toString();
+          });
+          return check.length;
+        };
+
+        const pandingIdExist = (id) => {
+          let panding = pandingConnection.filter(function (elf) {
+            return elf.senderId.toString() === id.toString();
+          });
+          console.log("length---->", panding.length);
+          return panding.length;
+        };
+        for (let i = 0; i < question[0]?.answerLater.length; i++) {
+          console.log("IN FOR---->");
+          if (conectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
+            console.log("IN IF----->>>");
+            let questionObj = {
+              question: question[0]?.answerLater[i],
+              isFriend: "true",
+            };
+            Question.push(questionObj);
+          } else if (sentIdExist(question[0]?.answerLater[i].createdBy?._id)) {
+            console.log("IN ELSE IF 1 -------> ");
+            const connect = findConection.filter((connection) => {
+              if (
+                connection?.senderId.toString() ==
+                question[0]?.answerLater[i].createdBy?._id.toString()
+              ) {
+                return connection;
+              }
+            });
+            let questionObj = {
+              question: question[0]?.answerLater[i],
+              connection: connect,
+              isFriend: "sent",
+            };
+            Question.push(questionObj);
+          } else if (
+            pandingIdExist(question[0]?.answerLater[i].createdBy?._id)
+          ) {
+            console.log("IN ELSE IF 2 -------> ");
+            const connect = pandingConnection.filter((connection) => {
+              if (
+                connection?.senderId.toString() ==
+                question[0]?.answerLater[i].createdBy?._id.toString()
+              ) {
+                return connection;
+              }
+            });
+            let questionObj = {
+              question: question[0]?.answerLater[i],
+              connection: connect,
+              isFriend: "pending",
+            };
+            Question.push(questionObj);
+          } else {
+            let questionObj = {
+              question: question[0]?.answerLater[i],
+              isFriend: "false",
+            };
+            Question.push(questionObj);
+          }
+        }
+        console.log("QUESTION----->>>>", Question);
+        Question = JSON.parse(JSON.stringify(Question));
         if (search) {
           let abcd = question[0]?.answerLater.filter((question) => {
             if (question.question.search(search) > 0) {
@@ -56,8 +140,8 @@ module.exports = exports = {
             result: 0,
             message: messages.ITEM_FETCHED,
             payload: {
-              questions: question[0]?.answerLater,
-              count: question[0]?.answerLater.length,
+              questions: Question,
+              count: Question.length,
               page,
               limit,
             },

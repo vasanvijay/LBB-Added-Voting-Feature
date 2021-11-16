@@ -17,7 +17,11 @@ router.post(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.createQuestion.handler
 );
-
+router.post(
+  "/filter",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.questionWithFilter.handler
+);
 // PUT Method
 router.put(
   "/update-question",

@@ -33,16 +33,31 @@ module.exports = exports = {
             _id: questionId,
             createdBy: user._id,
           });
-
+        await global.models.GLOBAL.ANSWER.deleteMany({
+          question: questionId,
+        });
+        if (deletedQuestion) {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_DELETED,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
+      } else {
         const data4createResponseObject = {
           req: req,
-          result: 0,
-          message: messages.ITEM_DELETED,
+          result: -1,
+          message: "Something went wrong to delete question.",
           payload: {},
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
