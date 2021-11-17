@@ -62,11 +62,6 @@ module.exports = exports = {
                 //   model: "filter",
                 //   select: "_id name",
                 // })
-                .populate({
-                  path: "createdBy",
-                  model: "user",
-                  select: "name",
-                })
                 .skip(skip)
                 .limit(limit)
                 .exec();
@@ -116,11 +111,6 @@ module.exports = exports = {
                 //   model: "filter",
                 //   select: "_id name",
                 // })
-                .populate({
-                  path: "createdBy",
-                  model: "user",
-                  select: "name",
-                })
                 .skip(skip)
                 .limit(limit)
                 .exec();
@@ -168,11 +158,6 @@ module.exports = exports = {
                 //   model: "filter",
                 //   select: "_id name",
                 // })
-                .populate({
-                  path: "createdBy",
-                  model: "user",
-                  select: "name",
-                })
                 .skip(skip)
                 .limit(limit)
                 .exec();

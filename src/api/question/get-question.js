@@ -30,7 +30,7 @@ module.exports = exports = {
         _id: question,
       };
     }
-    // console.log("Criteria---->", criteria);
+    console.log("Criteria---->", criteria);
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -57,11 +57,6 @@ module.exports = exports = {
             model: "filter",
             select: "_id name",
           })
-          .populate({
-            path: "createdBy",
-            model: "user",
-            select: "name",
-          })
           .skip(skip)
           .limit(limit)
           .exec();
@@ -84,11 +79,6 @@ module.exports = exports = {
               model: "filter",
               select: "_id name",
             })
-            .populate({
-              path: "createdBy",
-              model: "user",
-              select: "name",
-            })
             .skip(skip)
             .limit(limit)
             .exec();
@@ -110,11 +100,6 @@ module.exports = exports = {
               },
               model: "filter",
               select: "_id name",
-            })
-            .populate({
-              path: "createdBy",
-              model: "user",
-              select: "name",
             })
             .skip(skip)
             .limit(limit)

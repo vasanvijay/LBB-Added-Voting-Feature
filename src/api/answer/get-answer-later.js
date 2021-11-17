@@ -80,14 +80,6 @@ module.exports = exports = {
             Question.push(questionObj);
           } else if (sentIdExist(question[0]?.answerLater[i].createdBy?._id)) {
             console.log("IN ELSE IF 1 -------> ");
-            const connect = findConection.filter((connection) => {
-              if (
-                connection?.senderId.toString() ==
-                question[0]?.answerLater[i].createdBy?._id.toString()
-              ) {
-                return connection;
-              }
-            });
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
@@ -105,14 +97,6 @@ module.exports = exports = {
             pandingIdExist(question[0]?.answerLater[i].createdBy?._id)
           ) {
             console.log("IN ELSE IF 2 -------> ");
-            const connect = pandingConnection.filter((connection) => {
-              if (
-                connection?.senderId.toString() ==
-                question[0]?.answerLater[i].createdBy?._id.toString()
-              ) {
-                return connection;
-              }
-            });
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,

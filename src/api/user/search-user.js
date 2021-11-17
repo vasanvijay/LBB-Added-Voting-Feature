@@ -63,18 +63,8 @@ module.exports = exports = {
           allUser.push(searchUserObj);
         } else if (sentIdExist(searchUser[i]?._id)) {
           console.log("ID---->>>", searchUser[i]?._id);
-          const connect = findConection.filter((connection) => {
-            console.log("connection", typeof connection?.receiverId);
-            console.log("user_id", typeof searchUser[i]?._id);
-            if (
-              connection?.senderId.toString() == searchUser[i]?._id.toString()
-            ) {
-              return connection;
-            }
-          });
           const searchUserObj = {
             searchUser: searchUser[i],
-            connect: connect,
             isFriend: "sent",
           };
           allUser.push(searchUserObj);
@@ -82,7 +72,6 @@ module.exports = exports = {
           console.log("ID---->>>", searchUser[i]?._id);
           const searchUserObj = {
             searchUser: searchUser[i],
-            connect: connect,
             isFriend: "pending",
           };
           allUser.push(searchUserObj);

@@ -101,14 +101,6 @@ module.exports = exports = {
             Answer.push(answerObj);
           } else if (sentIdExist(answer[i].question?.createdBy)) {
             console.log("IN ELSE IF 1 -------> ");
-            const connect = findConection.filter((connection) => {
-              if (
-                connection?.senderId.toString() ==
-                answer[i]?.question?.createdBy.toString()
-              ) {
-                return connection;
-              }
-            });
             let answerObj = {
               _id: answer[i].question._id,
               displayProfile: answer[i].question.displayProfile,
@@ -128,14 +120,6 @@ module.exports = exports = {
             Answer.push(answerObj);
           } else if (pandingIdExist(answer[i].question?.createdBy)) {
             console.log("IN ELSE IF 2 -------> ");
-            const connect = pandingConnection.filter((connection) => {
-              if (
-                connection?.senderId.toString() ==
-                answer[i].question?.createdBy.toString()
-              ) {
-                return connection;
-              }
-            });
             let answerObj = {
               _id: answer[i].question._id,
               displayProfile: answer[i].question.displayProfile,
