@@ -10,43 +10,39 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { answerByMe } = req.query;
-    const { question } = req.query;
-    let criteria = {};
-    if (answerByMe) {
-      criteria = {
-        answerBy: user._id,
-      };
-      if (question) {
-        criteria = {
-          _id: question,
-          createdBy: user._id,
-        };
-      }
-    }
-    if (question) {
-      criteria = {
-        _id: question,
-      };
-    }
-    console.log("Criteria---->", criteria);
+    // let criteria = {};
+    // if (answerByMe) {
+    //   criteria = {
+    //     answerBy: user._id,
+    //   };
+    // }
+    // console.log("Criteria---->", criteria);
     try {
-      let Answer = [];
+      let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      let answer = await global.models.GLOBAL.ANSWER.find(criteria)
-        .populate({
-          path: "question",
-          model: "question",
-          select:
-            "_id question response filter status view displayProfile createdAt createdBy",
-        })
-        .skip(skip)
-        .limit(limit);
-      console.log("answer---->>>", answer);
+      let answer = [];
+      let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
+        "question",
+        { $and: [{ answerBy: user._id }] }
+      );
+      let mnop = await questionArray.map(async (ques) => {
+        let ans = await global.models.GLOBAL.QUESTION.findOne({
+          _id: ques,
+        });
+        console.log("ANS -->", ans);
+        answer.push(ans);
+      });
+
+      // .skip(skip)
+      // .limit(limit);
+
       if (answer) {
+        console.log("answer---->", answer);
+
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
         });
@@ -80,92 +76,84 @@ module.exports = exports = {
         };
         for (let i = 0; i < answer.length; i++) {
           console.log("IN FOR---->");
-          if (conectIdExist(answer[i].question?.createdBy)) {
-            console.log("IN IF----->>>", answer[i].question?.createdBy);
+          if (conectIdExist(answer[i]?.createdBy)) {
+            console.log("IN IF----->>>", answer[i]?.createdBy);
             let answerObj = {
-              _id: answer[i].question._id,
-              displayProfile: answer[i].question.displayProfile,
-              view: answer[i].question.view,
-              response: answer[i].question.response,
-              status: answer[i].question.status,
-              question_id: answer[i].question._id,
-              question: answer[i].question.question,
-              answer: answer[i].answer,
-              filter: answer[i].question.filter,
-              createdAt: answer[i].question.createdAt,
-              createdBy: answer[i].question.createdBy,
-              answerBy: answer[i].answerBy,
-              updated: answer[i].updated,
+              _id: answer[i]._id,
+              displayProfile: answer[i].displayProfile,
+              allowConnectionRequest: answer[i].allowConnectionRequest,
+              view: answer[i].view,
+              response: answer[i].response,
+              reaches: answer[i].reaches,
+              status: answer[i].status,
+              question: answer[i].question,
+              filter: answer[i].filter,
+              createdAt: answer[i].createdAt,
+              createdBy: answer[i].createdBy,
               isFriend: "true",
             };
-            Answer.push(answerObj);
-          } else if (sentIdExist(answer[i].question?.createdBy)) {
+            Answers.push(answerObj);
+          } else if (sentIdExist(answer[i]?.createdBy)) {
             console.log("IN ELSE IF 1 -------> ");
             let answerObj = {
-              _id: answer[i].question._id,
-              displayProfile: answer[i].question.displayProfile,
-              view: answer[i].question.view,
-              response: answer[i].question.response,
-              status: answer[i].question.status,
-              question_id: answer[i].question._id,
-              question: answer[i].question.question,
-              answer: answer[i].answer,
-              filter: answer[i].question.filter,
-              createdAt: answer[i].question.createdAt,
-              createdBy: answer[i].question.createdBy,
-              answerBy: answer[i].answerBy,
-              updated: answer[i].updated,
+              _id: answer[i]._id,
+              displayProfile: answer[i].displayProfile,
+              allowConnectionRequest: answer[i].allowConnectionRequest,
+              view: answer[i].view,
+              response: answer[i].response,
+              reaches: answer[i].reaches,
+              status: answer[i].status,
+              question: answer[i].question,
+              filter: answer[i].filter,
+              createdAt: answer[i].createdAt,
+              createdBy: answer[i].createdBy,
               isFriend: "sent",
             };
-            Answer.push(answerObj);
-          } else if (pandingIdExist(answer[i].question?.createdBy)) {
+            Answers.push(answerObj);
+          } else if (pandingIdExist(answer[i]?.createdBy)) {
             console.log("IN ELSE IF 2 -------> ");
             let answerObj = {
-              _id: answer[i].question._id,
-              displayProfile: answer[i].question.displayProfile,
-              view: answer[i].question.view,
-              response: answer[i].question.response,
-              status: answer[i].question.status,
-              question_id: answer[i].question._id,
-              question: answer[i].question.question,
-              answer: answer[i].answer,
-              filter: answer[i].question.filter,
-              createdAt: answer[i].question.createdAt,
-              createdBy: answer[i].question.createdBy,
-              answerBy: answer[i].answerBy,
-              updated: answer[i].updated,
+              _id: answer[i]._id,
+              displayProfile: answer[i].displayProfile,
+              allowConnectionRequest: answer[i].allowConnectionRequest,
+              view: answer[i].view,
+              response: answer[i].response,
+              reaches: answer[i].reaches,
+              status: answer[i].status,
+              question: answer[i].question,
+              filter: answer[i].filter,
+              createdAt: answer[i].createdAt,
+              createdBy: answer[i].createdBy,
               isFriend: "pending",
             };
-            Answer.push(answerObj);
+            Answers.push(answerObj);
           } else {
             let answerObj = {
-              _id: answer[i].question._id,
-              displayProfile: answer[i].question.displayProfile,
-              view: answer[i].question.view,
-              response: answer[i].question.response,
-              status: answer[i].question.status,
-              question_id: answer[i].question._id,
-              question: answer[i].question.question,
-              answer: answer[i].answer,
-              filter: answer[i].question.filter,
-              createdAt: answer[i].question.createdAt,
-              createdBy: answer[i].question.createdBy,
-              answerBy: answer[i].answerBy,
-              updated: answer[i].updated,
+              _id: answer[i]._id,
+              displayProfile: answer[i].displayProfile,
+              allowConnectionRequest: answer[i].allowConnectionRequest,
+              view: answer[i].view,
+              response: answer[i].response,
+              reaches: answer[i].reaches,
+              status: answer[i].status,
+              question: answer[i].question,
+              filter: answer[i].filter,
+              createdAt: answer[i].createdAt,
+              createdBy: answer[i].createdBy,
               isFriend: "false",
             };
-            Answer.push(answerObj);
+            Answers.push(answerObj);
           }
         }
 
-        Answer = JSON.parse(JSON.stringify(Answer));
+        Answers = JSON.parse(JSON.stringify(Answers));
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.SUCCESS,
           payload: {
-            questions: Answer,
-            count: Answer.length,
+            questions: Answers,
+            count: Answers.length,
             page,
             limit,
           },
