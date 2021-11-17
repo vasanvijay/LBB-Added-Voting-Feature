@@ -27,7 +27,8 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
-      // console.log("QUESTION", question[0]?.answerLater);
+      // console.log("question----->>>", question);
+      console.log("QUESTION", question[0]?.answerLater);
       if (question) {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
@@ -65,7 +66,15 @@ module.exports = exports = {
           if (conectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
             console.log("IN IF----->>>");
             let questionObj = {
-              question: question[0]?.answerLater[i],
+              _id: question[0]?.answerLater[i]._id,
+              displayProfile: question[0]?.answerLater[i].displayProfile,
+              view: question[0]?.answerLater[i].view,
+              response: question[0]?.answerLater[i].response,
+              status: question[0]?.answerLater[i].status,
+              question: question[0]?.answerLater[i].question,
+              filter: question[0]?.answerLater[i].filter,
+              createdAt: question[0]?.answerLater[i].createdAt,
+              createdBy: question[0]?.answerLater[i].createdBy,
               isFriend: "true",
             };
             Question.push(questionObj);
@@ -80,8 +89,15 @@ module.exports = exports = {
               }
             });
             let questionObj = {
-              question: question[0]?.answerLater[i],
-              connection: connect,
+              _id: question[0]?.answerLater[i]._id,
+              displayProfile: question[0]?.answerLater[i].displayProfile,
+              view: question[0]?.answerLater[i].view,
+              response: question[0]?.answerLater[i].response,
+              status: question[0]?.answerLater[i].status,
+              question: question[0]?.answerLater[i].question,
+              filter: question[0]?.answerLater[i].filter,
+              createdAt: question[0]?.answerLater[i].createdAt,
+              createdBy: question[0]?.answerLater[i].createdBy,
               isFriend: "sent",
             };
             Question.push(questionObj);
@@ -98,14 +114,29 @@ module.exports = exports = {
               }
             });
             let questionObj = {
-              question: question[0]?.answerLater[i],
-              connection: connect,
+              _id: question[0]?.answerLater[i]._id,
+              displayProfile: question[0]?.answerLater[i].displayProfile,
+              view: question[0]?.answerLater[i].view,
+              response: question[0]?.answerLater[i].response,
+              status: question[0]?.answerLater[i].status,
+              question: question[0]?.answerLater[i].question,
+              filter: question[0]?.answerLater[i].filter,
+              createdAt: question[0]?.answerLater[i].createdAt,
+              createdBy: question[0]?.answerLater[i].createdBy,
               isFriend: "pending",
             };
             Question.push(questionObj);
           } else {
             let questionObj = {
-              question: question[0]?.answerLater[i],
+              _id: question[0]?.answerLater[i]._id,
+              displayProfile: question[0]?.answerLater[i].displayProfile,
+              view: question[0]?.answerLater[i].view,
+              response: question[0]?.answerLater[i].response,
+              status: question[0]?.answerLater[i].status,
+              question: question[0]?.answerLater[i].question,
+              filter: question[0]?.answerLater[i].filter,
+              createdAt: question[0]?.answerLater[i].createdAt,
+              createdBy: question[0]?.answerLater[i].createdBy,
               isFriend: "false",
             };
             Question.push(questionObj);

@@ -45,6 +45,7 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
+      console.log("answer---->>>", answer);
       if (answer) {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
@@ -79,14 +80,26 @@ module.exports = exports = {
         };
         for (let i = 0; i < answer.length; i++) {
           console.log("IN FOR---->");
-          if (conectIdExist(answer[i]?.question?.createdBy)) {
-            console.log("IN IF----->>>");
+          if (conectIdExist(answer[i].question?.createdBy)) {
+            console.log("IN IF----->>>", answer[i].question?.createdBy);
             let answerObj = {
-              answer: answer[i]?.question,
+              _id: answer[i].question._id,
+              displayProfile: answer[i].question.displayProfile,
+              view: answer[i].question.view,
+              response: answer[i].question.response,
+              status: answer[i].question.status,
+              question_id: answer[i].question._id,
+              question: answer[i].question.question,
+              answer: answer[i].answer,
+              filter: answer[i].question.filter,
+              createdAt: answer[i].question.createdAt,
+              createdBy: answer[i].question.createdBy,
+              answerBy: answer[i].answerBy,
+              updated: answer[i].updated,
               isFriend: "true",
             };
             Answer.push(answerObj);
-          } else if (sentIdExist(answer[i]?.question?.createdBy)) {
+          } else if (sentIdExist(answer[i].question?.createdBy)) {
             console.log("IN ELSE IF 1 -------> ");
             const connect = findConection.filter((connection) => {
               if (
@@ -97,30 +110,64 @@ module.exports = exports = {
               }
             });
             let answerObj = {
-              question: answer[i]?.question,
-              connection: connect,
+              _id: answer[i].question._id,
+              displayProfile: answer[i].question.displayProfile,
+              view: answer[i].question.view,
+              response: answer[i].question.response,
+              status: answer[i].question.status,
+              question_id: answer[i].question._id,
+              question: answer[i].question.question,
+              answer: answer[i].answer,
+              filter: answer[i].question.filter,
+              createdAt: answer[i].question.createdAt,
+              createdBy: answer[i].question.createdBy,
+              answerBy: answer[i].answerBy,
+              updated: answer[i].updated,
               isFriend: "sent",
             };
             Answer.push(answerObj);
-          } else if (pandingIdExist(answer[i]?.question?.createdBy)) {
+          } else if (pandingIdExist(answer[i].question?.createdBy)) {
             console.log("IN ELSE IF 2 -------> ");
             const connect = pandingConnection.filter((connection) => {
               if (
                 connection?.senderId.toString() ==
-                answer[i]?.question?.createdBy.toString()
+                answer[i].question?.createdBy.toString()
               ) {
                 return connection;
               }
             });
             let answerObj = {
-              question: answer[i]?.question,
-              connection: connect,
+              _id: answer[i].question._id,
+              displayProfile: answer[i].question.displayProfile,
+              view: answer[i].question.view,
+              response: answer[i].question.response,
+              status: answer[i].question.status,
+              question_id: answer[i].question._id,
+              question: answer[i].question.question,
+              answer: answer[i].answer,
+              filter: answer[i].question.filter,
+              createdAt: answer[i].question.createdAt,
+              createdBy: answer[i].question.createdBy,
+              answerBy: answer[i].answerBy,
+              updated: answer[i].updated,
               isFriend: "pending",
             };
             Answer.push(answerObj);
           } else {
             let answerObj = {
-              question: answer[i]?.question,
+              _id: answer[i].question._id,
+              displayProfile: answer[i].question.displayProfile,
+              view: answer[i].question.view,
+              response: answer[i].question.response,
+              status: answer[i].question.status,
+              question_id: answer[i].question._id,
+              question: answer[i].question.question,
+              answer: answer[i].answer,
+              filter: answer[i].question.filter,
+              createdAt: answer[i].question.createdAt,
+              createdBy: answer[i].question.createdBy,
+              answerBy: answer[i].answerBy,
+              updated: answer[i].updated,
               isFriend: "false",
             };
             Answer.push(answerObj);
@@ -133,7 +180,7 @@ module.exports = exports = {
           result: 0,
           message: messages.SUCCESS,
           payload: {
-            answer: Answer,
+            questions: Answer,
             count: Answer.length,
             page,
             limit,

@@ -1,4 +1,3 @@
-const { serializeUser } = require("passport");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
