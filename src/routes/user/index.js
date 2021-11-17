@@ -17,9 +17,19 @@ router.get(
   api4User.getAllUser.handler
 );
 router.get(
-  "/:searchData",
+  "/blockList",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.getBlockuser.handler
+);
+router.get(
+  "/search=:searchData",
   passport.authenticate(["jwt"], { session: false }),
   api4User.searchUser.handler
+);
+router.get(
+  "/topUser",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.topUser.handler
 );
 
 // Post Methods
@@ -32,6 +42,18 @@ router.post(
   "/login",
   validate("body", api4User.userLogin.validation),
   api4User.userLogin.handler
+);
+router.post(
+  "/reset",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4User.resetPassword.validation),
+  api4User.resetPassword.handler
+);
+router.post(
+  "/de-activate",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4User.deactivateAccount.validation),
+  api4User.deactivateAccount.handler
 );
 
 // Put Method
@@ -51,16 +73,23 @@ router.put(
   api4User.userData.handler
 );
 router.put(
-  "/id=:userId",
+  "/",
   passport.authenticate(["jwt"], { session: false }),
-  validate("body", api4User.updateUSer.validation),
   api4User.updateUSer.handler
 );
-
 router.put(
   "/update-status/id=:userId&status=:status",
   passport.authenticate(["jwt"], { session: false }),
   api4User.updateStatus.handler
 );
-
+router.put(
+  "/block/id=:userId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.blockUser.handler
+);
+router.put(
+  "/unblock/id=:userId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.unBlockUser.handler
+);
 module.exports = exports = router;

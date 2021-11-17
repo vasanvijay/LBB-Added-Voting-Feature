@@ -20,6 +20,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.getAnswerByQuestion.handler
 );
+router.get(
+  "/:question",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.getAnswerByQuestion.handler
+);
 
 // PUT Method
 router.put(
@@ -52,5 +57,9 @@ router.delete(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.deleteAnswer.handler
 );
-
+router.delete(
+  "/:answerId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.removeAnswer.handler
+);
 module.exports = exports = router;

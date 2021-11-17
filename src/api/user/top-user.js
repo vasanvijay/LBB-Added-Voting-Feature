@@ -10,31 +10,48 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let mostUsed = await global.models.GLOBAL.QUESTION.aggregate([
-        { $project: { _id: 0, filter: 1 } },
-        { $unwind: "$filter" },
-        { $group: { _id: "$filter.filterId", use: { $sum: 1 } } },
-        { $project: { _id: 0, filterId: "$_id", use: 1 } },
+        { $project: { _id: 0, createdBy: 1 } },
+        { $unwind: "$createdBy" },
+        { $group: { _id: "$createdBy", use: { $sum: 1 } } },
+        { $project: { _id: 0, createdBy: "$_id", use: 1 } },
         { $sort: { use: -1 } },
       ]);
-      console.log("Most Used---->>>", mostUsed);
-      let newTopSubject = [];
+      // console.log("Most Used---->>>", mostUsed);
+      let newTopUser = [];
+      let users = {};
       for (let i = 0; i < mostUsed.length; i++) {
-        let topSubject = await global.models.GLOBAL.FILTER.find({
-          _id: mostUsed[i].filterId,
+        let answerCount = await global.models.GLOBAL.ANSWER.count({
+          answerBy: mostUsed[i].createdBy,
         });
-        topSubject = [...topSubject, { use: mostUsed[i].use }];
-        newTopSubject.push(topSubject);
+        // console.log("ANS COUNT-------------->>>>>", answerCount);
+        let topUser = await global.models.GLOBAL.USER.find({
+          _id: mostUsed[i].createdBy,
+        });
+        // console.log("topUser---->>>", topUser[i]?.name);
+        for (let j = 0; j < topUser.length; j++) {
+          users = {
+            name: topUser[j]?.name,
+            email: topUser[j]?.email,
+          };
+        }
+        // console.log("user--->>", users);
+        topUser = [
+          users,
+          { questionByUser: mostUsed[i].use },
+          { answerByuser: answerCount },
+        ];
+        newTopUser.push(topUser);
       }
-      console.log("newTopSubject", newTopSubject);
-      let topSubjects = newTopSubject.filter(function (el) {
+      // console.log("newTopSubject", newTopUser);
+      let topUsers = newTopUser.filter(function (el) {
         return el.length >= 1;
       });
-      console.log("topSubjects--->", topSubjects);
+      // console.log("topUsers--->", topUsers);
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.ITEM_FETCHED,
-        payload: { topSubjects },
+        payload: { topUsers },
         logPayload: false,
       };
       res

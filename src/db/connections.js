@@ -62,6 +62,9 @@ module.exports = async () => {
         CONNECTION: require("../schema/connection/connection")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        LEGENDS: require("../schema/legends/legends")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
       },
     };
 

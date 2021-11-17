@@ -28,7 +28,7 @@ module.exports = exports = {
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
       });
-      console.log("connection---->", findConection);
+      console.log("connection->", findConection);
 
       const sentIdExist = (id) => {
         let check = findConection.filter(function (elc) {
@@ -38,11 +38,11 @@ module.exports = exports = {
       };
 
       const pandingIdExist = (id) => {
-        let check = findConection.filter(function (elf) {
+        let panding = findConection.filter(function (elf) {
           return elf.senderId.toString() === id.toString();
         });
-        console.log("length---->", check.length);
-        return check.length;
+        console.log("length---->", panding.length);
+        return panding.length;
       };
 
       const conectIdExist = (id) => {
@@ -63,18 +63,8 @@ module.exports = exports = {
           allUser.push(searchUserObj);
         } else if (sentIdExist(searchUser[i]?._id)) {
           console.log("ID---->>>", searchUser[i]?._id);
-          const connect = findConection.filter((connection) => {
-            console.log("connection", typeof connection?.receiverId);
-            console.log("user_id", typeof searchUser[i]?._id);
-            if (
-              connection?.senderId.toString() == searchUser[i]?._id.toString()
-            ) {
-              return connection;
-            }
-          });
           const searchUserObj = {
             searchUser: searchUser[i],
-            connect: connect,
             isFriend: "sent",
           };
           allUser.push(searchUserObj);

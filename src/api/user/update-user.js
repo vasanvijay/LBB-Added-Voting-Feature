@@ -1,4 +1,3 @@
-const Joi = require("joi");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -7,69 +6,115 @@ const utils = require("../../utils");
 
 // Get User by ID
 module.exports = exports = {
-  // route validation
-  validation: Joi.object({
-    name: Joi.string().allow(""),
-    status: Joi.string(),
-  }),
-
   handler: async (req, res) => {
     let { user } = req;
-    let { userId } = req.params;
     console.log("user------->>", user);
     if (user.userType === enums.USER_TYPE.ADMIN) {
-    }
-    try {
-      let { name } = req.body;
-      let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
-        { _id: userId },
-        {
-          $set: {
-            name: name,
-            updatedAt: new Date(),
-            updatedBy: user.email,
+      try {
+        let { email, name } = req.body;
+        let updateByAdmin = await global.models.GLOBAL.USER.findOneAndUpdate(
+          {
+            email: email,
           },
-        },
-        { new: true }
-      );
-
-      if (!updateUser) {
+          {
+            $set: {
+              name: name,
+              updatedAt: new Date(),
+              updatedBy: user.email,
+            },
+          },
+          { new: true }
+        );
+        if (!updateByAdmin) {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.USER_DOES_NOT_EXIST,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.NOT_FOUND)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_UPDATED,
+            payload: { updateByAdmin },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
+      } catch (error) {
+        logger.error(
+          `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
+        );
         const data4createResponseObject = {
           req: req,
           result: -1,
-          message: messages.USER_DOES_NOT_EXIST,
+          message: messages.GENERAL,
           payload: {},
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.NOT_FOUND)
+          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
           .json(utils.createResponseObject(data4createResponseObject));
-      } else {
+      }
+    } else {
+      try {
+        let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+          { _id: user._id },
+          {
+            $set: {
+              ...req.body,
+              updatedAt: new Date(),
+              updatedBy: user.email,
+            },
+          },
+          { new: true }
+        );
+
+        if (!updateUser) {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.USER_DOES_NOT_EXIST,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.NOT_FOUND)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_UPDATED,
+            payload: { updateUser },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
+      } catch (error) {
+        logger.error(
+          `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
+        );
         const data4createResponseObject = {
           req: req,
-          result: 0,
-          message: messages.ITEM_UPDATED,
-          payload: { updateUser },
+          result: -1,
+          message: messages.GENERAL,
+          payload: {},
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
           .json(utils.createResponseObject(data4createResponseObject));
       }
-    } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
-      const data4createResponseObject = {
-        req: req,
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
-        logPayload: false,
-      };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

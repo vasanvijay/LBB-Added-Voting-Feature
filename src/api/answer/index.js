@@ -6,7 +6,7 @@ const answerLater = require("./add-answer-later");
 const getAnswerLater = require("./get-answer-later");
 const removeAnswerLater = require("./remove-answer-later");
 const getAnswerByQuestion = require("./get-answer-by-question");
-
+const removeAnswer = require("./remove-answer");
 module.exports = exports = {
   addAnswer,
   getAnswer,
@@ -16,4 +16,5 @@ module.exports = exports = {
   getAnswerLater,
   removeAnswerLater,
   getAnswerByQuestion,
+  removeAnswer,
 };

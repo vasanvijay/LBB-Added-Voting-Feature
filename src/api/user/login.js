@@ -48,36 +48,36 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
-        if (findUser.password !== password) {
+        if (findUser.status === false) {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: messages.USER_NOT_FOUND,
+            message: "Your account is inactivate. Please contact to Admin.",
             payload: {},
             logPayload: false,
           };
           return res
-            .status(enums.HTTP_CODES.OK)
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
             .json(utils.createResponseObject(data4createResponseObject));
         } else {
-          // User found - Check is verified or not
-          if (findUser.verified === false) {
+          if (findUser.password !== password) {
             const data4createResponseObject = {
               req: req,
               result: -1,
-              message: messages.USER_NOT_VERIFIED,
+              message: messages.USER_NOT_FOUND,
               payload: {},
               logPayload: false,
             };
             return res
-              .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
+              .status(enums.HTTP_CODES.OK)
               .json(utils.createResponseObject(data4createResponseObject));
           } else {
-            if (findUser.formFilled === false) {
+            // User found - Check is verified or not
+            if (findUser.verified === false) {
               const data4createResponseObject = {
                 req: req,
                 result: -1,
-                message: messages.EMPTY,
+                message: messages.USER_NOT_VERIFIED,
                 payload: {},
                 logPayload: false,
               };
@@ -85,32 +85,48 @@ module.exports = exports = {
                 .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
                 .json(utils.createResponseObject(data4createResponseObject));
             } else {
-              const data4token = {
-                id: findUser._id,
-                date: new Date(),
-                environment: process.env.APP_ENVIRONMENT,
-                email: email,
-                userType: findUser.userType,
-                scope: "login",
-              };
+              if (findUser.formFilled === false) {
+                const data4createResponseObject = {
+                  req: req,
+                  result: -1,
+                  message: messages.EMPTY,
+                  payload: {},
+                  logPayload: false,
+                };
+                return res
+                  .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
+                  .json(utils.createResponseObject(data4createResponseObject));
+              } else {
+                const data4token = {
+                  id: findUser._id,
+                  date: new Date(),
+                  environment: process.env.APP_ENVIRONMENT,
+                  email: email,
+                  userType: findUser.userType,
+                  scope: "login",
+                };
 
-              await global.models.GLOBAL.USER.findByIdAndUpdate(findUser._id, {
-                $set: { lastLogin: new Date() },
-              });
-              delete findUser.password;
-              const data4createResponseObject = {
-                req: req,
-                result: 0,
-                message: messages.USER_LOGIN_SUCCESSFULLY,
-                payload: {
-                  user: findUser,
-                  token: jwt.sign(data4token, jwtOptions.secretOrKey),
-                },
-                logPayload: false,
-              };
-              return res
-                .status(enums.HTTP_CODES.OK)
-                .json(utils.createResponseObject(data4createResponseObject));
+                await global.models.GLOBAL.USER.findByIdAndUpdate(
+                  findUser._id,
+                  {
+                    $set: { lastLogin: new Date() },
+                  }
+                );
+                delete findUser.password;
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.USER_LOGIN_SUCCESSFULLY,
+                  payload: {
+                    user: findUser,
+                    token: jwt.sign(data4token, jwtOptions.secretOrKey),
+                  },
+                  logPayload: false,
+                };
+                return res
+                  .status(enums.HTTP_CODES.OK)
+                  .json(utils.createResponseObject(data4createResponseObject));
+              }
             }
           }
         }

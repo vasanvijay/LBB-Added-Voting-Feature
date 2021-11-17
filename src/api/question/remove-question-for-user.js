@@ -4,57 +4,46 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 
-// Retrieve and return all Answer from the database.
+// Add category by admin
 module.exports = exports = {
-  // route handler
   handler: async (req, res) => {
-    const { question } = req.params;
-    if (!question) {
+    const { user } = req;
+    const { questionId } = req.params;
+    const questionExists = await global.models.GLOBAL.QUESTION.findById(
+      questionId
+    );
+    if (!questionExists) {
       const data4createResponseObject = {
         req: req,
         result: -1,
-        message: messages.INVALID_PARAMETERS,
+        message: messages.NOT_FOUND,
         payload: {},
         logPayload: false,
       };
-      res
+      return res
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    try {
-      req.query.page = req.query.page ? req.query.page : 1;
-      let page = parseInt(req.query.page);
-      req.query.limit = req.query.limit ? req.query.limit : 10;
-      let limit = parseInt(req.query.limit);
-      let skip = (parseInt(req.query.page) - 1) * limit;
-      let answer = await global.models.GLOBAL.ANSWER.find({
-        question: question,
-      })
-        .populate({
-          path: "question",
-          model: "question",
-          select: "_id question response filter view displayProfile createdAt",
-        })
-        .populate({
-          path: "answerBy",
-          model: "user",
-          select: "_id name email region currentRole",
-        })
-        .skip(skip)
-        .limit(limit);
 
-      if (answer) {
-        answer = JSON.parse(JSON.stringify(answer));
+    try {
+      if (questionId) {
+        const removeForUser = await global.models.GLOBAL.USER.findOneAndUpdate(
+          {
+            _id: user._id,
+          },
+          {
+            $addToSet: {
+              removeQuestion: questionId,
+            },
+          },
+          { new: true }
+        );
+
         const data4createResponseObject = {
           req: req,
           result: 0,
-          message: messages.SUCCESS,
-          payload: {
-            answer,
-            count: answer.length,
-            page,
-            limit,
-          },
+          message: messages.ITEM_DELETED,
+          payload: {},
           logPayload: false,
         };
         res

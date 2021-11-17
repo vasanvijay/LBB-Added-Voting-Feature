@@ -4,13 +4,7 @@ const api4Filter = require("../../api/contact-us/index");
 const { validate } = require("../../middlewares");
 const passport = require("passport");
 
-// GET Method
-// router.get(
-//   "/get-filter",
-//   // passport.authenticate(["jwt"], { session: false }),
-//   api4Filter.getFilter.handler
-// );
-
+// Get Method
 router.get(
   "/getcontact",
   passport.authenticate(["jwt"], { session: false }),
@@ -33,27 +27,29 @@ router.post(
 );
 
 // PUT method
-router.put("/updatestatus/id=:userId&status=:status", 
+router.put(
+  "/updatestatus/id=:userId&status=:status",
   passport.authenticate(["jwt"], { session: false }),
-  api4Filter.statusContact.handler);
+  api4Filter.statusContact.handler
+);
 
-// router.put("/update-filter-type", 
+// router.put("/update-filter-type",
 //   // passport.authenticate(["jwt"], { session: false }),
 // api4Filter.updateFilterType.handler);
 
-// router.put("/update-filter", 
+// router.put("/update-filter",
 //   // passport.authenticate(["jwt"], { session: false }),
 // api4Filter.updateFilter.handler);
 
-// router.put("/delete-filter", 
+// router.put("/delete-filter",
 //   // passport.authenticate(["jwt"], { session: false }),
 // api4Filter.deleteFilter.handler);
 
 // // DELETE method
-router.delete("/deletecontact/id=:userId", 
+router.delete(
+  "/deletecontact/id=:userId",
   passport.authenticate(["jwt"], { session: false }),
-api4Filter.deleteContact.handler);
-
-
+  api4Filter.deleteContact.handler
+);
 
 module.exports = exports = router;
