@@ -103,6 +103,7 @@ module.exports = exports = {
                   environment: process.env.APP_ENVIRONMENT,
                   email: email,
                   userType: findUser.userType,
+                  subject: findUser.subject,
                   scope: "login",
                 };
 
