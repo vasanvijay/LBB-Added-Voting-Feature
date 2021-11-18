@@ -9,7 +9,14 @@ module.exports = (connection) => {
     filter: [
       {
         filterId: mongoose.Schema.Types.ObjectId,
-        options: [{ optionId: mongoose.Schema.Types.ObjectId }],
+        filterName: String,
+        options: [
+          {
+            optionId: mongoose.Schema.Types.ObjectId,
+            optionName: String,
+            status: String,
+          },
+        ],
       },
     ],
     displayProfile: { type: Boolean, default: false },

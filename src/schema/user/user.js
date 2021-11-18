@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 module.exports = (connection) => {
   const userSchema = new mongoose.Schema({
+    profileImage: { type: String, default: null },
     name: String,
     email: String,
     password: String,

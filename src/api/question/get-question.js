@@ -48,15 +48,20 @@ module.exports = exports = {
           question: { $regex: search, $options: "i" },
         })
           .populate({
-            path: "filter.filterId",
-            populate: {
-              path: "options",
-              model: "filter",
-              select: "_id",
-            },
-            model: "filter",
+            path: "createdBy",
+            model: "user",
             select: "_id name",
           })
+          // .populate({
+          //   path: "filter.filterId",
+          //   populate: {
+          //     path: "options",
+          //     model: "filter",
+          //     select: "_id",
+          //   },
+          //   model: "filter",
+          //   select: "_id name",
+          // })
           .skip(skip)
           .limit(limit)
           .exec();
@@ -70,35 +75,45 @@ module.exports = exports = {
             ],
           })
             .populate({
-              path: "filter.filterId",
-              populate: {
-                path: "options",
-                model: "filter",
-                select: "_id",
-              },
-              model: "filter",
+              path: "createdBy",
+              model: "user",
               select: "_id name",
             })
+            // .populate({
+            //   path: "filter.filterId",
+            //   populate: {
+            //     path: "options",
+            //     model: "filter",
+            //     select: "_id",
+            //   },
+            //   model: "filter",
+            //   select: "_id name",
+            // })
             .skip(skip)
             .limit(limit)
             .exec();
         } else {
           question = await global.models.GLOBAL.QUESTION.find({
             ...criteria,
-            createdBy: { $not: { $eq: user._id } },
+            // createdBy: { $not: { $eq: user._id } },
             $and: [
               { _id: { $nin: user.answerLater } },
               { _id: { $nin: user.removeQuestion } },
             ],
           })
+            // .populate({
+            //   path: "filter.filterId",
+            //   populate: {
+            //     path: "options",
+            //     model: "filter",
+            //     select: "_id",
+            //   },
+            //   model: "filter",
+            //   select: "_id name",
+            // })
             .populate({
-              path: "filter.filterId",
-              populate: {
-                path: "options",
-                model: "filter",
-                select: "_id",
-              },
-              model: "filter",
+              path: "createdBy",
+              model: "user",
               select: "_id name",
             })
             .skip(skip)
@@ -106,20 +121,20 @@ module.exports = exports = {
             .exec();
         }
       }
-      question.map((quest, i) => {
-        return quest?.filter.map((filt, j) => {
-          return filt?.options.map(async (opt, k) => {
-            return filt?.filterId?.options?.filter((o) => {
-              if (o._id.toString() === opt._id.toString()) {
-                allQuestion = [
-                  ...question,
-                  (question[i].filter[j].options[k] = o),
-                ];
-              }
-            });
-          });
-        });
-      });
+      // question.map((quest, i) => {
+      //   return quest?.filter.map((filt, j) => {
+      //     return filt?.options.map(async (opt, k) => {
+      //       return filt?.filterId?.options?.filter((o) => {
+      //         if (o._id.toString() === opt._id.toString()) {
+      //           allQuestion = [
+      //             ...question,
+      //             (question[i].filter[j].options[k] = o),
+      //           ];
+      //         }
+      //       });
+      //     });
+      //   });
+      // });
 
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
@@ -179,14 +194,16 @@ module.exports = exports = {
             status: question[i].status,
             question: question[i].question,
             reaches: question[i].reaches,
-            filter: question[i]?.filter?.map((fil) => {
-              return {
-                filterId: fil?.filterId?._id,
-                options: fil?.options,
-              };
-            }),
+            filter: question[i]?.filter,
+            // ?.map((fil) => {
+            //   return {
+            //     filterId: fil?.filterId?._id,
+            //     options: fil?.options,
+            //   };
+            // }),
             createdAt: question[i].createdAt,
-            createdBy: question[i].createdBy,
+            userName: question[i].createdBy.name,
+            createdBy: question[i].createdBy._id,
             isFriend: "true",
           };
           questionDetais.push(questionDetaisObj);
@@ -201,14 +218,16 @@ module.exports = exports = {
             reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i]?.filter?.map((fil) => {
-              return {
-                filterId: fil?.filterId?._id,
-                options: fil?.options,
-              };
-            }),
+            filter: question[i]?.filter,
+            // ?.map((fil) => {
+            //   return {
+            //     filterId: fil?.filterId?._id,
+            //     options: fil?.options,
+            //   };
+            // }),
             createdAt: question[i].createdAt,
-            createdBy: question[i].createdBy,
+            userName: question[i].createdBy.name,
+            createdBy: question[i].createdBy._id,
             isFriend: "sent",
           };
           questionDetais.push(questionDetaisObj);
@@ -223,14 +242,16 @@ module.exports = exports = {
             reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i]?.filter?.map((fil) => {
-              return {
-                filterId: fil?.filterId?._id,
-                options: fil?.options,
-              };
-            }),
+            filter: question[i]?.filter,
+            // ?.map((fil) => {
+            //   return {
+            //     filterId: fil?.filterId?._id,
+            //     options: fil?.options,
+            //   };
+            // }),
             createdAt: question[i].createdAt,
-            createdBy: question[i].createdBy,
+            userName: question[i].createdBy.name,
+            createdBy: question[i].createdBy._id,
             isFriend: "pending",
           };
           questionDetais.push(questionDetaisObj);
@@ -245,14 +266,16 @@ module.exports = exports = {
             reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i]?.filter?.map((fil) => {
-              return {
-                filterId: fil?.filterId?._id,
-                options: fil?.options,
-              };
-            }),
+            filter: question[i]?.filter,
+            // ?.map((fil) => {
+            //   return {
+            //     filterId: fil?.filterId?._id,
+            //     options: fil?.options,
+            //   };
+            // }),
             createdAt: question[i].createdAt,
-            createdBy: question[i].createdBy,
+            userName: question[i].createdBy.name,
+            createdBy: question[i].createdBy._id,
             isFriend: "block",
           };
           questionDetais.push(questionDetaisObj);
@@ -267,14 +290,16 @@ module.exports = exports = {
             reaches: question[i].reaches,
             status: question[i].status,
             question: question[i].question,
-            filter: question[i]?.filter?.map((fil) => {
-              return {
-                filterId: fil?.filterId?._id,
-                options: fil?.options,
-              };
-            }),
+            filter: question[i]?.filter,
+            // ?.map((fil) => {
+            //   return {
+            //     filterId: fil?.filterId?._id,
+            //     options: fil?.options,
+            //   };
+            // }),
             createdAt: question[i].createdAt,
-            createdBy: question[i].createdBy,
+            userName: question[i].createdBy.name,
+            createdBy: question[i].createdBy._id,
             isFriend: "false",
           };
           questionDetais.push(questionDetaisObj);

@@ -9,6 +9,7 @@ const jwtOptions = require("../../auth/jwt-options");
 module.exports = exports = {
   // route validation
   validation: Joi.object({
+    profileImage: Joi.string().allow(""),
     email: Joi.string().required(),
     organizationName: Joi.string().required(),
     currentRole: Joi.string().required(),
@@ -23,6 +24,7 @@ module.exports = exports = {
 
   handler: async (req, res) => {
     const {
+      profileImage,
       email,
       organizationName,
       currentRole,
@@ -64,6 +66,7 @@ module.exports = exports = {
           { email: email },
           {
             $set: {
+              profileImage: profileImage,
               organizationName: organizationName,
               currentRole: currentRole,
               region: region,

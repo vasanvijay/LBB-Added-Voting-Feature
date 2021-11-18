@@ -9,6 +9,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { searchData } = req.params;
+    const { filter } = req.body;
     if (!searchData) {
       const data4createResponseObject = {
         req: req,
@@ -22,9 +23,42 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     }
     try {
-      let searchUser = await global.models.GLOBAL.USER.find({
-        name: { $regex: searchData, $options: "i" },
-      });
+      let searchUser = [];
+      let distinctUser;
+      if (filter) {
+        for (let i = 0; i < filter.length; i++) {
+          if (filter[i] != "") {
+            let quResult = await global.models.GLOBAL.USER.find({
+              name: { $regex: searchData, $options: "i" },
+              $and: [{ subject: filter[i] }],
+            });
+
+            for (let j = 0; j < quResult.length; j++) {
+              if (quResult[i] != null) {
+                searchUser.push(quResult[i]);
+              }
+            }
+          }
+        }
+        distinctUser = Array.from(new Set(searchUser.map((q) => q._id))).map(
+          (id) => {
+            return {
+              _id: id,
+              profileImage: searchUser.find((aid) => aid._id === id)
+                .profileImage,
+              name: searchUser.find((aid) => aid._id === id).name,
+              currentRole: searchUser.find((aid) => aid._id === id).currentRole,
+              region: searchUser.find((aid) => aid._id === id).region,
+              gender: searchUser.find((aid) => aid._id === id).gender,
+            };
+          }
+        );
+      } else {
+        distinctUser = await global.models.GLOBAL.USER.find({
+          name: { $regex: searchData, $options: "i" },
+        });
+      }
+
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
       });
@@ -53,37 +87,37 @@ module.exports = exports = {
           : false;
       };
       let allUser = [];
-      for (let i = 0; i < searchUser.length; i++) {
-        if (conectIdExist(searchUser[i]?._id)) {
-          console.log("ID---->>>", searchUser[i]?._id);
+      for (let i = 0; i < distinctUser.length; i++) {
+        if (conectIdExist(distinctUser[i]?._id)) {
+          console.log("ID---->>>", distinctUser[i]?._id);
           const searchUserObj = {
-            searchUser: searchUser[i],
+            searchUser: distinctUser[i],
             isFriend: "true",
           };
           allUser.push(searchUserObj);
-        } else if (sentIdExist(searchUser[i]?._id)) {
-          console.log("ID---->>>", searchUser[i]?._id);
+        } else if (sentIdExist(distinctUser[i]?._id)) {
+          console.log("ID---->>>", distinctUser[i]?._id);
           const searchUserObj = {
-            searchUser: searchUser[i],
+            searchUser: distinctUser[i],
             isFriend: "sent",
           };
           allUser.push(searchUserObj);
-        } else if (pandingIdExist(searchUser[i]?._id)) {
-          console.log("ID---->>>", searchUser[i]?._id);
+        } else if (pandingIdExist(distinctUser[i]?._id)) {
+          console.log("ID---->>>", distinctUser[i]?._id);
           const searchUserObj = {
-            searchUser: searchUser[i],
+            searchUser: distinctUser[i],
             isFriend: "pending",
           };
           allUser.push(searchUserObj);
         } else {
           const searchUserObj = {
-            searchUser: searchUser[i],
+            searchUser: distinctUser[i],
             isFriend: "false",
           };
           allUser.push(searchUserObj);
         }
       }
-      if (searchUser.length == 0) {
+      if (allUser.length == 0) {
         const data4createResponseObject = {
           req: req,
           result: 0,

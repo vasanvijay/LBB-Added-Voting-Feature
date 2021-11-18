@@ -61,13 +61,13 @@ module.exports = exports = {
       } else {
         const data4createResponseObject = {
           req: req,
-          result: 0,
-          message: messages.NOT_ALLOWED,
+          result: -1,
+          message: "Something Went wrong to Update Answer",
           payload: {},
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.BAD_REQUEST)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {

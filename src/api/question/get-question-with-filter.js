@@ -49,7 +49,7 @@ module.exports = exports = {
                 question: { $regex: search, $options: "i" },
                 $and: [
                   { _id: { $nin: user.answerLater } },
-                  { "filter.filterId": filter[i] },
+                  { "filter.options.optionName": filter[i] },
                 ],
               })
                 // .populate({
@@ -96,7 +96,7 @@ module.exports = exports = {
                 // createdBy: { $not: { $eq: user._id } },
                 $and: [
                   { _id: { $nin: user.answerLater } },
-                  { "filter.filterId": filter[i] },
+                  { "filter.options.optionName": filter[i] },
                   { _id: { $nin: user.removeQuestion } },
                   //   { createdBy: { $nin: user._id } },
                 ],
@@ -144,7 +144,7 @@ module.exports = exports = {
                 ...criteria,
                 $and: [
                   { _id: { $nin: user.answerLater } },
-                  { "filter.filterId": filter[i] },
+                  { "filter.options.optionName": filter[i] },
                   { _id: { $nin: user.removeQuestion } },
                 ],
               })
