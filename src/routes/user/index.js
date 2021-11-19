@@ -22,11 +22,6 @@ router.get(
   api4User.getBlockuser.handler
 );
 router.get(
-  "/search=:searchData",
-  passport.authenticate(["jwt"], { session: false }),
-  api4User.searchUser.handler
-);
-router.get(
   "/topUser",
   passport.authenticate(["jwt"], { session: false }),
   api4User.topUser.handler
@@ -54,6 +49,11 @@ router.post(
   passport.authenticate(["jwt"], { session: false }),
   validate("body", api4User.deactivateAccount.validation),
   api4User.deactivateAccount.handler
+);
+router.post(
+  "/search=:searchData",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.searchUser.handler
 );
 
 // Put Method

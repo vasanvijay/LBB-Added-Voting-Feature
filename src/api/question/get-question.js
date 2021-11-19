@@ -79,7 +79,6 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
-                  { "filter.options.optionName": user.subject[i] },
                 ],
               })
                 .populate({
@@ -110,7 +109,7 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
-                  { "filter.options.optionName": user.subject[i] },
+                  // { "filter.options.optionName": user.subject[i] },
                 ],
               })
                 // .populate({

@@ -65,6 +65,9 @@ module.exports = async () => {
         LEGENDS: require("../schema/legends/legends")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        ANSWER_ROOM: require("../schema/answerRoom/answerRoom")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
       },
     };
 

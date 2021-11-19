@@ -21,9 +21,9 @@ router.get(
   api4Answer.getAnswerByQuestion.handler
 );
 router.get(
-  "/:question",
+  "/id=:question",
   passport.authenticate(["jwt"], { session: false }),
-  api4Answer.getAnswerByQuestion.handler
+  api4Answer.answerByUser.handler
 );
 
 // PUT Method

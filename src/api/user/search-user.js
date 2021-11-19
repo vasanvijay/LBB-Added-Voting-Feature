@@ -1,3 +1,4 @@
+const { nargs } = require("yargs");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -26,11 +27,19 @@ module.exports = exports = {
       let searchUser = [];
       let distinctUser;
       if (filter) {
-        for (let i = 0; i < filter.length; i++) {
-          if (filter[i] != "") {
+        console.log("FILTER---->>>", filter);
+        let optionName = [];
+        filter.map((fil) => {
+          fil?.options?.map((opt) => {
+            optionName.push(opt.optionName);
+          });
+        });
+        console.log("OBJ------>>>", optionName);
+        for (let i = 0; i < optionName.length; i++) {
+          if (optionName[i] != "") {
             let quResult = await global.models.GLOBAL.USER.find({
               name: { $regex: searchData, $options: "i" },
-              $and: [{ subject: filter[i] }],
+              $and: [{ subject: optionName[i] }],
             });
 
             for (let j = 0; j < quResult.length; j++) {
@@ -54,15 +63,27 @@ module.exports = exports = {
           }
         );
       } else {
-        distinctUser = await global.models.GLOBAL.USER.find({
+        let searchUser = await global.models.GLOBAL.USER.find({
           name: { $regex: searchData, $options: "i" },
         });
-      }
 
+        distinctUser = Array.from(new Set(searchUser.map((q) => q._id))).map(
+          (id) => {
+            return {
+              _id: id,
+              profileImage: searchUser.find((aid) => aid._id === id)
+                .profileImage,
+              name: searchUser.find((aid) => aid._id === id).name,
+              currentRole: searchUser.find((aid) => aid._id === id).currentRole,
+              region: searchUser.find((aid) => aid._id === id).region,
+              gender: searchUser.find((aid) => aid._id === id).gender,
+            };
+          }
+        );
+      }
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
       });
-      console.log("connection->", findConection);
 
       const sentIdExist = (id) => {
         let check = findConection.filter(function (elc) {
