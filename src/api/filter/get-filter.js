@@ -24,7 +24,7 @@
            criteria["_id"] = id;
          }
          try {
-             let filter = await global.models.GLOBAL.FILTER.find(criteria);
+             let filter = await global.models.GLOBAL.FILTER.find(criteria).sort({createdAt:-1});
              const data4createResponseObject = {
                  req: req,
                  result: 0,
