@@ -95,7 +95,7 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
-                  { _id: { $nin: user.abuseQuestion.questionId } },
+                  // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
                 ],
@@ -123,7 +123,7 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
-                  { _id: { $nin: user.abuseQuestion.questionId } },
+                  // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
                 ],
@@ -138,7 +138,7 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
-                  { _id: { $nin: user.abuseQuestion.questionId } },
+                  // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
                   // { "filter.options?.optionName": user.subject[i] },
