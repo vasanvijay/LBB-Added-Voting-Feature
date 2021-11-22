@@ -1,35 +1,63 @@
+const { ObjectID } = require("bson");
 const Joi = require("joi");
+
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
 
-// Retrieve and return all Chats for particular user from the database.
+// Add Answer
 module.exports = exports = {
+  // route validation
+  validation: Joi.object({
+    roomId: Joi.string().required(),
+    answer: Joi.string().required(),
+  }),
+
   // route handler
   handler: async (req, res) => {
+    const { user } = req;
+    const { questionId } = req.params;
+    const { roomId, answer } = req.body;
+    if (!questionId || !answer || !roomId) {
+      const data4createResponseObject = {
+        req: req,
+        result: -1,
+        message: messages.INVALID_PARAMETERS,
+        payload: {},
+        logPayload: false,
+      };
+      return res
+        .status(enums.HTTP_CODES.BAD_REQUEST)
+        .json(utils.createResponseObject(data4createResponseObject));
+    }
+
     try {
-      let { user } = req;
-      let { question } = req.params;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
-        _id: question,
+        _id: questionId,
       });
       if (findQuestion) {
-        const id = question;
-        const answerBy = user._id;
-        const questionBy = findQuestion.createdBy;
-        // let answerRoom;
-        let participateIds = [];
-        participateIds.push(answerBy);
-        participateIds.push(id);
-        participateIds.push(questionBy);
-        console.log("participateIds", participateIds);
+        let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+          _id: roomId,
+        });
+        let newAnswer = {
+          answer: answer,
+          answerBy: user._id,
+        };
+        let updateAnswer =
+          await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
+            { _id: ObjectID(roomId) },
+            {
+              $push: {
+                answer: newAnswer,
+              },
+            },
+            { new: true }
+          );
+
         let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
-          participateIds: {
-            $size: participateIds.length,
-            $all: [...participateIds],
-          },
+          _id: ObjectID(roomId),
         })
           .populate({
             path: "answer.answerBy",
@@ -41,20 +69,22 @@ module.exports = exports = {
             model: "question",
             select: "_id question response view createdBy",
           });
-        // .populate({
-        //   path: "participateIds",
-        //   model: "user",
-        //   select: "_id name email region currentRole profileImage",
-        // });
-        if (answerRoom != null) {
-          console.log("Chat room---<>", answerRoom);
-          // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-          //   questionId: question,
-          // });
+        if (updateAnswer) {
+          console.log("UPDATED----->>>>", updateAnswer);
+          let addAnswer = {
+            answer: answer,
+            answerBy: user._id,
+            question: questionId,
+            answerAt: Date.now(),
+          };
+
+          const newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
+          newAnswer.save();
+          console.log("NEW ANSWER---->>>>", newAnswer);
           const data4createResponseObject = {
             req: req,
             result: 0,
-            message: messages.ITEM_FETCHED,
+            message: messages.ITEM_INSERTED,
             payload: { answerRoom },
             logPayload: false,
           };
@@ -64,20 +94,21 @@ module.exports = exports = {
         } else {
           const data4createResponseObject = {
             req: req,
-            result: 0,
-            message: messages.GENERAL,
-            payload: {},
+            result: -1,
+            message:
+              "Something went wrong to Add Answer, Please try agin later",
+            payload: { updateAnswer },
             logPayload: false,
           };
           res
-            .status(enums.HTTP_CODES.OK)
+            .status(enums.HTTP_CODES.BAD_REQUEST)
             .json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
         const data4createResponseObject = {
           req: req,
           result: -1,
-          message: messages.ITEM_NOT_FOUND,
+          message: "Question Not Found",
           payload: {},
           logPayload: false,
         };

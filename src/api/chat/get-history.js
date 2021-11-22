@@ -24,7 +24,7 @@ module.exports = exports = {
       }).populate({
         path: "sender",
         model: "user",
-        select: "name",
+        select: "name subject",
       });
 
       if (chats) {

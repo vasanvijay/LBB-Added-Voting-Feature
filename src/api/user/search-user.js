@@ -1,4 +1,3 @@
-const { nargs } = require("yargs");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -44,7 +43,7 @@ module.exports = exports = {
         for (let i = 0; i < optionName.length; i++) {
           if (optionName[i] != "") {
             let quResult = await global.models.GLOBAL.USER.find({
-              name: { $regex: searchData, $options: "i" },
+              subject: { $regex: searchData, $options: "i" },
               $and: [{ subject: optionName[i] }],
             });
 
@@ -65,12 +64,13 @@ module.exports = exports = {
               currentRole: searchUser.find((aid) => aid._id === id).currentRole,
               region: searchUser.find((aid) => aid._id === id).region,
               gender: searchUser.find((aid) => aid._id === id).gender,
+              subject: searchUser.find((aid) => aid._id === id).subject,
             };
           }
         );
       } else {
         let searchUser = await global.models.GLOBAL.USER.find({
-          name: { $regex: searchData, $options: "i" },
+          subject: { $regex: searchData, $options: "i" },
         });
 
         distinctUser = Array.from(new Set(searchUser.map((q) => q._id))).map(
@@ -83,6 +83,7 @@ module.exports = exports = {
               currentRole: searchUser.find((aid) => aid._id === id).currentRole,
               region: searchUser.find((aid) => aid._id === id).region,
               gender: searchUser.find((aid) => aid._id === id).gender,
+              subject: searchUser.find((aid) => aid._id === id).subject,
             };
           }
         );

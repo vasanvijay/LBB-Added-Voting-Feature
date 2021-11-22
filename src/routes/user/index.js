@@ -26,6 +26,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4User.topUser.handler
 );
+router.get(
+  "/count",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.getCount.handler
+);
 
 // Post Methods
 router.post(

@@ -25,7 +25,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.answerByUser.handler
 );
-
+router.get(
+  "/answer-room/id=:room",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.answerRoomById.handler
+);
 // PUT Method
 router.put(
   "/id=:answerId",
@@ -49,6 +53,12 @@ router.post(
   "/id=:questionId",
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.answerLater.handler
+);
+router.post(
+  "/asked/id=:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4Answer.addAnswerInAsked.validation),
+  api4Answer.addAnswerInAsked.handler
 );
 
 // DELETE Method

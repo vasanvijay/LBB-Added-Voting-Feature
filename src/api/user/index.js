@@ -16,6 +16,7 @@ const getBlockuser = require("./get-block-user");
 const topUser = require("./top-user");
 const updatePassword = require("./update-password");
 const forgetPassword = require("./forget-password");
+const getCount = require("./get-count");
 
 module.exports = exports = {
   userRegistration,
@@ -36,4 +37,5 @@ module.exports = exports = {
   topUser,
   updatePassword,
   forgetPassword,
+  getCount,
 };

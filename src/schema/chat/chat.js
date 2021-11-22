@@ -9,6 +9,7 @@ module.exports = (connection) => {
     attach: { type: String },
     readBy: { type: Array },
     isActive: { type: Boolean, default: true },
+    isStar: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
   });
