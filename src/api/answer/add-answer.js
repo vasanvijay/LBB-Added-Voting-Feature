@@ -1,3 +1,4 @@
+const { ObjectID } = require("bson");
 const Joi = require("joi");
 
 const enums = require("../../../json/enums.json");
@@ -32,40 +33,50 @@ module.exports = exports = {
     }
 
     try {
-      let findQuestion = await global.models.GLOBAL.QUESTION.find({
+      let answerRoom;
+      let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
       console.log("question--->>>", findQuestion);
       if (findQuestion) {
-        console.log("findQuestion?._id", findQuestion[0]._id);
+        console.log("findQuestion?._id", findQuestion._id);
         console.log("user._id", user._id);
-        console.log("findQuestion?.createdBy", findQuestion[0].createdBy);
-        const { id } = findQuestion[0]._id;
-        const { answerBy } = user._id;
-        const { questionBy } = findQuestion[0].createdBy;
+        console.log("findQuestion?.createdBy", findQuestion.createdBy);
+        const id = findQuestion._id;
+        const answerBy = user._id;
+        const questionBy = findQuestion.createdBy;
 
         let participateIds = [];
         participateIds.push(answerBy);
         participateIds.push(id);
         participateIds.push(questionBy);
 
-        let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
+        answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
           participateIds: {
             $size: participateIds.length,
             $all: [...participateIds],
           },
         });
 
-        if (answerRoom) {
+        console.log("answerRoom", answerRoom);
+
+        if (answerRoom != null) {
           console.log("Answer room---<>", answerRoom);
           let newAnswer = {
             answer: answer,
             answerBy: user._id,
           };
+
+          console.log("newAnswer", newAnswer);
           let updateAnswer =
             await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
-              { _id: answerRoom._id },
-              { $addToSet: { answer: newAnswer } }
+              { _id: ObjectID(answerRoom._id) },
+              {
+                $push: {
+                  answer: newAnswer,
+                },
+              },
+              { new: true }
             );
           if (updateAnswer) {
             console.log("UPDATED----->>>>", updateAnswer);
@@ -79,7 +90,7 @@ module.exports = exports = {
             participateIds: participateIds,
             questionId: question,
             answer: newAnswer,
-            createdAt: user._id,
+            createdAt: Date.now(),
           };
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM(roomObj);
 

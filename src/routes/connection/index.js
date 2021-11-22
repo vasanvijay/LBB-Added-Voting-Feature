@@ -27,6 +27,11 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4Connection.diclineConnection.handler
 );
+router.put(
+  "/remove/id=:removeId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Connection.removeConnection.handler
+);
 
 // POST Method
 router.post(

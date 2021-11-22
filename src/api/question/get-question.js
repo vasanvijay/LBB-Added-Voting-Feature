@@ -47,7 +47,8 @@ module.exports = exports = {
               $and: [
                 { _id: { $nin: user.answerLater } },
                 { _id: { $nin: user.removeQuestion } },
-                { "filter.options.optionName": user.subject[i] },
+                { createdBy: { $nin: user.blockUser } },
+                // { "filter.options?.optionName": user.subject[i] },
               ],
               question: { $regex: search, $options: "i" },
             })
@@ -79,6 +80,7 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
+                  { createdBy: { $nin: user.blockUser } },
                 ],
               })
                 .populate({
@@ -109,7 +111,8 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
-                  // { "filter.options.optionName": user.subject[i] },
+                  { createdBy: { $nin: user.blockUser } },
+                  // { "filter.options?.optionName": user.subject[i] },
                 ],
               })
                 // .populate({

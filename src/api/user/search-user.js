@@ -25,15 +25,21 @@ module.exports = exports = {
     }
     try {
       let searchUser = [];
+      let filterName;
       let distinctUser;
       if (filter) {
         console.log("FILTER---->>>", filter);
         let optionName = [];
+        filterName = filter.map((filName) => {
+          return filName.filterName;
+        });
         filter.map((fil) => {
+          // return (filterName = fil.filterName);
           fil?.options?.map((opt) => {
             optionName.push(opt.optionName);
           });
         });
+        console.log("FILT NAME----->>>", filterName);
         console.log("OBJ------>>>", optionName);
         for (let i = 0; i < optionName.length; i++) {
           if (optionName[i] != "") {

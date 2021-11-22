@@ -4,7 +4,6 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const ObjectId = require("mongodb").ObjectId;
 
 // Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
@@ -13,28 +12,39 @@ module.exports = exports = {
     try {
       let { user } = req;
       let { question } = req.params;
-      let findQuestion = await global.models.GLOBAL.QUESTION.find({
+      let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
       if (findQuestion) {
-        const { id } = question;
-        const { answerBy } = user._id;
-        const { questionBy } = findQuestion.createdBy;
-
+        const id = question;
+        const answerBy = user._id;
+        const questionBy = findQuestion.createdBy;
+        // let answerRoom;
         let participateIds = [];
         participateIds.push(answerBy);
         participateIds.push(id);
         participateIds.push(questionBy);
-
+        console.log("participateIds", participateIds);
         let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
             $all: [...participateIds],
           },
+        }).populate({
+          path: "answer.answerBy",
+          model: "user",
+          select: "_id name email region currentRole profileImage",
         });
-
-        if (answerRoom) {
+        // .populate({
+        //   path: "participateIds",
+        //   model: "user",
+        //   select: "_id name email region currentRole profileImage",
+        // });
+        if (answerRoom != null) {
           console.log("Chat room---<>", answerRoom);
+          // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+          //   questionId: question,
+          // });
           const data4createResponseObject = {
             req: req,
             result: 0,

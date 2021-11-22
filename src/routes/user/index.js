@@ -55,7 +55,11 @@ router.post(
   passport.authenticate(["jwt"], { session: false }),
   api4User.searchUser.handler
 );
-
+router.post(
+  "/reset/id=:userId",
+  validate("body", api4User.updatePassword.validation),
+  api4User.updatePassword.handler
+);
 // Put Method
 router.put(
   "/verify-email",
@@ -91,5 +95,10 @@ router.put(
   "/unblock/id=:userId",
   passport.authenticate(["jwt"], { session: false }),
   api4User.unBlockUser.handler
+);
+router.put(
+  "/forget",
+  validate("body", api4User.forgetPassword.validation),
+  api4User.forgetPassword.handler
 );
 module.exports = exports = router;

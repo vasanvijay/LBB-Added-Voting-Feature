@@ -4,6 +4,7 @@ const acceptConnection = require("./accept-connection");
 const withdrawConnection = require("./withdraw-connection");
 const getConnected = require("./get-coonected-user");
 const diclineConnection = require("./decline-connection");
+const removeConnection = require("./remove-connection");
 
 module.exports = exports = {
   addConnection,
@@ -12,4 +13,5 @@ module.exports = exports = {
   withdrawConnection,
   getConnected,
   diclineConnection,
+  removeConnection,
 };
