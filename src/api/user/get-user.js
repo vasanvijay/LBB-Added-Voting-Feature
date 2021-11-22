@@ -39,7 +39,7 @@ module.exports = exports = {
     }
     console.log("criteria---->", criteria);
     try {
-      let findUser = await global.models.GLOBAL.USER.find(criteria);
+      let findUser = await global.models.GLOBAL.USER.find(criteria).sort({createdAt:-1});
       let count = await global.models.GLOBAL.USER.count(criteria);
 
       // let TodayUser = await global.models.GLOBAL.USER.find(
