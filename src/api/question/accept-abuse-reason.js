@@ -1,36 +1,45 @@
+const Joi = require("joi");
+
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const ObjectId = require("mongodb").ObjectId;
 
-// Retrieve and return all Chats for particular user from the database.
+// Add category by admin
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
-    try {
-      let allChats;
-      allChats = await global.models.GLOBAL.CHAT.find({
-        userId: ObjectId(user._id),
-      })
-        .populate({
-          path: "sender",
-          model: "user",
-          select: "name email subject",
-        })
-        .populate({
-          path: "userId",
-          model: "user",
-          select: "name email subject",
-        });
+    const { questionId } = req.params;
+    if (!questionId) {
+      const data4createResponseObject = {
+        req: req,
+        result: -1,
+        message: messages.INVALID_PARAMETERS,
+        payload: {},
+        logPayload: false,
+      };
+      return res
+        .status(enums.HTTP_CODES.BAD_REQUEST)
+        .json(utils.createResponseObject(data4createResponseObject));
+    }
 
+    try {
+      const updateQuestion =
+        await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
+          { _id: questionId },
+          {
+            $set: {
+              reportAbuse: true,
+            },
+          },
+          { new: true }
+        );
       const data4createResponseObject = {
         req: req,
         result: 0,
-        message: messages.SUCCESS,
-        payload: { allChats },
+        message: messages.ITEM_INSERTED,
+        payload: { updateQuestion },
         logPayload: false,
       };
       res

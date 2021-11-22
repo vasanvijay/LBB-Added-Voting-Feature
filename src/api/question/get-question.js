@@ -40,6 +40,7 @@ module.exports = exports = {
         let limit = parseInt(req.query.limit);
         let skip = (parseInt(req.query.page) - 1) * limit;
         let question;
+        let count;
         if (search) {
           for (let i = 0; i < user.subject.length; i++) {
             question = await global.models.GLOBAL.QUESTION.find({
@@ -47,7 +48,9 @@ module.exports = exports = {
               $and: [
                 { _id: { $nin: user.answerLater } },
                 { _id: { $nin: user.removeQuestion } },
+                { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
+                { reportAbuse: { $nin: true } },
                 // { "filter.options?.optionName": user.subject[i] },
               ],
               question: { $regex: search, $options: "i" },
@@ -55,7 +58,7 @@ module.exports = exports = {
               .populate({
                 path: "createdBy",
                 model: "user",
-                select: "_id name",
+                select: "_id name subject",
               })
               // .populate({
               //   path: "filter.filterId",
@@ -70,6 +73,18 @@ module.exports = exports = {
               .skip(skip)
               .limit(limit)
               .exec();
+            count = await global.models.GLOBAL.QUESTION.count({
+              ...criteria,
+              $and: [
+                { _id: { $nin: user.answerLater } },
+                { _id: { $nin: user.removeQuestion } },
+                { _id: { $nin: user.abuseQuestion.questionId } },
+                { createdBy: { $nin: user.blockUser } },
+                { reportAbuse: { $nin: true } },
+                // { "filter.options?.optionName": user.subject[i] },
+              ],
+              question: { $regex: search, $options: "i" },
+            });
           }
         } else {
           if (byUser) {
@@ -80,13 +95,15 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
+                  { reportAbuse: { $nin: true } },
                 ],
               })
                 .populate({
                   path: "createdBy",
                   model: "user",
-                  select: "_id name",
+                  select: "_id name subject",
                 })
                 // .populate({
                 //   path: "filter.filterId",
@@ -101,6 +118,16 @@ module.exports = exports = {
                 .skip(skip)
                 .limit(limit)
                 .exec();
+              count = await global.models.GLOBAL.QUESTION.count({
+                ...criteria,
+                $and: [
+                  { _id: { $nin: user.answerLater } },
+                  { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: user.abuseQuestion.questionId } },
+                  { createdBy: { $nin: user.blockUser } },
+                  { reportAbuse: { $nin: true } },
+                ],
+              });
             }
           } else {
             for (let i = 0; i < user.subject.length; i++) {
@@ -111,7 +138,9 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
+                  { reportAbuse: { $nin: true } },
                   // { "filter.options?.optionName": user.subject[i] },
                 ],
               })
@@ -128,11 +157,22 @@ module.exports = exports = {
                 .populate({
                   path: "createdBy",
                   model: "user",
-                  select: "_id name",
+                  select: "_id name subject",
                 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
+              count = await global.models.GLOBAL.QUESTION.count({
+                ...criteria,
+                createdBy: { $not: { $eq: user._id } },
+                $and: [
+                  { _id: { $nin: user.answerLater } },
+                  { _id: { $nin: user.removeQuestion } },
+                  { createdBy: { $nin: user.blockUser } },
+                  { reportAbuse: { $nin: true } },
+                  // { "filter.options?.optionName": user.subject[i] },
+                ],
+              });
             }
           }
         }
@@ -345,7 +385,7 @@ module.exports = exports = {
           message: messages.SUCCESS,
           payload: {
             questions: questionDetais,
-            count: question.length,
+            count: count,
             todaysCount: TodayQuestion.length,
             profileaccess: QuestionProfileAccess.length,
             withoutprofileaccess: QuestionProfileWithoutAccess.length,
@@ -367,11 +407,12 @@ module.exports = exports = {
           .populate({
             path: "createdBy",
             model: "user",
-            select: "_id name",
+            select: "_id name subject",
           })
           .skip(skip)
           .limit(limit)
           .exec();
+        let count = await global.models.GLOBAL.QUESTION.count();
         let TodayQuestion = await global.models.GLOBAL.QUESTION.count({
           createdAt: {
             $gte: moment(new Date()).format("YYYY-MM-DD"),
@@ -384,7 +425,7 @@ module.exports = exports = {
             message: messages.SUCCESS,
             payload: {
               questions: questionDetais,
-              count: questionDetais.length,
+              count: count,
               todaysCount: TodayQuestion,
               page,
               limit,

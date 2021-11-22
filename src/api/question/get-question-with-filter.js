@@ -49,8 +49,10 @@ module.exports = exports = {
                 question: { $regex: search, $options: "i" },
                 $and: [
                   { _id: { $nin: user.answerLater } },
+                  { _id: { $nin: user.abuseQuestion } },
                   { createdBy: { $nin: user.blockUser } },
-                  { "filter.options?.optionName": filter[i] },
+                  { "filter.options.optionName": filter[i] },
+                  { reportAbuse: { $nin: true } },
                 ],
               })
                 // .populate({
@@ -97,9 +99,11 @@ module.exports = exports = {
                 // createdBy: { $not: { $eq: user._id } },
                 $and: [
                   { _id: { $nin: user.answerLater } },
-                  { "filter.options?.optionName": filter[i] },
+                  { "filter.options.optionName": filter[i] },
                   { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: user.abuseQuestion } },
                   { createdBy: { $nin: user.blockUser } },
+                  { reportAbuse: { $nin: true } },
                   //   { createdBy: { $nin: user._id } },
                 ],
               })
@@ -116,7 +120,7 @@ module.exports = exports = {
                 .skip(skip)
                 .limit(limit)
                 .exec();
-
+              console.log("quResult--->>", quResult);
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[i] != null) {
                   Questions.push(quResult[i]);
@@ -148,7 +152,9 @@ module.exports = exports = {
                   { _id: { $nin: user.answerLater } },
                   { "filter.options.optionName": filter[i] },
                   { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: user.abuseQuestion } },
                   { createdBy: { $nin: user.blockUser } },
+                  { reportAbuse: { $nin: true } },
                 ],
               })
                 // .populate({

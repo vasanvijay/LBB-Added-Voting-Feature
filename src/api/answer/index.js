@@ -8,6 +8,8 @@ const removeAnswerLater = require("./remove-answer-later");
 const getAnswerByQuestion = require("./get-answer-by-question");
 const removeAnswer = require("./remove-answer");
 const answerByUser = require("./answer-by-user");
+const answerRoomById = require("./get-answer-room-by-id");
+const addAnswerInAsked = require("./add-answer-in-asked-question");
 
 module.exports = exports = {
   addAnswer,
@@ -20,4 +22,6 @@ module.exports = exports = {
   getAnswerByQuestion,
   removeAnswer,
   answerByUser,
+  answerRoomById,
+  addAnswerInAsked,
 };

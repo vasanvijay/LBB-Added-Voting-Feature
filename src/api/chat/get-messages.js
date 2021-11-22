@@ -24,7 +24,7 @@ module.exports = exports = {
         roomId: req,
       }).populate({
         path: "sender",
-        select: "name",
+        select: "name subject",
       });
       console.log("Chat--->>>", chats);
       if (chats) {

@@ -18,6 +18,7 @@ module.exports = (connection) => {
       type: String,
       default: "Admin",
     },
+    abuseQuestion: [],
     answerLater: [{ type: mongoose.Schema.Types.ObjectId }],
     removeQuestion: [{ type: mongoose.Schema.Types.ObjectId }],
     blockUser: [{ type: mongoose.Schema.Types.ObjectId }],

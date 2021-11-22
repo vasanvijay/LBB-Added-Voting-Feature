@@ -10,6 +10,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.getQuestion.handler
 );
+router.get(
+  "/reported/id=:userId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.getReportedQuestion.handler
+);
 
 // POST Method
 router.post(
@@ -22,6 +27,13 @@ router.post(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.questionWithFilter.handler
 );
+router.post(
+  "/report/id=:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4Question.reportQuestion.validation),
+  api4Question.reportQuestion.handler
+);
+
 // PUT Method
 router.put(
   "/update-question",
@@ -38,6 +50,17 @@ router.put(
   "/remove/id=:questionId",
   passport.authenticate(["jwt"], { session: false }),
   api4Question.removeForUser.handler
+);
+router.put(
+  "/report/id=:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.acceptAbuse.handler
+);
+router.put(
+  "/decline/id=:userId",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4Question.declineRequest.validation),
+  api4Question.declineRequest.handler
 );
 
 // DELETE METHOD

@@ -1,45 +1,40 @@
+const Joi = require("joi");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
 
-// Retrieve and return all Block-user List from the database.
+// Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
-    console.log("User--->", user);
     try {
-      req.query.page = req.query.page ? req.query.page : 1;
-      let page = parseInt(req.query.page);
-      req.query.limit = req.query.limit ? req.query.limit : 10;
-      let limit = parseInt(req.query.limit);
-      let skip = (parseInt(req.query.page) - 1) * limit;
-      let blockUser = await global.models.GLOBAL.USER.find({
-        _id: user._id,
+      let { user } = req;
+      let { room } = req.params;
+      let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+        _id: room,
       })
         .populate({
-          path: "blockUser",
+          path: "answer.answerBy",
           model: "user",
-          select: "_id email name currentRole subject",
+          select: "_id name email region currentRole profileImage subject",
         })
-        .skip(skip)
-        .limit(limit);
-      console.log("BlokList--->>>", blockUser);
-      console.log("blockUser", blockUser[0]?.blockUser);
-      if (blockUser) {
-        blockUser = JSON.parse(JSON.stringify(blockUser));
+        .populate({
+          path: "questionId",
+          model: "question",
+          select: "_id question response view createdBy",
+        });
+      if (findAnswerRoom) {
+        console.log("findAnswerRoom---<>", findAnswerRoom);
+        // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+        //   questionId: question,
+        // });
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.ITEM_FETCHED,
-          payload: {
-            blockUser: blockUser[0]?.blockUser,
-            count: blockUser[0]?.blockUser.length,
-            page,
-            limit,
-          },
+          payload: { findAnswerRoom },
           logPayload: false,
         };
         res
@@ -49,7 +44,7 @@ module.exports = exports = {
         const data4createResponseObject = {
           req: req,
           result: -1,
-          message: messages.NOT_FOUND,
+          message: messages.ITEM_NOT_FOUND,
           payload: {},
           logPayload: false,
         };
