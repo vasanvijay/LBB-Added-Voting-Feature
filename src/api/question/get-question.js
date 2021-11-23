@@ -13,6 +13,7 @@ module.exports = exports = {
     const { question } = req.query;
     const { byUser } = req.query;
     const { search } = req.query;
+    // console.log("user.abuseQuestion", user.abuseQuestion);
     let criteria = {};
     if (byUser) {
       criteria = {
@@ -48,7 +49,7 @@ module.exports = exports = {
               $and: [
                 { _id: { $nin: user.answerLater } },
                 { _id: { $nin: user.removeQuestion } },
-                { _id: { $nin: user.abuseQuestion.questionId } },
+                // { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
                 // { "filter.options?.optionName": user.subject[i] },
@@ -78,7 +79,7 @@ module.exports = exports = {
               $and: [
                 { _id: { $nin: user.answerLater } },
                 { _id: { $nin: user.removeQuestion } },
-                { _id: { $nin: user.abuseQuestion.questionId } },
+                // { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
                 // { "filter.options?.optionName": user.subject[i] },

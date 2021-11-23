@@ -104,6 +104,7 @@ module.exports = exports = {
                   email: email,
                   userType: findUser.userType,
                   subject: findUser.subject,
+                  abuseQuestion: findUser.abuseQuestion,
                   scope: "login",
                 };
 

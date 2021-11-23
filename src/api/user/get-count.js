@@ -10,7 +10,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    console.log("User--->", user);
+    // console.log("User--->", user);
     try {
       let questionAsked = await global.models.GLOBAL.QUESTION.count({
         createdBy: user._id,
@@ -22,9 +22,23 @@ module.exports = exports = {
       let answerLaterCount = answerLaters.answerLater.length;
       console.log("answerLaterCount---->>", answerLaterCount);
 
-      let getAnswer = await global.models.GLOBAL.ANSWER.count({
-        answerBy: ObjectID(user._id),
+      let answer = 0;
+      let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
+        "question",
+        { $and: [{ answerBy: user._id }] }
+      );
+      answer = await questionArray.map(async (ques) => {
+        let ans = await global.models.GLOBAL.QUESTION.findOne({
+          _id: ques,
+        });
+        // console.log("ANS -->", ans);
+        return ans.length;
       });
+      console.log("LENGTH ----->>>", answer.length);
+      // let getAnswer = await global.models.GLOBAL.ANSWER.find({
+      //   answerBy: ObjectID(user._id),
+      // });
+
       const data4createResponseObject = {
         req: req,
         result: 0,
@@ -32,7 +46,7 @@ module.exports = exports = {
         payload: {
           questionAskedCount: questionAsked,
           answerLaterCount: answerLaterCount,
-          getAnswerCount: getAnswer,
+          getAnswerCount: answer.length,
         },
         logPayload: false,
       };
