@@ -56,7 +56,7 @@ router.post(
   api4User.deactivateAccount.handler
 );
 router.post(
-  "/search=:searchData",
+  "/search/",
   passport.authenticate(["jwt"], { session: false }),
   api4User.searchUser.handler
 );
@@ -65,6 +65,7 @@ router.post(
   validate("body", api4User.updatePassword.validation),
   api4User.updatePassword.handler
 );
+
 // Put Method
 router.put(
   "/verify-email",

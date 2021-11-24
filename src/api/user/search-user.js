@@ -8,85 +8,273 @@ const utils = require("../../utils");
 module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
-    const { searchData } = req.params;
+    const { search } = req.query;
+    console.log("SEARCH --->>", search);
     const { filter } = req.body;
-    if (!searchData) {
-      const data4createResponseObject = {
-        req: req,
-        result: -1,
-        message: messages.INVALID_PARAMETERS,
-        payload: {},
-        logPayload: false,
-      };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
-    }
+
     try {
+      let criteria = [];
       let searchUser = [];
-      let filterName;
       let distinctUser;
-      if (filter) {
+      if (filter && search) {
         console.log("FILTER---->>>", filter);
-        let optionName = [];
-        filterName = filter.map((filName) => {
-          return filName.filterName;
-        });
+
         filter.map((fil) => {
-          // return (filterName = fil.filterName);
-          fil?.options?.map((opt) => {
-            optionName.push(opt.optionName);
-          });
-        });
-        console.log("FILT NAME----->>>", filterName);
-        console.log("OBJ------>>>", optionName);
-        for (let i = 0; i < optionName.length; i++) {
-          if (optionName[i] != "") {
-            let quResult = await global.models.GLOBAL.USER.find({
-              subject: { $regex: searchData, $options: "i" },
-              $and: [{ subject: optionName[i] }],
+          if (fil.filterId == "6188f31e603a571b33b09585") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
             });
-
-            for (let j = 0; j < quResult.length; j++) {
-              if (quResult[i] != null) {
-                searchUser.push(quResult[i]);
-              }
-            }
+            criteria.push({
+              subject: { $in: optionName },
+            });
           }
-        }
-        distinctUser = Array.from(new Set(searchUser.map((q) => q._id))).map(
-          (id) => {
-            return {
-              _id: id,
-              profileImage: searchUser.find((aid) => aid._id === id)
-                .profileImage,
-              name: searchUser.find((aid) => aid._id === id).name,
-              currentRole: searchUser.find((aid) => aid._id === id).currentRole,
-              region: searchUser.find((aid) => aid._id === id).region,
-              gender: searchUser.find((aid) => aid._id === id).gender,
-              subject: searchUser.find((aid) => aid._id === id).subject,
-            };
+          if (fil.filterId == "6188f41c603a571b33b095d9") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              currentRole: { $in: optionName },
+            });
           }
-        );
-      } else {
-        let searchUser = await global.models.GLOBAL.USER.find({
-          subject: { $regex: searchData, $options: "i" },
+          if (fil.filterId == "618909c5fec3b250c029caec") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              industry: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f536603a571b33b09644") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              employeeNumber: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6189098afec3b250c029cadd") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              region: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f6d1a06a481f928d6667") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              countryOfOrigin: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a1dfec3b250c029cb05") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              countryOfResidence: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f7caa06a481f928d6699") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              levelOfEducation: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "618909a2fec3b250c029cae2") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              ethnicity: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a10fec3b250c029cb00") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              politicalAffiliation: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a36fec3b250c029cb0a") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              religiousAffiliation: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a4efec3b250c029cb0f") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              sexualOrientation: { $in: optionName },
+            });
+          }
         });
+        distinctUser = await global.models.GLOBAL.USER.find({
+          $and: [
+            { subject: { $regex: search, $options: "i" } },
+            {
+              $or: criteria,
+            },
+          ],
+        });
+      } else if (search) {
+        distinctUser = await global.models.GLOBAL.USER.find({
+          subject: { $regex: search, $options: "i" },
+        });
+      } else if (filter) {
+        console.log("FILTER---->>>", filter);
 
-        distinctUser = Array.from(new Set(searchUser.map((q) => q._id))).map(
-          (id) => {
-            return {
-              _id: id,
-              profileImage: searchUser.find((aid) => aid._id === id)
-                .profileImage,
-              name: searchUser.find((aid) => aid._id === id).name,
-              currentRole: searchUser.find((aid) => aid._id === id).currentRole,
-              region: searchUser.find((aid) => aid._id === id).region,
-              gender: searchUser.find((aid) => aid._id === id).gender,
-              subject: searchUser.find((aid) => aid._id === id).subject,
-            };
+        filter.map((fil) => {
+          if (fil.filterId == "6188f31e603a571b33b09585") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              subject: { $in: optionName },
+            });
           }
-        );
+          if (fil.filterId == "6188f41c603a571b33b095d9") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              currentRole: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "618909c5fec3b250c029caec") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              industry: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f536603a571b33b09644") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              employeeNumber: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6189098afec3b250c029cadd") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              region: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f6d1a06a481f928d6667") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              countryOfOrigin: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a1dfec3b250c029cb05") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              countryOfResidence: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f7caa06a481f928d6699") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              levelOfEducation: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "618909a2fec3b250c029cae2") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              ethnicity: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a10fec3b250c029cb00") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              politicalAffiliation: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a36fec3b250c029cb0a") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              religiousAffiliation: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a4efec3b250c029cb0f") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              sexualOrientation: { $in: optionName },
+            });
+          }
+        });
+        distinctUser = await global.models.GLOBAL.USER.find({
+          $and: [
+            { _id: { $nin: user._id } },
+            {
+              $or: criteria,
+            },
+          ],
+        });
+      } else {
+        console.log("ELSE---->>>");
+        req.query.page = req.query.page ? req.query.page : 1;
+        let page = parseInt(req.query.page);
+        req.query.limit = req.query.limit ? req.query.limit : 10;
+        console.log("LIMIT--->>", req.query.limit);
+        let limit = parseInt(req.query.limit);
+        let skip = (parseInt(req.query.page) - 1) * limit;
+        distinctUser = await global.models.GLOBAL.USER.find({
+          _id: { $nin: user._id },
+        })
+          .skip(skip)
+          .limit(limit);
       }
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
@@ -103,7 +291,6 @@ module.exports = exports = {
         let panding = findConection.filter(function (elf) {
           return elf.senderId.toString() === id.toString();
         });
-        console.log("length---->", panding.length);
         return panding.length;
       };
 
@@ -117,21 +304,18 @@ module.exports = exports = {
       let allUser = [];
       for (let i = 0; i < distinctUser.length; i++) {
         if (conectIdExist(distinctUser[i]?._id)) {
-          console.log("ID---->>>", distinctUser[i]?._id);
           const searchUserObj = {
             searchUser: distinctUser[i],
             isFriend: "true",
           };
           allUser.push(searchUserObj);
         } else if (sentIdExist(distinctUser[i]?._id)) {
-          console.log("ID---->>>", distinctUser[i]?._id);
           const searchUserObj = {
             searchUser: distinctUser[i],
             isFriend: "sent",
           };
           allUser.push(searchUserObj);
         } else if (pandingIdExist(distinctUser[i]?._id)) {
-          console.log("ID---->>>", distinctUser[i]?._id);
           const searchUserObj = {
             searchUser: distinctUser[i],
             isFriend: "pending",
@@ -157,6 +341,7 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
+        console.log("ALL USER LENGTH---->>>", allUser.length);
         const data4createResponseObject = {
           req: req,
           result: 0,
