@@ -4,6 +4,7 @@ module.exports = (connection) => {
     answer: String,
     answerBy: { type: mongoose.Schema.Types.ObjectId },
     answerAt: { type: Date, default: Date.now() },
+    messageStar: { type: Boolean, default: false },
   });
 
   const answerRoomSchema = new mongoose.Schema({

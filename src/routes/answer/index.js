@@ -42,6 +42,16 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.removeAnswerLater.handler
 );
+router.put(
+  "/star/id=:roomId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.starAnswer.handler
+);
+router.put(
+  "/remove/id=:roomId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.removeRoomAnswer.handler
+);
 
 // POST Method
 router.post(

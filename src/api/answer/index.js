@@ -10,6 +10,8 @@ const removeAnswer = require("./remove-answer");
 const answerByUser = require("./answer-by-user");
 const answerRoomById = require("./get-answer-room-by-id");
 const addAnswerInAsked = require("./add-answer-in-asked-question");
+const starAnswer = require("./star-message");
+const removeRoomAnswer = require("./delete-into-room");
 
 module.exports = exports = {
   addAnswer,
@@ -24,4 +26,6 @@ module.exports = exports = {
   answerByUser,
   answerRoomById,
   addAnswerInAsked,
+  starAnswer,
+  removeRoomAnswer,
 };

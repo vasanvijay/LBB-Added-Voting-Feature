@@ -253,6 +253,24 @@ module.exports = exports = {
               sexualOrientation: { $in: optionName },
             });
           }
+          if (fil.filterId == "619e0cf5641d2f00f887ece1") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              gender: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "619e0cec641d2f00f887ecdc") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              age: { $in: optionName },
+            });
+          }
         });
         distinctUser = await global.models.GLOBAL.USER.find({
           $and: [
