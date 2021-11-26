@@ -13,6 +13,7 @@ module.exports = (app, logger) => {
   const chatRoute = require("../routes/chat/index");
   const connectionRoute = require("../routes/connection/index");
   const legendsRoute = require("../routes/legends/index");
+  const notificationRoute = require("../routes/notification/index");
 
   // define all routes here
   const { createResponseObject } = require("../utils");
@@ -26,6 +27,7 @@ module.exports = (app, logger) => {
   app.use(["/api/v1/chat"], chatRoute);
   app.use(["/api/v1/connection"], connectionRoute);
   app.use(["/api/v1/legend"], legendsRoute);
+  app.use(["/api/v1/notification"], notificationRoute);
 
   /* Catch all */
   app.all("*", function (req, res) {

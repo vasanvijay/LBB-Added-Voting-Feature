@@ -119,6 +119,18 @@ module.exports = exports = {
             },
           }
         );
+        let ntfObj = {
+          userId: user._id,
+          receiverId: questionBy,
+          title: `Notification By ${user._id} to ${questionBy}`,
+          description: `Someones Give Answer to Your Question's ${findQuestion.question}`,
+          createdBy: user._id,
+          updatedBy: user._id,
+        };
+
+        let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);
+        notification.save();
+
         const data4createResponseObject = {
           req: req,
           result: 0,

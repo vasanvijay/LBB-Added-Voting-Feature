@@ -68,6 +68,9 @@ module.exports = async () => {
         ANSWER_ROOM: require("../schema/answerRoom/answerRoom")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        NOTIFICATION: require("../schema/notification/notification")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
       },
     };
 
