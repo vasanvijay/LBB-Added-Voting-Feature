@@ -3,7 +3,7 @@ module.exports = (connection) => {
   const answerSchema = new mongoose.Schema({
     answer: String,
     answerBy: { type: mongoose.Schema.Types.ObjectId },
-    answerAt: { type: Date, default: Date.now() },
+    answerAt: { type: Date, default: new Date() },
     messageStar: { type: Boolean, default: false },
   });
 
@@ -11,7 +11,7 @@ module.exports = (connection) => {
     participateIds: [{ type: mongoose.Schema.Types.ObjectId }],
     questionId: { type: mongoose.Schema.Types.ObjectId },
     answer: [answerSchema],
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date, default: new Date() },
   });
 
   // return chat Schema;

@@ -11,26 +11,25 @@ module.exports = exports = {
     try {
       let { user } = req;
       let { roomId } = req.params;
-      let { answerId } = req.body;
+      let { answerId, answer, messageStar } = req.body;
       let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
         _id: roomId,
       });
-      console.log("ANSWER ROOM--->", findAnswerRoom);
+      // console.log("ANSWER ROOM--->", findAnswerRoom);
       if (findAnswerRoom) {
         let answerObj;
         findAnswerRoom.map((ansObj) => {
           //   console.log("ANS-->", ansObj.answer);
           answerObj = ansObj.answer.map((ansId) => {
-            console.log("ANS ID--->>", ansId._id == answerId);
+            // console.log("ANS ID--->>", ansId._id == answerId);
             if (ansId._id == answerId) {
-              //   console.log("ID-->", answerId);
               return {
                 answerAt: new Date(),
                 _id: ansId._id,
-                answer: req.body.answer ? req.body.answer : ansId.answer,
-                messageStar: req.body.messageStar
-                  ? req.body.messageStar
-                  : ansId.messageStar,
+                answer: answer ? answer : ansId?.answer,
+                // messageStar:
+                messageStar:
+                  messageStar != undefined ? messageStar : ansId?.messageStar,
                 answerBy: ansId.answerBy,
               };
             } else {
@@ -44,7 +43,7 @@ module.exports = exports = {
             }
           });
         });
-        console.log("answerObj-->", answerObj);
+        // console.log("answerObj-->", answerObj);
         let starAndUpdate =
           await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
             { _id: roomId },
@@ -55,7 +54,7 @@ module.exports = exports = {
             },
             { new: true }
           );
-        console.log("STAR--->>>", starAndUpdate);
+        // console.log("STAR--->>>", starAndUpdate);
         const data4createResponseObject = {
           req: req,
           result: 0,
