@@ -9,7 +9,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-
+    let notification = [];
     try {
       let getNotification = await global.models.GLOBAL.NOTIFICATION.find({
         receiverId: user._id,
@@ -18,16 +18,58 @@ module.exports = exports = {
         model: "user",
         select: "subject profileImage",
       });
-      console.log("COUNT---->>>", getNotification.length);
       if (getNotification) {
+        for (let i = 0; i < getNotification.length; i++) {
+          if (getNotification[i].question !== null) {
+            let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+              _id: getNotification[i].question,
+            });
+            let ntfObj = {
+              _id: getNotification[i]._id,
+              userId: getNotification[i].userId,
+              receiverId: getNotification[i].receiverId,
+              title: getNotification[i].title,
+              description: getNotification[i].description,
+              status: getNotification[i].status,
+              createdAt: getNotification[i].createdAt,
+              createdBy: getNotification[i].createdBy,
+              updatedAt: getNotification[i].updatedAt,
+              updatedBy: getNotification[i].updatedBy,
+              question: findQuestion,
+            };
+            notification.push(ntfObj);
+          } else {
+            let ntfObj = {
+              _id: getNotification[i]._id,
+              userId: getNotification[i].userId,
+              receiverId: getNotification[i].receiverId,
+              title: getNotification[i].title,
+              description: getNotification[i].description,
+              status: getNotification[i].status,
+              createdAt: getNotification[i].createdAt,
+              createdBy: getNotification[i].createdBy,
+              updatedAt: getNotification[i].updatedAt,
+              updatedBy: getNotification[i].updatedBy,
+            };
+            notification.push(ntfObj);
+          }
+        }
+        let updateNotification =
+          await global.models.GLOBAL.NOTIFICATION.updateMany(
+            { receiverId: user._id },
+            {
+              $set: {
+                status: false,
+              },
+            },
+            { new: true }
+          );
+        console.log("Update Many----->>>", updateNotification);
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.ITEM_FETCHED,
-          payload: {
-            notification: getNotification,
-            count: getNotification.length,
-          },
+          payload: { notification },
           logPayload: false,
         };
         return res

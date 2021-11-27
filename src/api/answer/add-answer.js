@@ -126,6 +126,7 @@ module.exports = exports = {
           description: `Someones Give Answer to Your Question's ${findQuestion.question}`,
           createdBy: user._id,
           updatedBy: user._id,
+          questionBy: findQuestion._id,
         };
 
         let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);

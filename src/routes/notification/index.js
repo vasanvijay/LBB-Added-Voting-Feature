@@ -6,9 +6,14 @@ const passport = require("passport");
 
 // Get Methods
 router.get(
-  "/",
+  "/active",
   passport.authenticate(["jwt"], { session: false }),
   api4Notification.getAllNotification.handler
+);
+router.get(
+  "/",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Notification.getNotificationCount.handler
 );
 
 // Put Methods

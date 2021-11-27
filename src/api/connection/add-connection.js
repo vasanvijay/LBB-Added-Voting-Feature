@@ -35,6 +35,19 @@ module.exports = exports = {
           request
         );
         updatedReceiverData.save();
+
+        let ntfObj = {
+          userId: user._id,
+          receiverId: receiverId,
+          title: `Notification By ${user._id} to ${receiverId}`,
+          description: "Someones Sent You the Connection Request.",
+          createdBy: user._id,
+          updatedBy: user._id,
+        };
+
+        let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);
+        notification.save();
+
         const data4createResponseObject = {
           req: req,
           result: 0,
