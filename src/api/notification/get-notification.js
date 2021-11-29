@@ -64,7 +64,6 @@ module.exports = exports = {
             },
             { new: true }
           );
-        console.log("Update Many----->>>", updateNotification);
         const data4createResponseObject = {
           req: req,
           result: 0,

@@ -16,7 +16,6 @@ module.exports = exports = {
         { $project: { _id: 0, filterId: "$_id", use: 1 } },
         { $sort: { use: -1 } },
       ]);
-      console.log("Most Used---->>>", mostUsed);
       let newTopSubject = [];
       for (let i = 0; i < mostUsed.length; i++) {
         let topSubject = await global.models.GLOBAL.FILTER.find({
@@ -25,11 +24,9 @@ module.exports = exports = {
         topSubject = [...topSubject, { use: mostUsed[i].use }];
         newTopSubject.push(topSubject);
       }
-      console.log("newTopSubject", newTopSubject);
       let topSubjects = newTopSubject.filter(function (el) {
         return el.length >= 1;
       });
-      console.log("topSubjects--->", topSubjects);
       const data4createResponseObject = {
         req: req,
         result: 0,

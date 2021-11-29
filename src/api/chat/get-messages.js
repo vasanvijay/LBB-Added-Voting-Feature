@@ -18,7 +18,6 @@ module.exports = exports = {
     //    const { roomId } = req;
     //    const { user } = req;
 
-    console.log("req", req);
     try {
       let chats = await global.models.GLOBAL.CHAT.find({
         roomId: req,
@@ -26,7 +25,6 @@ module.exports = exports = {
         path: "sender",
         select: "name subject",
       });
-      console.log("Chat--->>>", chats);
       if (chats) {
         const data4createResponseObject = {
           req: req,

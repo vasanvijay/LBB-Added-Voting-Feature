@@ -18,7 +18,6 @@ module.exports = exports = {
 
   handler: async (req, res) => {
     const { email, password } = req.body;
-    console.log("req.body", req.body);
     if (!email || !password) {
       const data4createResponseObject = {
         req: req,

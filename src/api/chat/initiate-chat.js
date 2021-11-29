@@ -20,7 +20,6 @@ module.exports = exports = {
       const { user } = req;
 
       let participateIds = [];
-      console.log("userr", user);
       // check user type
       participateIds.push(user._id);
       participateIds.push(id);
@@ -32,7 +31,6 @@ module.exports = exports = {
         },
       });
       if (chatRoom) {
-        console.log("Chat room---<>", chatRoom);
         const data4createResponseObject = {
           req: req,
           result: 0,
@@ -48,7 +46,6 @@ module.exports = exports = {
           participateIds: participateIds,
         });
         chatRoom.save();
-        console.log("New Chats room---<>", chatRoom);
         const data4createResponseObject = {
           req: req,
           result: 0,

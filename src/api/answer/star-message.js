@@ -15,13 +15,10 @@ module.exports = exports = {
       let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
         _id: roomId,
       });
-      // console.log("ANSWER ROOM--->", findAnswerRoom);
       if (findAnswerRoom) {
         let answerObj;
         findAnswerRoom.map((ansObj) => {
-          //   console.log("ANS-->", ansObj.answer);
           answerObj = ansObj.answer.map((ansId) => {
-            // console.log("ANS ID--->>", ansId._id == answerId);
             if (ansId._id == answerId) {
               return {
                 answerAt: new Date(),
@@ -43,7 +40,6 @@ module.exports = exports = {
             }
           });
         });
-        // console.log("answerObj-->", answerObj);
         let starAndUpdate =
           await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
             { _id: roomId },
@@ -54,7 +50,6 @@ module.exports = exports = {
             },
             { new: true }
           );
-        // console.log("STAR--->>>", starAndUpdate);
         const data4createResponseObject = {
           req: req,
           result: 0,

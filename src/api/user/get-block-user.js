@@ -9,7 +9,6 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    console.log("User--->", user);
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -26,8 +25,6 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
-      console.log("BlokList--->>>", blockUser);
-      console.log("blockUser", blockUser[0]?.blockUser);
       if (blockUser) {
         blockUser = JSON.parse(JSON.stringify(blockUser));
         const data4createResponseObject = {

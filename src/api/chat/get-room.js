@@ -11,7 +11,6 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       const chatRoom = await global.models.GLOBAL.CHAT({ roomId: req });
-      console.log("chats", chatRoom);
       const data4createResponseObject = {
         req: req,
         result: 0,

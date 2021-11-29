@@ -13,7 +13,6 @@ module.exports = exports = {
     const { question } = req.query;
     const { byUser } = req.query;
     const { search } = req.query;
-    // console.log("user.abuseQuestion", user.abuseQuestion);
     let criteria = {};
     if (byUser) {
       criteria = {
@@ -31,8 +30,6 @@ module.exports = exports = {
         _id: question,
       };
     }
-    // console.log("Criteria---->", user.subject);
-    // console.log("LENGTH--------->>", user.subject.length);
     try {
       if (user.userType !== enums.USER_TYPE.ADMIN) {
         req.query.page = req.query.page ? req.query.page : 1;
@@ -90,7 +87,6 @@ module.exports = exports = {
         } else {
           if (byUser) {
             for (let i = 0; i < user.subject.length; i++) {
-              console.log("user.subject[i]---->", user.subject[i]);
               question = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
                 $and: [
@@ -132,7 +128,6 @@ module.exports = exports = {
             }
           } else {
             for (let i = 0; i < user.subject.length; i++) {
-              console.log("user.subject[i]---->", user.subject[i]);
               question = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
                 createdBy: { $not: { $eq: user._id } },
@@ -205,7 +200,6 @@ module.exports = exports = {
         });
 
         const blockIdExist = (id) => {
-          console.log("ID--->>", id);
           return findUser.blockUser?.length
             ? findUser.blockUser.some(function (eld) {
                 return eld.toString() == id.toString();
@@ -214,7 +208,6 @@ module.exports = exports = {
         };
 
         const sentIdExist = (id) => {
-          console.log("ID--->>", id);
           var check = findConection.filter(function (elc) {
             return elc.receiverId.toString() == id.toString();
           });
@@ -224,23 +217,18 @@ module.exports = exports = {
           let panding = pandingConnection.filter(function (elf) {
             return elf.senderId.toString() === id.toString();
           });
-          console.log("length---->", panding.length);
           return panding.length;
         };
         const conectIdExist = (id) => {
-          console.log("ID--->>", id);
-
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
               })
             : false;
         };
-        console.log("QUESTION----->>>", question);
         let questionDetais = [];
         for (let i = 0; i < question.length; i++) {
           if (conectIdExist(question[i].createdBy?._id)) {
-            console.log("IF--------------<>");
             const questionDetaisObj = {
               _id: question[i]._id,
               displayProfile: question[i].displayProfile,
@@ -264,7 +252,6 @@ module.exports = exports = {
             };
             questionDetais.push(questionDetaisObj);
           } else if (sentIdExist(question[i].createdBy?._id)) {
-            console.log("IN ELSE IF----------->>>>>>");
             const questionDetaisObj = {
               _id: question[i]._id,
               displayProfile: question[i].displayProfile,
@@ -288,7 +275,6 @@ module.exports = exports = {
             };
             questionDetais.push(questionDetaisObj);
           } else if (pandingIdExist(question[i].createdBy?._id)) {
-            console.log("ELSE IF--------->>>>");
             const questionDetaisObj = {
               _id: question[i]._id,
               displayProfile: question[i].displayProfile,
@@ -312,7 +298,6 @@ module.exports = exports = {
             };
             questionDetais.push(questionDetaisObj);
           } else if (blockIdExist(question[i].createdBy?._id)) {
-            console.log("BLOCK ELSE IF----->>>> ", question[i].createdBy?._id);
             const questionDetaisObj = {
               _id: question[i]._id,
               displayProfile: question[i].displayProfile,
@@ -336,7 +321,6 @@ module.exports = exports = {
             };
             questionDetais.push(questionDetaisObj);
           } else {
-            console.log("ELSE------->>>", question[i].createdBy?._id);
             const questionDetaisObj = {
               _id: question[i]._id,
               displayProfile: question[i].displayProfile,

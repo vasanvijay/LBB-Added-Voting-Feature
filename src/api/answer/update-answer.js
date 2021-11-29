@@ -47,7 +47,6 @@ module.exports = exports = {
         }
       );
       if (updateAnswer) {
-        console.log("Updated--->", updateAnswer);
         const data4createResponseObject = {
           req: req,
           result: 0,

@@ -15,7 +15,7 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    const { email, name,password } = req.body;
+    const { email, name, password } = req.body;
     if (!email || !name || !password) {
       const data4createResponseObject = {
         req: req,
@@ -28,7 +28,6 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-     console.log("new body--->", req.body)
 
     try {
       let findUser = await global.models.GLOBAL.USER.find({
@@ -58,7 +57,6 @@ module.exports = exports = {
           date: new Date(),
           scope: "signup",
         };
-        console.log("token", data4token);
         let userRegistration = {
           email: email,
           name: name,
@@ -67,7 +65,9 @@ module.exports = exports = {
         };
 
         const newUser = await global.models.GLOBAL.USER(userRegistration);
-        const contregister = await global.models.GLOBAL.USER.count(userRegistration);
+        const contregister = await global.models.GLOBAL.USER.count(
+          userRegistration
+        );
         try {
           await newUser.save();
         } catch (error) {
@@ -104,7 +104,7 @@ module.exports = exports = {
           result: 0,
           message: messages.USER_REGISTRATION_SUCCESS,
           payload: responseObj,
-        
+
           logPayload: false,
         };
         res

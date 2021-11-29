@@ -16,25 +16,21 @@ module.exports = exports = {
         { $project: { _id: 0, createdBy: "$_id", use: 1 } },
         { $sort: { use: -1 } },
       ]);
-      // console.log("Most Used---->>>", mostUsed);
       let newTopUser = [];
       let users = {};
       for (let i = 0; i < mostUsed.length; i++) {
         let answerCount = await global.models.GLOBAL.ANSWER.count({
           answerBy: mostUsed[i].createdBy,
         });
-        // console.log("ANS COUNT-------------->>>>>", answerCount);
         let topUser = await global.models.GLOBAL.USER.find({
           _id: mostUsed[i].createdBy,
         });
-        // console.log("topUser---->>>", topUser[i]?.name);
         for (let j = 0; j < topUser.length; j++) {
           users = {
             name: topUser[j]?.name,
             email: topUser[j]?.email,
           };
         }
-        // console.log("user--->>", users);
         topUser = [
           users,
           { questionByUser: mostUsed[i].use },
@@ -42,11 +38,9 @@ module.exports = exports = {
         ];
         newTopUser.push(topUser);
       }
-      // console.log("newTopSubject", newTopUser);
       let topUsers = newTopUser.filter(function (el) {
         return el.length >= 1;
       });
-      // console.log("topUsers--->", topUsers);
       const data4createResponseObject = {
         req: req,
         result: 0,

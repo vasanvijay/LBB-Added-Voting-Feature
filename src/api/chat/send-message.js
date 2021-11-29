@@ -17,7 +17,6 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { roomId, sender, message, type } = req;
     // const { user } = req;
-    console.log("reqqqqq", req);
     try {
       let chat = {
         roomId: roomId,

@@ -117,7 +117,6 @@ module.exports = exports = {
         { $set: { verified: true } },
         { new: true }
       );
-      console.log("verification---->", verified);
       // User found - create JWT and return it
       const data4token = {
         id: user._id,
@@ -184,7 +183,6 @@ module.exports = exports = {
           { $set: [{ verified: true }] },
           { new: true }
         );
-        console.log("verification---->", verified);
         const data4createResponseObject = {
           req: req,
           result: 0,

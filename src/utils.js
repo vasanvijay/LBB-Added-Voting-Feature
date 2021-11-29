@@ -4,7 +4,18 @@ const crypto = require("crypto");
 const flatten = require("flat");
 const logger = require("./logger");
 const { default: jwtDecode } = require("jwt-decode");
+const multer = require("multer");
+const multerS3 = require("multer-s3");
+var AWS = require("aws-sdk");
 
+const { s3Config } = require("./middlewares/config");
+AWS.config.update({
+  accessKeyId: s3Config.clientId,
+  secretAccessKey: s3Config.clientSecret,
+  region: s3Config.region,
+});
+
+const s3 = new AWS.S3();
 let functions = {};
 
 functions.config4hashes = {
@@ -81,4 +92,86 @@ functions.sortByKeys = (obj) => {
   return sortedObj;
 };
 /* This has to be the last line - add all functions above. */
+
+functions.serviceImageUploadS3 = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: s3Config.bucket,
+    acl: "public-read",
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function (req, file, cb) {
+      console.log("file[0]", file);
+      cb(
+        null,
+        "service/" +
+          "-" +
+          "ser" +
+          "-" +
+          Date.now().toString() +
+          "." +
+          file.mimetype.split("/")[file.mimetype.split("/").length - 1]
+      );
+    },
+    shouldTransform: function (req, file, cb) {
+      cb(null, /^image/i.test(file.mimetype));
+    },
+    // transforms: [
+    //   {
+    //     id: "original",
+    //     transform: function (req, file, cb) {
+    //       //Perform desired transformations
+    //       cb(null, sharp().resize(600, 600).max());
+    //     },
+    //   },
+    // ],
+  }),
+});
+
+functions.mediaDeleteS3 = function (filename, callback) {
+  console.log(filename);
+  var s3 = new AWS.S3();
+  var params = {
+    Bucket: s3Config.bucket,
+    Key: filename,
+  };
+
+  s3.deleteObject(params, function (err, data) {
+    if (data) {
+      console.log("file deleted", data);
+    } else {
+      console.log("err in delete object", err);
+      // callback(null);
+    }
+  });
+};
+
+functions.uploadBase = async function (profileImage, userId) {
+  const base64Data = Buffer.from(
+    profileImage.replace(/^data:image\/\w+;base64,/, ""),
+    "base64"
+  );
+  const type = profileImage.split(";")[0].split("/")[1];
+  const params = {
+    Bucket: process.env.bucket,
+    Key: `${userId}.${type}`, // type is not required
+    Body: base64Data,
+    ACL: "public-read",
+    ContentEncoding: "base64", // required
+    ContentType: `image/${type}`, // required. Notice the back ticks
+  };
+
+  let location = "";
+  let key = "";
+  try {
+    const { Location, Key } = await s3.upload(params).promise();
+    location = Location;
+    key = Key;
+    return location;
+  } catch (error) {
+    console.log("image upload error --> ", error);
+  }
+};
 module.exports = exports = functions;

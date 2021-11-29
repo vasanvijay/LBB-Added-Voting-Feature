@@ -26,8 +26,6 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
-      // console.log("question----->>>", question);
-      console.log("QUESTION", question[0]?.answerLater);
       if (question) {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
@@ -37,8 +35,6 @@ module.exports = exports = {
           receiverId: user._id,
         });
         const conectIdExist = (id) => {
-          console.log("ID--->>", id);
-
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
@@ -57,13 +53,10 @@ module.exports = exports = {
           let panding = pandingConnection.filter(function (elf) {
             return elf.senderId.toString() === id.toString();
           });
-          console.log("length---->", panding.length);
           return panding.length;
         };
         for (let i = 0; i < question[0]?.answerLater.length; i++) {
-          console.log("IN FOR---->");
           if (conectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
-            console.log("IN IF----->>>");
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
@@ -78,7 +71,6 @@ module.exports = exports = {
             };
             Question.push(questionObj);
           } else if (sentIdExist(question[0]?.answerLater[i].createdBy?._id)) {
-            console.log("IN ELSE IF 1 -------> ");
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
@@ -95,7 +87,6 @@ module.exports = exports = {
           } else if (
             pandingIdExist(question[0]?.answerLater[i].createdBy?._id)
           ) {
-            console.log("IN ELSE IF 2 -------> ");
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
@@ -125,7 +116,6 @@ module.exports = exports = {
             Question.push(questionObj);
           }
         }
-        console.log("QUESTION----->>>>", Question);
         Question = JSON.parse(JSON.stringify(Question));
         if (search) {
           let abcd = question[0]?.answerLater.filter((question) => {

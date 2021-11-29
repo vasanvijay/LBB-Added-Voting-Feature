@@ -9,7 +9,6 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { search } = req.query;
-    console.log("SEARCH --->>", search);
     const { filter } = req.body;
 
     try {
@@ -17,8 +16,6 @@ module.exports = exports = {
       let searchUser = [];
       let distinctUser;
       if (filter && search) {
-        console.log("FILTER---->>>", filter);
-
         filter.map((fil) => {
           if (fil.filterId == "6188f31e603a571b33b09585") {
             let optionName = [];
@@ -142,8 +139,6 @@ module.exports = exports = {
           subject: { $regex: search, $options: "i" },
         });
       } else if (filter) {
-        console.log("FILTER---->>>", filter);
-
         filter.map((fil) => {
           if (fil.filterId == "6188f31e603a571b33b09585") {
             let optionName = [];
@@ -281,11 +276,9 @@ module.exports = exports = {
           ],
         });
       } else {
-        console.log("ELSE---->>>");
         req.query.page = req.query.page ? req.query.page : 1;
         let page = parseInt(req.query.page);
         req.query.limit = req.query.limit ? req.query.limit : 10;
-        console.log("LIMIT--->>", req.query.limit);
         let limit = parseInt(req.query.limit);
         let skip = (parseInt(req.query.page) - 1) * limit;
         distinctUser = await global.models.GLOBAL.USER.find({
@@ -359,7 +352,6 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
-        console.log("ALL USER LENGTH---->>>", allUser.length);
         const data4createResponseObject = {
           req: req,
           result: 0,

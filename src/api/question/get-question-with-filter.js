@@ -29,7 +29,6 @@ module.exports = exports = {
         _id: question,
       };
     }
-    console.log("Criteria---->", criteria);
     try {
       const { filter } = req.body;
       let distinctQue;
@@ -91,7 +90,6 @@ module.exports = exports = {
             }
           );
         } else if (!byUser) {
-          console.log("FILTER------->", filter);
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               let quResult = await global.models.GLOBAL.QUESTION.find({
@@ -120,7 +118,6 @@ module.exports = exports = {
                 .skip(skip)
                 .limit(limit)
                 .exec();
-              console.log("quResult--->>", quResult);
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[i] != null) {
                   Questions.push(quResult[i]);
@@ -143,7 +140,6 @@ module.exports = exports = {
             }
           );
         } else {
-          console.log("FILTER------->", filter);
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               let quResult = await global.models.GLOBAL.QUESTION.find({
@@ -217,8 +213,6 @@ module.exports = exports = {
           receiverId: user._id,
         });
         const conectIdExist = (id) => {
-          console.log("ID--->>", id);
-
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
@@ -237,7 +231,6 @@ module.exports = exports = {
           let panding = pandingConnection.filter(function (elf) {
             return elf.senderId.toString() === id.toString();
           });
-          console.log("length---->", panding.length);
           return panding.length;
         };
 

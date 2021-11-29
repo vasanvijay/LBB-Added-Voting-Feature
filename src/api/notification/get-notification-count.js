@@ -14,8 +14,7 @@ module.exports = exports = {
       let count = await global.models.GLOBAL.NOTIFICATION.count({
         $and: [{ receiverId: user._id }, { status: true }],
       });
-      console.log("COUNT---->>>", count);
-      if (count) {
+      if (count >= 0) {
         const data4createResponseObject = {
           req: req,
           result: 0,

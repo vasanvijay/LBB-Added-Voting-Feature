@@ -16,8 +16,8 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    const { email, name, subject,message } = req.body;
-    if (!email || !name ||!subject|| !message) {
+    const { email, name, subject, message } = req.body;
+    if (!email || !name || !subject || !message) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -29,7 +29,6 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-     console.log("newbody", req.body)
 
     try {
       let findUser = await global.models.GLOBAL.CONTACT.find({
@@ -56,25 +55,23 @@ module.exports = exports = {
           name: name,
           subject: subject,
           message: message,
- 
         };
 
         try {
-          
-        const newUser = await global.models.GLOBAL.CONTACT(userRegistration).save();
+          const newUser = await global.models.GLOBAL.CONTACT(
+            userRegistration
+          ).save();
 
-
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.CONTACT_USER,
-          payload: newUser,
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
-
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.CONTACT_USER,
+            payload: newUser,
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
         } catch (error) {
           logger.error(
             "/user - Error encountered while trying to add new user:\n" + error
@@ -90,8 +87,6 @@ module.exports = exports = {
             .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
             .json(utils.createResponseObject(data4createResponseObject));
         }
-
-
       }
     } catch (error) {
       logger.error(

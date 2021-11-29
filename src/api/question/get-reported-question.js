@@ -30,7 +30,6 @@ module.exports = exports = {
         model: "question",
         select: "_id question response view createdBy",
       });
-      console.log("getReportAbuse---->>>", getReportAbuse);
       if (getReportAbuse) {
         const data4createResponseObject = {
           req: req,

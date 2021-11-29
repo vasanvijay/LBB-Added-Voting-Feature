@@ -16,7 +16,6 @@ module.exports = exports = {
   handler: async (req, res) => {
     let { user } = req;
     let { userId, status } = req.params;
-    console.log("user------->>", user);
 
     let updateUser;
 

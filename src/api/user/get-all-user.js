@@ -17,7 +17,6 @@ module.exports = exports = {
         _id: userId,
       };
     }
-    console.log("Criteria---->", criteria);
     try {
       let user = await global.models.GLOBAL.USER.find(criteria);
       const data4createResponseObject = {

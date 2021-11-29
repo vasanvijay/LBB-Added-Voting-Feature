@@ -1,10 +1,8 @@
 const Joi = require("joi");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
-const jwt = require("jsonwebtoken");
 const logger = require("../../logger");
 const utils = require("../../utils");
-const jwtOptions = require("../../auth/jwt-options");
 // User Registration
 module.exports = exports = {
   // route validation
@@ -55,18 +53,18 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    console.log("new body--->", req.body);
 
     try {
       let findUser = await global.models.GLOBAL.USER.findOne({
         $or: [{ email: { $eq: email } }],
       });
       if (findUser) {
+        const image = await utils.uploadBase(profileImage, user._id);
         let fillForm = await global.models.GLOBAL.USER.findOneAndUpdate(
           { email: email },
           {
             $set: {
-              profileImage: profileImage,
+              profileImage: image,
               organizationName: organizationName,
               currentRole: currentRole,
               region: region,

@@ -37,11 +37,7 @@ module.exports = exports = {
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
-      console.log("question--->>>", findQuestion);
       if (findQuestion) {
-        console.log("findQuestion?._id", findQuestion._id);
-        console.log("user._id", user._id);
-        console.log("findQuestion?.createdBy", findQuestion.createdBy);
         const id = findQuestion._id;
         const answerBy = user._id;
         const questionBy = findQuestion.createdBy;
@@ -58,16 +54,12 @@ module.exports = exports = {
           },
         });
 
-        console.log("answerRoom", answerRoom);
-
         if (answerRoom != null) {
-          console.log("Answer room---<>", answerRoom);
           let newAnswer = {
             answer: answer,
             answerBy: user._id,
           };
 
-          console.log("newAnswer", newAnswer);
           let updateAnswer =
             await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
               { _id: ObjectID(answerRoom._id) },
@@ -95,7 +87,6 @@ module.exports = exports = {
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM(roomObj);
 
           answerRoom.save();
-          console.log("Answer ROOM-------->>><<>>>", answerRoom);
         }
 
         let addAnswer = {
@@ -126,7 +117,7 @@ module.exports = exports = {
           description: `Someones Give Answer to Your Question's ${findQuestion.question}`,
           createdBy: user._id,
           updatedBy: user._id,
-          questionBy: findQuestion._id,
+          question: question,
         };
 
         let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);

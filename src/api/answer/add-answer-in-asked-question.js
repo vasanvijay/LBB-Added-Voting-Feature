@@ -70,7 +70,6 @@ module.exports = exports = {
             select: "_id question response view createdBy",
           });
         if (updateAnswer) {
-          console.log("UPDATED----->>>>", updateAnswer);
           let addAnswer = {
             answer: answer,
             answerBy: user._id,
@@ -80,7 +79,6 @@ module.exports = exports = {
 
           const newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
           newAnswer.save();
-          console.log("NEW ANSWER---->>>>", newAnswer);
           const data4createResponseObject = {
             req: req,
             result: 0,

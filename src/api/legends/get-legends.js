@@ -15,7 +15,6 @@ module.exports = exports = {
         _id: id,
       };
     }
-    console.log("Criteria---->", criteria);
     try {
       let legends = await global.models.GLOBAL.LEGENDS.find(criteria);
       const data4createResponseObject = {

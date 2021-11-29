@@ -25,7 +25,6 @@ module.exports = exports = {
     let findUser = await global.models.GLOBAL.USER.findOne({
       $or: [{ email: { $eq: email } }],
     });
-    console.log("user------>", findUser);
     try {
       if (String(findUser.email) === String(email)) {
         if (!email) {

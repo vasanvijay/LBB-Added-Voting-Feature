@@ -18,7 +18,6 @@ module.exports = exports = {
         select: "_id name email profileImage region currentRole subject",
       });
       findConnection = JSON.parse(JSON.stringify(findConnection));
-      console.log("findConnection----->>", findConnection);
       const data4createResponseObject = {
         req: req,
         result: 0,

@@ -8,7 +8,6 @@ const utils = require("../../utils");
 module.exports = exports = {
   handler: async (req, res) => {
     let { user } = req;
-    console.log("user------->>", user);
     if (user.userType === enums.USER_TYPE.ADMIN) {
       try {
         let { email, name } = req.body;
@@ -65,6 +64,27 @@ module.exports = exports = {
       }
     } else {
       try {
+        if (req.body.profileImage) {
+          let findUser = await global.models.GLOBAL.USER.findOne({
+            _id: user._id,
+          });
+          if (findUser.image !== null || undefined) {
+            const url = findUser.image.split(".com/").slice(-1)[0];
+            console.log(url);
+            if (url) {
+              utils.mediaDeleteS3(url, function (err) {
+                if (err) {
+                  console.log("s3 err", err);
+                  return next(err);
+                }
+              });
+            }
+          }
+          req.body.profileImage = await utils.uploadBase(
+            req.body.profileImage,
+            user._id
+          );
+        }
         let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
           { _id: user._id },
           {

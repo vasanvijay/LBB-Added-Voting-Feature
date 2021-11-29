@@ -14,8 +14,6 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    console.log("vijayvasan");
-
     let { userId, status } = req.params;
     const { email } = req.body;
 

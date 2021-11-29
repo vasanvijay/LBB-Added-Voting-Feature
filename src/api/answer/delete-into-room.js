@@ -14,15 +14,11 @@ module.exports = exports = {
       let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
         _id: roomId,
       });
-      console.log("ANSWER ROOM--->", findAnswerRoom);
       if (findAnswerRoom) {
         let answerObj;
         findAnswerRoom.map((ansObj) => {
-          //   console.log("ANS-->", ansObj.answer);
           answerObj = ansObj.answer.filter((ansId) => {
-            console.log("ANS ID--->>", ansId._id == answerId);
             if (ansId._id == answerId) {
-              console.log("REMOVE--->>>", ansId._id);
             } else {
               return {
                 answerAt: ansId.answerAt,
@@ -34,7 +30,6 @@ module.exports = exports = {
             }
           });
         });
-        console.log("answerObj-->", answerObj);
         let removeAndUpdate =
           await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
             { _id: roomId },
@@ -45,7 +40,6 @@ module.exports = exports = {
             },
             { new: true }
           );
-        console.log("REMOVE--->>>", removeAndUpdate);
         const data4createResponseObject = {
           req: req,
           result: 0,

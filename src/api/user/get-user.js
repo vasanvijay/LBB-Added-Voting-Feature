@@ -10,7 +10,6 @@ module.exports = exports = {
   handler: async (req, res) => {
     let { user } = req;
     let { userId } = req.query;
-    console.log("user------->>", user);
     let criteria = {};
 
     if (user.userType === enums.USER_TYPE.USER) {
@@ -37,9 +36,10 @@ module.exports = exports = {
         };
       }
     }
-    console.log("criteria---->", criteria);
     try {
-      let findUser = await global.models.GLOBAL.USER.find(criteria).sort({createdAt:-1});
+      let findUser = await global.models.GLOBAL.USER.find(criteria).sort({
+        createdAt: -1,
+      });
       let count = await global.models.GLOBAL.USER.count(criteria);
 
       // let TodayUser = await global.models.GLOBAL.USER.find(
@@ -57,7 +57,6 @@ module.exports = exports = {
           $gte: moment(new Date()).format("YYYY-MM-DD"),
         },
       });
-      console.log("TodayUser", TodayUser.length);
       const user = await global.models.GLOBAL.USER.aggregate([
         {
           $group: {
@@ -66,8 +65,6 @@ module.exports = exports = {
           },
         },
       ]).sort({ _id: 1 });
-
-      console.log("user---->", user);
 
       if (!findUser) {
         const data4createResponseObject = {

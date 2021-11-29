@@ -10,13 +10,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { answerByMe } = req.query;
-    // let criteria = {};
-    // if (answerByMe) {
-    //   criteria = {
-    //     answerBy: user._id,
-    //   };
-    // }
-    // console.log("Criteria---->", criteria);
+
     try {
       let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -33,7 +27,6 @@ module.exports = exports = {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
           _id: ques,
         });
-        console.log("ANS -->", ans);
         answer.push(ans);
       });
 
@@ -41,8 +34,6 @@ module.exports = exports = {
       // .limit(limit);
 
       if (answer) {
-        console.log("answer---->", answer);
-
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
         });
@@ -51,8 +42,6 @@ module.exports = exports = {
           receiverId: user._id,
         });
         const conectIdExist = (id) => {
-          console.log("ID--->>", id);
-
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
@@ -71,13 +60,10 @@ module.exports = exports = {
           let panding = pandingConnection.filter(function (elf) {
             return elf.senderId.toString() === id.toString();
           });
-          console.log("length---->", panding.length);
           return panding.length;
         };
         for (let i = 0; i < answer.length; i++) {
-          console.log("IN FOR---->");
           if (conectIdExist(answer[i]?.createdBy)) {
-            console.log("IN IF----->>>", answer[i]?.createdBy);
             let answerObj = {
               _id: answer[i]._id,
               displayProfile: answer[i].displayProfile,
@@ -94,7 +80,6 @@ module.exports = exports = {
             };
             Answers.push(answerObj);
           } else if (sentIdExist(answer[i]?.createdBy)) {
-            console.log("IN ELSE IF 1 -------> ");
             let answerObj = {
               _id: answer[i]._id,
               displayProfile: answer[i].displayProfile,
@@ -111,7 +96,6 @@ module.exports = exports = {
             };
             Answers.push(answerObj);
           } else if (pandingIdExist(answer[i]?.createdBy)) {
-            console.log("IN ELSE IF 2 -------> ");
             let answerObj = {
               _id: answer[i]._id,
               displayProfile: answer[i].displayProfile,

@@ -28,7 +28,6 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    console.log("new body--->", req.body);
 
     try {
       let findLegends = await global.models.GLOBAL.LEGENDS.find({

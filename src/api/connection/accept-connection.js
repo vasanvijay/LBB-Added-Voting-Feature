@@ -26,7 +26,6 @@ module.exports = exports = {
       let findUser = await global.models.GLOBAL.USER.find({
         _id: user._id,
       });
-      console.log("Find USer--->", findUser.length);
       if (findUser.length > 0) {
         try {
           const { connectionId } = req.body;
@@ -54,10 +53,6 @@ module.exports = exports = {
           });
           updatedConnectedData = JSON.parse(
             JSON.stringify(updatedConnectedData)
-          );
-          console.log(
-            "updatedConnectedData.conected---->",
-            updatedConnectedData[0]?.conected
           );
 
           let ntfObj = {

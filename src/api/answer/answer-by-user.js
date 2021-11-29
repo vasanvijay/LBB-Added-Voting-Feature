@@ -24,7 +24,6 @@ module.exports = exports = {
         participateIds.push(answerBy);
         participateIds.push(id);
         participateIds.push(questionBy);
-        console.log("participateIds", participateIds);
         let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
@@ -47,7 +46,6 @@ module.exports = exports = {
         //   select: "_id name email region currentRole profileImage",
         // });
         if (answerRoom != null) {
-          console.log("Chat room---<>", answerRoom);
           // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
           //   questionId: question,
           // });

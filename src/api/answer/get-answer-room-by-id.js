@@ -26,7 +26,6 @@ module.exports = exports = {
           select: "_id question response view createdBy",
         });
       if (findAnswerRoom) {
-        console.log("findAnswerRoom---<>", findAnswerRoom);
         // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
         //   questionId: question,
         // });

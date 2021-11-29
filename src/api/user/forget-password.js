@@ -20,37 +20,36 @@ module.exports = exports = {
     let findUser = await global.models.GLOBAL.USER.findOne({
       $or: [{ email: { $eq: email } }],
     });
-    console.log("user------>", findUser);
     try {
-      if (String(findUser.email) === String(email)) {
-        if (!email) {
-          const data4createResponseObject = {
-            req: req,
-            result: -1,
-            message: messages.INVALID_PARAMETERS,
-            payload: {},
-            logPayload: false,
-          };
-          return res
-            .status(enums.HTTP_CODES.BAD_REQUEST)
-            .json(utils.createResponseObject(data4createResponseObject));
-        } else {
-          console.log("MAIL SENDING");
-          let transporter = nodemailer.createTransport({
-            service: "gmail",
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-              user: process.env.EMAIL,
-              pass: process.env.PASSWORD,
-            },
-          });
-          let info = await transporter.sendMail({
-            from: process.env.EMAIL,
-            to: email,
-            subject: "Account Verification Code",
-            html: `<!DOCTYPE html>
+      if (findUser) {
+        if (String(findUser.email) === String(email)) {
+          if (!email) {
+            const data4createResponseObject = {
+              req: req,
+              result: -1,
+              message: messages.INVALID_PARAMETERS,
+              payload: {},
+              logPayload: false,
+            };
+            return res
+              .status(enums.HTTP_CODES.BAD_REQUEST)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            let transporter = nodemailer.createTransport({
+              service: "gmail",
+              host: "smtp.gmail.com",
+              port: 587,
+              secure: false,
+              auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD,
+              },
+            });
+            let info = await transporter.sendMail({
+              from: process.env.EMAIL,
+              to: email,
+              subject: "Account Verification Code",
+              html: `<!DOCTYPE html>
                     <html lang="en">
                     
                     <head>
@@ -118,18 +117,30 @@ module.exports = exports = {
                     </body>
                     
                     </html>`,
-          });
-          console.log("Message sent: %s", info.messageId);
+            });
+            console.log("Message sent: %s", info.messageId);
+          }
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.MAIL_SENT,
+            payload: {},
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
         }
+      } else {
         const data4createResponseObject = {
           req: req,
-          result: 0,
-          message: messages.MAIL_SENT,
+          result: -1,
+          message: messages.USER_DOES_NOT_EXIST,
           payload: {},
           logPayload: false,
         };
         return res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {

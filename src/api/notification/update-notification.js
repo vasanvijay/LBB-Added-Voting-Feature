@@ -47,7 +47,6 @@ module.exports = exports = {
           }
         );
       if (updateNotification) {
-        console.log("Updated--->", updateNotification);
         const data4createResponseObject = {
           req: req,
           result: 0,
