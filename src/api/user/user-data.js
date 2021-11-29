@@ -59,7 +59,7 @@ module.exports = exports = {
         $or: [{ email: { $eq: email } }],
       });
       if (findUser) {
-        const image = await utils.uploadBase(profileImage, user._id);
+        const image = await utils.uploadBase(profileImage, findUser._id);
         let fillForm = await global.models.GLOBAL.USER.findOneAndUpdate(
           { email: email },
           {
