@@ -4,7 +4,11 @@ const chatCtrl = require("../api/chat");
 
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
-  const io = require("socket.io")(server);
+  const io = require("socket.io")(server, {
+    cors: {
+      origin: "*",
+    },
+  });
 
   io.use((socket, next) => {
     logger.info(
