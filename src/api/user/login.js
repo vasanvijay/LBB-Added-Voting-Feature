@@ -25,6 +25,7 @@ module.exports = exports = {
         message: messages.INVALID_PARAMETERS,
         payload: {},
         logPayload: false,
+        status: enums.HTTP_CODES.BAD_REQUEST,
       };
       return res
         .status(enums.HTTP_CODES.BAD_REQUEST)
@@ -42,6 +43,7 @@ module.exports = exports = {
           message: messages.USER_DOES_NOT_EXIST,
           payload: {},
           logPayload: false,
+          status: enums.HTTP_CODES.OK,
         };
         return res
           .status(enums.HTTP_CODES.OK)
@@ -54,6 +56,7 @@ module.exports = exports = {
             message: "Your account is inactivate. Please contact to Admin.",
             payload: {},
             logPayload: false,
+            status: enums.HTTP_CODES.NOT_ACCEPTABLE,
           };
           return res
             .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
@@ -66,6 +69,7 @@ module.exports = exports = {
               message: messages.USER_NOT_FOUND,
               payload: {},
               logPayload: false,
+              status: enums.HTTP_CODES.OK,
             };
             return res
               .status(enums.HTTP_CODES.OK)
@@ -79,6 +83,7 @@ module.exports = exports = {
                 message: messages.USER_NOT_VERIFIED,
                 payload: {},
                 logPayload: false,
+                status: enums.HTTP_CODES.METHOD_NOT_ALLOWED,
               };
               return res
                 .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
@@ -91,6 +96,7 @@ module.exports = exports = {
                   message: messages.EMPTY,
                   payload: {},
                   logPayload: false,
+                  status: enums.HTTP_CODES.METHOD_NOT_ALLOWED,
                 };
                 return res
                   .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
@@ -123,6 +129,7 @@ module.exports = exports = {
                     token: jwt.sign(data4token, jwtOptions.secretOrKey),
                   },
                   logPayload: false,
+                  status: enums.HTTP_CODES.OK,
                 };
                 return res
                   .status(enums.HTTP_CODES.OK)
@@ -142,6 +149,7 @@ module.exports = exports = {
         message: messages.GENERAL,
         payload: {},
         logPayload: false,
+        status: enums.HTTP_CODES.INTERNAL_SERVER_ERROR,
       };
       return res
         .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)

@@ -18,20 +18,21 @@ module.exports = exports = {
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      let answer = [];
       let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
         "question",
         { $and: [{ answerBy: user._id }] }
       );
-      let mnop = await questionArray.map(async (ques) => {
+      let answer = [];
+      for (let i = 0; i < questionArray.length; i++) {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
-          _id: ques,
+          _id: questionArray[i],
+        }).populate({
+          path: "createdBy",
+          model: "user",
+          select: "_id name subject profileImage currentRole",
         });
         answer.push(ans);
-      });
-
-      // .skip(skip)
-      // .limit(limit);
+      }
 
       if (answer) {
         let findConection = await global.models.GLOBAL.CONNECTION.find({

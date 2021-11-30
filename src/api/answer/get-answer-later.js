@@ -22,7 +22,7 @@ module.exports = exports = {
           path: "answerLater",
           model: "question",
           select:
-            "_id question response filter status view displayProfile createdAt createdBy",
+            "_id question response filter status view displayProfile allowConnectionRequest createdAt createdBy",
         })
         .skip(skip)
         .limit(limit);
@@ -60,6 +60,8 @@ module.exports = exports = {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
+              allowConnectionRequest:
+                question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
@@ -74,6 +76,8 @@ module.exports = exports = {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
+              allowConnectionRequest:
+                question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
@@ -90,6 +94,8 @@ module.exports = exports = {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
+              allowConnectionRequest:
+                question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
@@ -104,6 +110,8 @@ module.exports = exports = {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
+              allowConnectionRequest:
+                question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,

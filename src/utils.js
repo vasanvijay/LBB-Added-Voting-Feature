@@ -38,6 +38,7 @@ functions.createResponseObject = ({
   message = "",
   payload = {},
   logPayload = false,
+  status,
 }) => {
   let payload2log = {};
   if (logPayload) {
@@ -57,7 +58,7 @@ functions.createResponseObject = ({
     logger.info(messageToLog);
   }
 
-  return { result: result, message: message, payload: payload };
+  return { result: result, message: message, payload: payload, status: status };
 };
 
 /* Return true if the app is in production mode */
