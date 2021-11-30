@@ -64,6 +64,7 @@ module.exports = exports = {
       }
     } else {
       try {
+        console.log("IMAGE--->>", req.body.profileImage);
         if (req?.body?.profileImage?.include("base64")) {
           let findUser = await global.models.GLOBAL.USER.findOne({
             _id: user._id,

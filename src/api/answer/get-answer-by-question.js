@@ -38,7 +38,7 @@ module.exports = exports = {
         .populate({
           path: "answerBy",
           model: "user",
-          select: "_id name email region currentRole subject",
+          select: "_id name email region currentRole subject profileImage",
         })
         .skip(skip)
         .limit(limit);

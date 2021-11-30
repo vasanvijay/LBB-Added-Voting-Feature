@@ -21,7 +21,7 @@ module.exports = exports = {
         .populate({
           path: "blockUser",
           model: "user",
-          select: "_id email name currentRole subject",
+          select: "_id email name currentRole subject profileImage",
         })
         .skip(skip)
         .limit(limit);

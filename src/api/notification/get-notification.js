@@ -16,7 +16,7 @@ module.exports = exports = {
       }).populate({
         path: "userId",
         model: "user",
-        select: "subject profileImage",
+        select: "subject profileImage currentRole",
       });
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {

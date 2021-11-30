@@ -18,12 +18,12 @@ module.exports = exports = {
         .populate({
           path: "sender",
           model: "user",
-          select: "name email subject",
+          select: "name email subject profileImage currentRole",
         })
         .populate({
           path: "userId",
           model: "user",
-          select: "name email subject",
+          select: "name email subject profileImage currentRole",
         });
 
       const data4createResponseObject = {

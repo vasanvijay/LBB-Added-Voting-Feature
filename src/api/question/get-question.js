@@ -56,7 +56,7 @@ module.exports = exports = {
               .populate({
                 path: "createdBy",
                 model: "user",
-                select: "_id name subject",
+                select: "_id name subject profileImage currentRole",
               })
               // .populate({
               //   path: "filter.filterId",
@@ -100,7 +100,7 @@ module.exports = exports = {
                 .populate({
                   path: "createdBy",
                   model: "user",
-                  select: "_id name subject",
+                  select: "_id name subject profileImage currentRole",
                 })
                 // .populate({
                 //   path: "filter.filterId",
@@ -153,7 +153,7 @@ module.exports = exports = {
                 .populate({
                   path: "createdBy",
                   model: "user",
-                  select: "_id name subject",
+                  select: "_id name subject profileImage currentRole",
                 })
                 .skip(skip)
                 .limit(limit)
@@ -247,7 +247,7 @@ module.exports = exports = {
               // }),
               createdAt: question[i].createdAt,
               userName: question[i].createdBy.name,
-              createdBy: question[i].createdBy._id,
+              createdBy: question[i].createdBy,
               isFriend: "true",
             };
             questionDetais.push(questionDetaisObj);
@@ -270,7 +270,7 @@ module.exports = exports = {
               // }),
               createdAt: question[i].createdAt,
               userName: question[i].createdBy.name,
-              createdBy: question[i].createdBy._id,
+              createdBy: question[i].createdBy,
               isFriend: "sent",
             };
             questionDetais.push(questionDetaisObj);
@@ -293,7 +293,7 @@ module.exports = exports = {
               // }),
               createdAt: question[i].createdAt,
               userName: question[i].createdBy.name,
-              createdBy: question[i].createdBy._id,
+              createdBy: question[i].createdBy,
               isFriend: "pending",
             };
             questionDetais.push(questionDetaisObj);
@@ -316,7 +316,7 @@ module.exports = exports = {
               // }),
               createdAt: question[i].createdAt,
               userName: question[i].createdBy.name,
-              createdBy: question[i].createdBy._id,
+              createdBy: question[i].createdBy,
               isFriend: "block",
             };
             questionDetais.push(questionDetaisObj);
@@ -339,7 +339,7 @@ module.exports = exports = {
               // }),
               createdAt: question[i].createdAt,
               userName: question[i].createdBy.name,
-              createdBy: question[i].createdBy._id,
+              createdBy: question[i].createdBy,
               isFriend: "false",
             };
             questionDetais.push(questionDetaisObj);
@@ -392,7 +392,7 @@ module.exports = exports = {
           .populate({
             path: "createdBy",
             model: "user",
-            select: "_id name subject",
+            select: "_id name subject profileImage currentRole",
           })
           .skip(skip)
           .limit(limit)
