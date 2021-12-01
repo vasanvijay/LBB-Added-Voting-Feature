@@ -56,6 +56,18 @@ module.exports = exports = {
           return panding.length;
         };
         for (let i = 0; i < question[0]?.answerLater.length; i++) {
+          let createdBy = await global.models.GLOBAL.USER.findOne(
+            {
+              _id: question[0]?.answerLater[i].createdBy,
+            },
+            {
+              _id: 1,
+              subject: 1,
+              profileImage: 1,
+              name: 1,
+              currentRole: 1,
+            }
+          );
           if (conectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
@@ -68,7 +80,7 @@ module.exports = exports = {
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
-              createdBy: question[0]?.answerLater[i].createdBy,
+              createdBy: createdBy,
               isFriend: "true",
             };
             Question.push(questionObj);
@@ -84,7 +96,7 @@ module.exports = exports = {
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
-              createdBy: question[0]?.answerLater[i].createdBy,
+              createdBy: createdBy,
               isFriend: "sent",
             };
             Question.push(questionObj);
@@ -102,7 +114,7 @@ module.exports = exports = {
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
-              createdBy: question[0]?.answerLater[i].createdBy,
+              createdBy: createdBy,
               isFriend: "pending",
             };
             Question.push(questionObj);
@@ -118,7 +130,7 @@ module.exports = exports = {
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
-              createdBy: question[0]?.answerLater[i].createdBy,
+              createdBy: createdBy,
               isFriend: "false",
             };
             Question.push(questionObj);
