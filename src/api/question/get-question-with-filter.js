@@ -43,6 +43,7 @@ module.exports = exports = {
         if (search) {
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
+              // console.log("Criteria ni moj", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
                 question: { $regex: search, $options: "i" },
@@ -54,23 +55,19 @@ module.exports = exports = {
                   { reportAbuse: { $nin: true } },
                 ],
               })
-                // .populate({
-                //   path: "filter.filterId",
-                //   populate: {
-                //     path: "options",
-                //     model: "filter",
-                //     select: "_id",
-                //   },
-                //   model: "filter",
-                //   select: "_id name",
-                // })
+                .populate({
+                  path: "createdBy",
+                  model: "user",
+                  select: "_id name subject profileImage currentRole",
+                })
+
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
               for (let j = 0; j < quResult.length; j++) {
-                if (quResult[i] != null) {
-                  Questions.push(quResult[i]);
+                if (quResult[j] != null) {
+                  Questions.push(quResult[j]);
                 }
               }
             }
@@ -80,6 +77,10 @@ module.exports = exports = {
               return {
                 _id: id,
                 question: Questions.find((aid) => aid._id === id).question,
+                allowConnectionRequest: Questions.find((aid) => aid._id === id)
+                  .allowConnectionRequest,
+                displayProfile: Questions.find((aid) => aid._id === id)
+                  .displayProfile,
                 view: Questions.find((aid) => aid._id === id).view,
                 response: Questions.find((aid) => aid._id === id).response,
                 status: Questions.find((aid) => aid._id === id).status,
@@ -92,35 +93,50 @@ module.exports = exports = {
         } else if (!byUser) {
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
+              console.log("criteria ni", user.answerLater);
               let quResult = await global.models.GLOBAL.QUESTION.find({
-                ...criteria,
                 // createdBy: { $not: { $eq: user._id } },
                 $and: [
                   { _id: { $nin: user.answerLater } },
-                  { "filter.options.optionName": filter[i] },
+                  // "$filter.options.optionName": filter[i],
                   { _id: { $nin: user.removeQuestion } },
                   // { _id: { $nin: user.abuseQuestion } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
-                  //   { createdBy: { $nin: user._id } },
+                  { createdBy: { $nin: user._id } },
                 ],
               })
-                // .populate({
-                //   path: "filter.filterId",
-                //   populate: {
-                //     path: "options",
-                //     model: "filter",
-                //     select: "_id",
-                //   },
-                //   model: "filter",
-                //   select: "_id name",
-                // })
-                .skip(skip)
-                .limit(limit)
+                .populate({
+                  path: "createdBy",
+                  model: "user",
+                  select: "_id name subject profileImage currentRole",
+                })
                 .exec();
+
+              // let quResult = await global.models.GLOBAL.QUESTION.aggregate([
+              //   { $unwind: "$filter" },
+              //   {
+              //     $project: {
+              //       "filter._id": {
+              //         $cond: [
+              //           { $in: [{ optionName: filter[i] }, "$filter.options"] },
+              //           null,
+              //           "$filter.options",
+              //         ],
+              //       },
+              //       options: {
+              //         $filter: {
+              //           input: "$filter.options",
+              //           as: "item",
+              //           cond: { $eq: ["$$item.optionName", filter[i]] },
+              //         },
+              //       },
+              //     },
+              //   },
+              // ]);
               for (let j = 0; j < quResult.length; j++) {
-                if (quResult[i] != null) {
-                  Questions.push(quResult[i]);
+                if (quResult[j] != null) {
+                  Questions.push(quResult[j]);
                 }
               }
             }
@@ -130,6 +146,10 @@ module.exports = exports = {
               return {
                 _id: id,
                 question: Questions.find((aid) => aid._id === id).question,
+                allowConnectionRequest: Questions.find((aid) => aid._id === id)
+                  .allowConnectionRequest,
+                displayProfile: Questions.find((aid) => aid._id === id)
+                  .displayProfile,
                 view: Questions.find((aid) => aid._id === id).view,
                 response: Questions.find((aid) => aid._id === id).response,
                 status: Questions.find((aid) => aid._id === id).status,
@@ -153,23 +173,18 @@ module.exports = exports = {
                   { reportAbuse: { $nin: true } },
                 ],
               })
-                // .populate({
-                //   path: "filter.filterId",
-                //   populate: {
-                //     path: "options",
-                //     model: "filter",
-                //     select: "_id",
-                //   },
-                //   model: "filter",
-                //   select: "_id name",
-                // })
+                .populate({
+                  path: "createdBy",
+                  model: "user",
+                  select: "_id name subject profileImage currentRole",
+                })
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
               for (let j = 0; j < quResult.length; j++) {
-                if (quResult[i] != null) {
-                  Questions.push(quResult[i]);
+                if (quResult[j] != null) {
+                  Questions.push(quResult[j]);
                 }
               }
             }
@@ -179,6 +194,10 @@ module.exports = exports = {
               return {
                 _id: id,
                 question: Questions.find((aid) => aid._id === id).question,
+                allowConnectionRequest: Questions.find((aid) => aid._id === id)
+                  .allowConnectionRequest,
+                displayProfile: Questions.find((aid) => aid._id === id)
+                  .displayProfile,
                 view: Questions.find((aid) => aid._id === id).view,
                 response: Questions.find((aid) => aid._id === id).response,
                 status: Questions.find((aid) => aid._id === id).status,

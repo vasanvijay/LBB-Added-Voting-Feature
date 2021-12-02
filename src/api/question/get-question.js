@@ -49,7 +49,7 @@ module.exports = exports = {
                 // { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
-                // { "filter.options?.optionName": user.subject[i] },
+                { "filter.options.optionName": user.subject[i] },
               ],
               question: { $regex: search, $options: "i" },
             })
@@ -79,7 +79,7 @@ module.exports = exports = {
                 // { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
-                // { "filter.options?.optionName": user.subject[i] },
+                { "filter.options.optionName": user.subject[i] },
               ],
               question: { $regex: search, $options: "i" },
             });
@@ -137,9 +137,10 @@ module.exports = exports = {
                   // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
-                  // { "filter.options?.optionName": user.subject[i] },
+                  { "filter.options.optionName": user.subject[i] },
                 ],
               })
+
                 // .populate({
                 //   path: "filter.filterId",
                 //   populate: {
@@ -158,7 +159,8 @@ module.exports = exports = {
                 .skip(skip)
                 .limit(limit)
                 .exec();
-              count = await global.models.GLOBAL.QUESTION.count({
+              // console.log("QUE-->", question);
+              count = await global.models.GLOBAL.QUESTION.countDocuments({
                 ...criteria,
                 createdBy: { $not: { $eq: user._id } },
                 $and: [
@@ -166,7 +168,7 @@ module.exports = exports = {
                   { _id: { $nin: user.removeQuestion } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
-                  // { "filter.options?.optionName": user.subject[i] },
+                  { "filter.options.optionName": user.subject[i] },
                 ],
               });
             }

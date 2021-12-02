@@ -18,12 +18,85 @@ module.exports = exports = {
       };
     }
     try {
-      let user = await global.models.GLOBAL.USER.find(criteria);
+      let userArray = [];
+      let findUser = await global.models.GLOBAL.USER.find(criteria);
+      if (findUser) {
+        let findConection = await global.models.GLOBAL.CONNECTION.find({
+          senderId: user._id,
+        });
+        console.log("Find Connection --->", findConection);
+        let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
+          receiverId: user._id,
+        });
+
+        const conectIdExist = (id) => {
+          return user.accepted.length
+            ? user.accepted.some(function (el) {
+                return el.toString() == id.toString();
+              })
+            : false;
+        };
+
+        const sentIdExist = (id) => {
+          var check = findConection.filter(function (elc) {
+            return elc.receiverId.toString() == id.toString();
+          });
+          return check.length;
+        };
+
+        const pandingIdExist = (id) => {
+          let panding = pandingConnection.filter(function (elf) {
+            return elf.senderId.toString() === id.toString();
+          });
+          return panding.length;
+        };
+
+        for (let i = 0; i < findUser.length; i++) {
+          if (conectIdExist(findUser[i]?._id)) {
+            const userObj = {
+              user: findUser[i],
+              isFriend: "true",
+            };
+            userArray.push(userObj);
+          } else if (sentIdExist(findUser[i]?._id)) {
+            let findConnection = await global.models.GLOBAL.CONNECTION.findOne({
+              senderId: user._id,
+              receiverId: findUser[i]?._id,
+            });
+            const userObj = {
+              user: findUser[i],
+              isFriend: "sent",
+              connection: findConnection,
+            };
+            userArray.push(userObj);
+          } else if (pandingIdExist(findUser[i]?._id)) {
+            let findConnection = await global.models.GLOBAL.CONNECTION.findOne({
+              senderId: findUser[i]?._id,
+              receiverId: user._id,
+            });
+            const userObj = {
+              user: findUser[i],
+              isFriend: "pending",
+              connection: findConnection,
+            };
+            userArray.push(userObj);
+          } else {
+            const userObj = {
+              user: findUser[i],
+              isFriend: "false",
+            };
+            userArray.push(userObj);
+          }
+        }
+      }
+
+      // let newArray = [];
+      // newArray.push({ findUser: userArray[0]?.user });
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.SUCCESS,
-        payload: user,
+        payload: { userArray },
         logPayload: false,
       };
       res

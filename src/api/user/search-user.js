@@ -1,3 +1,4 @@
+const { ObjectID, ObjectId } = require("bson");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -290,8 +291,12 @@ module.exports = exports = {
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
       });
+      let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
+        receiverId: user._id,
+      });
 
       const sentIdExist = (id) => {
+        console.log("INSENT--->>", id);
         let check = findConection.filter(function (elc) {
           return elc.receiverId.toString() === id.toString();
         });
@@ -299,7 +304,8 @@ module.exports = exports = {
       };
 
       const pandingIdExist = (id) => {
-        let panding = findConection.filter(function (elf) {
+        console.log("INPENDING--->>", id);
+        let panding = pandingConnection.filter(function (elf) {
           return elf.senderId.toString() === id.toString();
         });
         return panding.length;
@@ -321,15 +327,25 @@ module.exports = exports = {
           };
           allUser.push(searchUserObj);
         } else if (sentIdExist(distinctUser[i]?._id)) {
+          let findConnection = await global.models.GLOBAL.CONNECTION.findOne({
+            senderId: user._id,
+            receiverId: distinctUser[i]?._id,
+          });
           const searchUserObj = {
             searchUser: distinctUser[i],
             isFriend: "sent",
+            connection: findConnection,
           };
           allUser.push(searchUserObj);
         } else if (pandingIdExist(distinctUser[i]?._id)) {
+          let findConnection = await global.models.GLOBAL.CONNECTION.findOne({
+            senderId: distinctUser[i]?._id,
+            receiverId: user._id,
+          });
           const searchUserObj = {
             searchUser: distinctUser[i],
             isFriend: "pending",
+            connection: findConnection,
           };
           allUser.push(searchUserObj);
         } else {
