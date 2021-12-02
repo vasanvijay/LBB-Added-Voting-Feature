@@ -50,6 +50,7 @@ module.exports = exports = {
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
                 { "filter.options.optionName": user.subject[i] },
+                { status: { $eq: "active" } },
               ],
               question: { $regex: search, $options: "i" },
             })
@@ -80,6 +81,7 @@ module.exports = exports = {
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
                 { "filter.options.optionName": user.subject[i] },
+                { status: { $eq: "active" } },
               ],
               question: { $regex: search, $options: "i" },
             });
@@ -95,6 +97,7 @@ module.exports = exports = {
                   // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
+                  { status: { $eq: "active" } },
                 ],
               })
                 .populate({
@@ -123,6 +126,7 @@ module.exports = exports = {
                   // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
+                  { status: { $eq: "active" } },
                 ],
               });
             }
@@ -138,6 +142,7 @@ module.exports = exports = {
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
                   { "filter.options.optionName": user.subject[i] },
+                  { status: { $eq: "active" } },
                 ],
               })
 
@@ -169,6 +174,7 @@ module.exports = exports = {
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
                   { "filter.options.optionName": user.subject[i] },
+                  { status: { $eq: "active" } },
                 ],
               });
             }

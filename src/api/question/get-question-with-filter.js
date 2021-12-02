@@ -63,6 +63,9 @@ module.exports = exports = {
 
                 .skip(skip)
                 .limit(limit)
+                .sort({
+                  createdAt: -1,
+                })
                 .exec();
 
               for (let j = 0; j < quResult.length; j++) {
@@ -180,6 +183,9 @@ module.exports = exports = {
                 })
                 .skip(skip)
                 .limit(limit)
+                .sort({
+                  createdAt: -1,
+                })
                 .exec();
 
               for (let j = 0; j < quResult.length; j++) {

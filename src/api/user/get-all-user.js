@@ -19,7 +19,9 @@ module.exports = exports = {
     }
     try {
       let userArray = [];
-      let findUser = await global.models.GLOBAL.USER.find(criteria);
+      let findUser = await global.models.GLOBAL.USER.find(criteria).sort({
+        createdAt: -1,
+      });
       if (findUser) {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
