@@ -165,22 +165,22 @@ module.exports = exports = {
                   createdAt: -1,
                 })
                 .exec();
-              console.log("QUES-->", question);
+              // console.log("QUES-->", question);
               count = await global.models.GLOBAL.QUESTION.count({
                 ...criteria,
               });
             }
             if (question.filter) {
               reachCount = await global.models.GLOBAL.QUESTION.aggregate([
-                // {
-                //   $match: {
-                //     filter: {
-                //       $gt: {
-                //         $size: "$filter",
-                //       },
-                //     },
-                //   },
-                // },
+                {
+                  $match: {
+                    filter: {
+                      $gt: {
+                        $size: "$filter",
+                      },
+                    },
+                  },
+                },
                 {
                   $project: {
                     _id: "$_id",
@@ -427,7 +427,7 @@ module.exports = exports = {
               }
             }
           });
-          console.log("COUNT---<>>", reach);
+          console.log("COUNT---<>>", reaches);
           if (conectIdExist(question[i].createdBy?._id)) {
             const questionDetaisObj = {
               _id: question[i]._id,
