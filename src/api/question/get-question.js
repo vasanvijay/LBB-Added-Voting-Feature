@@ -49,7 +49,7 @@ module.exports = exports = {
                 // { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
-                { "filter.options.optionName": user.subject[i] },
+                // { "filter.options.optionName": user.subject[i] },
                 { status: { $eq: "active" } },
               ],
               question: { $regex: search, $options: "i" },
@@ -80,8 +80,8 @@ module.exports = exports = {
                 // { _id: { $nin: user.abuseQuestion.questionId } },
                 { createdBy: { $nin: user.blockUser } },
                 { reportAbuse: { $nin: true } },
-                { "filter.options.optionName": user.subject[i] },
-                { status: { $eq: "active" } },
+                // { "filter.options.optionName": user.subject[i] },
+                // { status: { $eq: "active" } },
               ],
               question: { $regex: search, $options: "i" },
             });
@@ -91,43 +91,18 @@ module.exports = exports = {
             for (let i = 0; i < user.subject.length; i++) {
               question = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
-                $and: [
-                  { _id: { $nin: user.answerLater } },
-                  { _id: { $nin: user.removeQuestion } },
-                  // { _id: { $nin: user.abuseQuestion.questionId } },
-                  { createdBy: { $nin: user.blockUser } },
-                  { reportAbuse: { $nin: true } },
-                  { status: { $eq: "active" } },
-                ],
               })
                 .populate({
                   path: "createdBy",
                   model: "user",
                   select: "_id name subject profileImage currentRole",
                 })
-                // .populate({
-                //   path: "filter.filterId",
-                //   populate: {
-                //     path: "options",
-                //     model: "filter",
-                //     select: "_id",
-                //   },
-                //   model: "filter",
-                //   select: "_id name",
-                // })
                 .skip(skip)
                 .limit(limit)
                 .exec();
+              console.log("QUES-->", question);
               count = await global.models.GLOBAL.QUESTION.count({
                 ...criteria,
-                $and: [
-                  { _id: { $nin: user.answerLater } },
-                  { _id: { $nin: user.removeQuestion } },
-                  // { _id: { $nin: user.abuseQuestion.questionId } },
-                  { createdBy: { $nin: user.blockUser } },
-                  { reportAbuse: { $nin: true } },
-                  { status: { $eq: "active" } },
-                ],
               });
             }
           } else {
@@ -141,21 +116,10 @@ module.exports = exports = {
                   // { _id: { $nin: user.abuseQuestion.questionId } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
-                  { "filter.options.optionName": user.subject[i] },
-                  { status: { $eq: "active" } },
+                  // { "filter.options.optionName": { $eq: user.subject[i] } },
+                  // { status: { $eq: "active" } },
                 ],
               })
-
-                // .populate({
-                //   path: "filter.filterId",
-                //   populate: {
-                //     path: "options",
-                //     model: "filter",
-                //     select: "_id",
-                //   },
-                //   model: "filter",
-                //   select: "_id name",
-                // })
                 .populate({
                   path: "createdBy",
                   model: "user",
@@ -173,8 +137,8 @@ module.exports = exports = {
                   { _id: { $nin: user.removeQuestion } },
                   { createdBy: { $nin: user.blockUser } },
                   { reportAbuse: { $nin: true } },
-                  { "filter.options.optionName": user.subject[i] },
-                  { status: { $eq: "active" } },
+                  // { "filter.options.optionName": user.subject[i] },
+                  // { status: { $eq: "active" } },
                 ],
               });
             }
