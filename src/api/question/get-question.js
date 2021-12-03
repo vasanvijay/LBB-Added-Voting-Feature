@@ -39,6 +39,8 @@ module.exports = exports = {
         let skip = (parseInt(req.query.page) - 1) * limit;
         let question;
         let count;
+        let reachCount;
+        let reach = await global.models.GLOBAL.USER.count();
         if (search) {
           for (let i = 0; i < user.subject.length; i++) {
             question = await global.models.GLOBAL.QUESTION.find({
@@ -71,6 +73,9 @@ module.exports = exports = {
               // })
               .skip(skip)
               .limit(limit)
+              .sort({
+                createdAt: -1,
+              })
               .exec();
             count = await global.models.GLOBAL.QUESTION.count({
               ...criteria,
@@ -86,6 +91,63 @@ module.exports = exports = {
               question: { $regex: search, $options: "i" },
             });
           }
+          if (question.filter) {
+            reachCount = await global.models.GLOBAL.QUESTION.aggregate([
+              // {
+              //   $match: {
+              //     filter: {
+              //       $gt: {
+              //         $size: "$filter",
+              //       },
+              //     },
+              //   },
+              // },
+              {
+                $project: {
+                  _id: "$_id",
+                  filter: {
+                    filterId: "$filter.filterId",
+                    filterName: "$filter.filterName",
+                    options: "$filter.options.optionName",
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: "$_id",
+                  filter: {
+                    $slice: ["$filter", 1],
+                  },
+                },
+              },
+            ]);
+            // console.log("reachCount ---->", reachCount);
+            reachCount?.map(async (object, objIndex) => {
+              for (let i = 0; i < object?.filter[0].filterId?.length; i++) {
+                // console.log("index ---->", i);
+                if (
+                  object?.filter[0].filterId[i] == "619e07b7641d2f00f887ec96"
+                ) {
+                  reachCount[objIndex].filter[0].reach =
+                    await global.models.GLOBAL.USER.aggregate([
+                      {
+                        $match: {
+                          subject: {
+                            $in: object?.filter?.[0]?.options[i],
+                          },
+                        },
+                      },
+                      {
+                        $count: "subject",
+                      },
+                    ]);
+                }
+              }
+              // console.log(`filterr`, reachCount[objIndex].filter[0]);
+            });
+          } else {
+            reachCount = await global.models.GLOBAL.USER.count();
+          }
         } else {
           if (byUser) {
             for (let i = 0; i < user.subject.length; i++) {
@@ -99,13 +161,74 @@ module.exports = exports = {
                 })
                 .skip(skip)
                 .limit(limit)
+                .sort({
+                  createdAt: -1,
+                })
                 .exec();
               console.log("QUES-->", question);
               count = await global.models.GLOBAL.QUESTION.count({
                 ...criteria,
               });
             }
+            if (question.filter) {
+              reachCount = await global.models.GLOBAL.QUESTION.aggregate([
+                // {
+                //   $match: {
+                //     filter: {
+                //       $gt: {
+                //         $size: "$filter",
+                //       },
+                //     },
+                //   },
+                // },
+                {
+                  $project: {
+                    _id: "$_id",
+                    filter: {
+                      filterId: "$filter.filterId",
+                      filterName: "$filter.filterName",
+                      options: "$filter.options.optionName",
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    _id: "$_id",
+                    filter: {
+                      $slice: ["$filter", 1],
+                    },
+                  },
+                },
+              ]);
+              // console.log("reachCount ---->", reachCount);
+              reachCount?.map(async (object, objIndex) => {
+                for (let i = 0; i < object?.filter[0].filterId?.length; i++) {
+                  // console.log("index ---->", i);
+                  if (
+                    object?.filter[0].filterId[i] == "619e07b7641d2f00f887ec96"
+                  ) {
+                    reachCount[objIndex].filter[0].reach =
+                      await global.models.GLOBAL.USER.aggregate([
+                        {
+                          $match: {
+                            subject: {
+                              $in: object?.filter?.[0]?.options[i],
+                            },
+                          },
+                        },
+                        {
+                          $count: "subject",
+                        },
+                      ]);
+                  }
+                }
+                // console.log(`filterr`, reachCount[objIndex].filter[0]);
+              });
+            } else {
+              reachCount = await global.models.GLOBAL.USER.count();
+            }
           } else {
+            let flag = [];
             for (let i = 0; i < user.subject.length; i++) {
               question = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
@@ -127,7 +250,46 @@ module.exports = exports = {
                 })
                 .skip(skip)
                 .limit(limit)
+                .sort({
+                  createdAt: -1,
+                })
                 .exec();
+              // question.map((que) => {
+              //   if (que.filter.length) {
+              //     // console.log("questionData---->", que.filter);
+              //     que.filter.map((options) => {
+              //       if (options.options.length) {
+              //         options.options.map((option) => {
+              //           if (option.optionName === user.subject[i]) {
+              //             console.log("optionDataData---->", option);
+              //           }
+              //         });
+              //       }
+              //     });
+              //   }
+              // });
+              // for (let a = 0; a < question.length; a++) {
+              //   for (let j = 0; j < question[a].filter.length; j++) {
+              //     for (
+              //       let k = 0;
+              //       k < question[a].filter[j].options.length;
+              //       k++
+              //     ) {
+              //       if (
+              //         question[a].filter[j].options[k].optionName ===
+              //         user.subject[i]
+              //       ) {
+              //         // console.log("questionData---->", question[a]);
+              //         flag.push(question[a]._id);
+
+              //         // if(!flag.includes(question[a]._id)){
+              //         //   flag.push(question[a]._id);
+              //         //   question.push(question[a]);
+              //         // }
+              //       }
+              //     }
+              //   }
+              // }
               // console.log("QUE-->", question);
               count = await global.models.GLOBAL.QUESTION.countDocuments({
                 ...criteria,
@@ -141,6 +303,63 @@ module.exports = exports = {
                   // { status: { $eq: "active" } },
                 ],
               });
+            }
+            if (question.filter) {
+              reachCount = await global.models.GLOBAL.QUESTION.aggregate([
+                {
+                  $match: {
+                    filter: {
+                      $gt: {
+                        $size: "$filter",
+                      },
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    _id: "$_id",
+                    filter: {
+                      filterId: "$filter.filterId",
+                      filterName: "$filter.filterName",
+                      options: "$filter.options.optionName",
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    _id: "$_id",
+                    filter: {
+                      $slice: ["$filter", 1],
+                    },
+                  },
+                },
+              ]);
+              // console.log("reachCount ---->", reachCount);
+              reachCount?.map(async (object, objIndex) => {
+                for (let i = 0; i < object?.filter[0].filterId?.length; i++) {
+                  // console.log("index ---->", i);
+                  if (
+                    object?.filter[0].filterId[i] == "619e07b7641d2f00f887ec96"
+                  ) {
+                    reachCount[objIndex].filter[0].reach =
+                      await global.models.GLOBAL.USER.aggregate([
+                        {
+                          $match: {
+                            subject: {
+                              $in: object?.filter?.[0]?.options[i],
+                            },
+                          },
+                        },
+                        {
+                          $count: "subject",
+                        },
+                      ]);
+                  }
+                }
+                // console.log(`filterr`, reachCount[objIndex].filter[0]);
+              });
+            } else {
+              reachCount = await global.models.GLOBAL.USER.count();
             }
           }
         }
@@ -200,6 +419,15 @@ module.exports = exports = {
         };
         let questionDetais = [];
         for (let i = 0; i < question.length; i++) {
+          let reaches = 0;
+          let reachCounts = reachCount.map((count) => {
+            if (count.filter[0].reach) {
+              if (question[i]._id.toString() == count._id) {
+                reaches = count;
+              }
+            }
+          });
+          console.log("COUNT---<>>", reach);
           if (conectIdExist(question[i].createdBy?._id)) {
             const questionDetaisObj = {
               _id: question[i]._id,
@@ -221,6 +449,7 @@ module.exports = exports = {
               userName: question[i].createdBy.name,
               createdBy: question[i].createdBy,
               isFriend: "true",
+              reach: reaches == 0 ? reach : reaches.filter[0].reach[0].subject,
             };
             questionDetais.push(questionDetaisObj);
           } else if (sentIdExist(question[i].createdBy?._id)) {
@@ -244,6 +473,7 @@ module.exports = exports = {
               userName: question[i].createdBy.name,
               createdBy: question[i].createdBy,
               isFriend: "sent",
+              reach: reaches == 0 ? reach : reaches.filter[0].reach[0].subject,
             };
             questionDetais.push(questionDetaisObj);
           } else if (pandingIdExist(question[i].createdBy?._id)) {
@@ -267,6 +497,7 @@ module.exports = exports = {
               userName: question[i].createdBy.name,
               createdBy: question[i].createdBy,
               isFriend: "pending",
+              reach: reaches == 0 ? reach : reaches.filter[0].reach[0].subject,
             };
             questionDetais.push(questionDetaisObj);
           } else if (blockIdExist(question[i].createdBy?._id)) {
@@ -290,6 +521,7 @@ module.exports = exports = {
               userName: question[i].createdBy.name,
               createdBy: question[i].createdBy,
               isFriend: "block",
+              reach: reaches == 0 ? reach : reaches.filter[0].reach[0].subject,
             };
             questionDetais.push(questionDetaisObj);
           } else {
@@ -313,6 +545,7 @@ module.exports = exports = {
               userName: question[i].createdBy.name,
               createdBy: question[i].createdBy,
               isFriend: "false",
+              reach: reaches == 0 ? reach : reaches.filter[0].reach[0].subject,
             };
             questionDetais.push(questionDetaisObj);
           }
