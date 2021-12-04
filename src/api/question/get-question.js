@@ -75,7 +75,6 @@ module.exports = exports = {
         user.subject = [...user.subject, ...user.countryOfOrigin];
 
         // return res.send({ sub: subjects });
-        console.log("CRITERIA", ...criteria);
         quResult = await global.models.GLOBAL.QUESTION.find({
           question: { $regex: search, $options: "i" },
           _id: {
