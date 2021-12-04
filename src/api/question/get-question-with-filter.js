@@ -12,7 +12,7 @@ module.exports = exports = {
     const { question } = req.query;
     const { byUser } = req.query;
     const { search } = req.query;
-    let criteria = {};
+    let criteria;
     if (byUser) {
       criteria = {
         createdBy: user._id,
@@ -60,7 +60,6 @@ module.exports = exports = {
                   model: "user",
                   select: "_id name subject profileImage currentRole",
                 })
-
                 .skip(skip)
                 .limit(limit)
                 .sort({
@@ -96,18 +95,19 @@ module.exports = exports = {
         } else if (!byUser) {
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
-              console.log("criteria ni", user.answerLater);
+              console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
-                // createdBy: { $not: { $eq: user._id } },
-                $and: [
-                  { _id: { $nin: user.answerLater } },
-                  // "$filter.options.optionName": filter[i],
-                  { _id: { $nin: user.removeQuestion } },
-                  // { _id: { $nin: user.abuseQuestion } },
-                  { createdBy: { $nin: user.blockUser } },
-                  { reportAbuse: { $nin: true } },
-                  { createdBy: { $nin: user._id } },
-                ],
+                // $and: [
+                _id: {
+                  $nin: user.answerLater,
+                  $nin: user.removeQuestion,
+                  $nin: user.abuseQuestion,
+                },
+                "filter.options.optionName": filter[i],
+                createdBy: { $nin: user.blockUser, $nin: user._id },
+                reportAbuse: { $nin: true },
+                criteria,
+                // ],
               })
                 .populate({
                   path: "createdBy",
@@ -115,7 +115,7 @@ module.exports = exports = {
                   select: "_id name subject profileImage currentRole",
                 })
                 .exec();
-
+              // return res.send(quResult);
               // let quResult = await global.models.GLOBAL.QUESTION.aggregate([
               //   { $unwind: "$filter" },
               //   {
@@ -165,16 +165,16 @@ module.exports = exports = {
         } else {
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
+              console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
-                ...criteria,
-                $and: [
-                  { _id: { $nin: user.answerLater } },
-                  { "filter.options.optionName": filter[i] },
-                  { _id: { $nin: user.removeQuestion } },
-                  // { _id: { $nin: user.abuseQuestion } },
-                  { createdBy: { $nin: user.blockUser } },
-                  { reportAbuse: { $nin: true } },
-                ],
+                // $and: [
+                _id: { $nin: user.answerLater },
+                "filter.options.optionName": filter[i],
+                _id: { $nin: user.removeQuestion },
+                _id: { $nin: user.abuseQuestion },
+                reportAbuse: { $nin: true },
+                createdBy: criteria.createdBy,
+                // ],
               })
                 .populate({
                   path: "createdBy",

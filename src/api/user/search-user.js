@@ -127,18 +127,24 @@ module.exports = exports = {
             });
           }
         });
-        distinctUser = await global.models.GLOBAL.USER.find({
-          $and: [
-            { subject: { $regex: search, $options: "i" } },
-            {
-              $or: criteria,
-            },
-          ],
-        });
+        distinctUser = await global.models.GLOBAL.USER.find(
+          {
+            $and: [
+              { subject: { $regex: search, $options: "i" } },
+              {
+                $or: criteria,
+              },
+            ],
+          },
+          { password: 0 }
+        );
       } else if (search) {
-        distinctUser = await global.models.GLOBAL.USER.find({
-          subject: { $regex: search, $options: "i" },
-        });
+        distinctUser = await global.models.GLOBAL.USER.find(
+          {
+            subject: { $regex: search, $options: "i" },
+          },
+          { password: 0 }
+        );
       } else if (filter) {
         filter.map((fil) => {
           if (fil.filterId == "6188f31e603a571b33b09585") {
@@ -268,23 +274,29 @@ module.exports = exports = {
             });
           }
         });
-        distinctUser = await global.models.GLOBAL.USER.find({
-          $and: [
-            { _id: { $nin: user._id } },
-            {
-              $or: criteria,
-            },
-          ],
-        });
+        distinctUser = await global.models.GLOBAL.USER.find(
+          {
+            $and: [
+              { _id: { $nin: user._id } },
+              {
+                $or: criteria,
+              },
+            ],
+          },
+          { password: 0 }
+        );
       } else {
         req.query.page = req.query.page ? req.query.page : 1;
         let page = parseInt(req.query.page);
         req.query.limit = req.query.limit ? req.query.limit : 10;
         let limit = parseInt(req.query.limit);
         let skip = (parseInt(req.query.page) - 1) * limit;
-        distinctUser = await global.models.GLOBAL.USER.find({
-          _id: { $nin: user._id },
-        })
+        distinctUser = await global.models.GLOBAL.USER.find(
+          {
+            _id: { $nin: user._id },
+          },
+          { password: 0 }
+        )
           .skip(skip)
           .limit(limit);
       }
