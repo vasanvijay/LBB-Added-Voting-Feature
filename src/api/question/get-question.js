@@ -85,7 +85,7 @@ module.exports = exports = {
           "filter.options.optionName": { $in: user.subject },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
-          criteria,
+          ...criteria,
         })
           .populate({
             path: "createdBy",
@@ -123,7 +123,7 @@ module.exports = exports = {
         user.subject.push(user.sexualOrientation);
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
-        console.log("CRITERIA", criteria);
+        // console.log("CRITERIA", criteria);
         // console.log("dsfdsfsdf", user.subject);
         // return res.send({ sub: subjects });
         quResult = await global.models.GLOBAL.QUESTION.find({
