@@ -22,6 +22,25 @@ module.exports = exports = {
         "question",
         { $and: [{ answerBy: user._id }] }
       );
+      let optionNames = [];
+      let reachCount = async (question) => {
+        for (let k = 0; k < question.filter.length; k++) {
+          question.filter[k]?.options.map(async (item) => {
+            optionNames.push(item.optionName);
+          });
+        }
+
+        const users = await global.models.GLOBAL.USER.find({
+          $text: { $search: optionNames.join(" ") },
+        })
+          .count()
+          .then((ress) => ress);
+        if (users == 0) {
+          return await global.models.GLOBAL.USER.count();
+        } else {
+          return users;
+        }
+      };
       let answer = [];
       for (let i = 0; i < questionArray.length; i++) {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
@@ -78,6 +97,7 @@ module.exports = exports = {
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "true",
+              reach: await reachCount(answer[i]),
             };
             Answers.push(answerObj);
           } else if (sentIdExist(answer[i]?.createdBy)) {
@@ -94,6 +114,7 @@ module.exports = exports = {
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "sent",
+              reach: await reachCount(answer[i]),
             };
             Answers.push(answerObj);
           } else if (pandingIdExist(answer[i]?.createdBy)) {
@@ -110,6 +131,7 @@ module.exports = exports = {
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "pending",
+              reach: await reachCount(answer[i]),
             };
             Answers.push(answerObj);
           } else {
@@ -126,6 +148,7 @@ module.exports = exports = {
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "false",
+              reach: await reachCount(answer[i]),
             };
             Answers.push(answerObj);
           }

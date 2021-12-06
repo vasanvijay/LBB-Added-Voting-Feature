@@ -26,6 +26,25 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
+      let optionNames = [];
+      let reachCount = async (question) => {
+        for (let k = 0; k < question.filter.length; k++) {
+          question.filter[k]?.options.map(async (item) => {
+            optionNames.push(item.optionName);
+          });
+        }
+
+        const users = await global.models.GLOBAL.USER.find({
+          $text: { $search: optionNames.join(" ") },
+        })
+          .count()
+          .then((ress) => ress);
+        if (users == 0) {
+          return await global.models.GLOBAL.USER.count();
+        } else {
+          return users;
+        }
+      };
       if (question) {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
@@ -82,6 +101,7 @@ module.exports = exports = {
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
               isFriend: "true",
+              reach: await reachCount(question[0]?.answerLater[i]),
             };
             Question.push(questionObj);
           } else if (sentIdExist(question[0]?.answerLater[i].createdBy?._id)) {
@@ -97,6 +117,7 @@ module.exports = exports = {
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
+              reach: await reachCount(question[0]?.answerLater[i]),
               isFriend: "sent",
             };
             Question.push(questionObj);
@@ -115,6 +136,7 @@ module.exports = exports = {
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
+              reach: await reachCount(question[0]?.answerLater[i]),
               isFriend: "pending",
             };
             Question.push(questionObj);
@@ -131,6 +153,7 @@ module.exports = exports = {
               filter: question[0]?.answerLater[i].filter,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
+              reach: await reachCount(question[0]?.answerLater[i]),
               isFriend: "false",
             };
             Question.push(questionObj);
