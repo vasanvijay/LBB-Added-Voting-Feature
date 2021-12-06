@@ -49,7 +49,7 @@ module.exports = exports = {
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.BAD_REQUEST)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
