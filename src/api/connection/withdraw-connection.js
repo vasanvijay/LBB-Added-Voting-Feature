@@ -24,32 +24,48 @@ module.exports = exports = {
     }
 
     try {
-      const withdrawConnection =
-        await global.models.GLOBAL.CONNECTION.findOneAndRemove({
-          _id: connectionId,
-          senderId: user._id,
-        });
-      if (withdrawConnection) {
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.CONNECTION_WITHDRAW,
-          payload: {},
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+      let findConnection = await global.models.GLOBAL.CONNECTION.findOne({
+        _id: connectionId,
+      });
+      if (findConnection) {
+        const withdrawConnection =
+          await global.models.GLOBAL.CONNECTION.findOneAndRemove({
+            _id: connectionId,
+            senderId: user._id,
+          });
+        if (withdrawConnection) {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.CONNECTION_WITHDRAW,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.GENERAL,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.BAD_REQUEST)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
       } else {
         const data4createResponseObject = {
           req: req,
           result: -1,
-          message: messages.GENERAL,
+          message: messages.NOT_FOUND,
           payload: {},
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.BAD_REQUEST)
+          .status(enums.HTTP_CODES.NOT_FOUND)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
