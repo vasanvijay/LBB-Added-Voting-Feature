@@ -222,7 +222,11 @@ module.exports = exports = {
         })
           .count()
           .then((ress) => ress);
-        return users;
+        if (users == 0) {
+          return await global.models.GLOBAL.USER.count();
+        } else {
+          return users;
+        }
       };
       for (let i = 0; i < quResult.length; i++) {
         if (conectIdExist(quResult[i]._id)) {
@@ -230,11 +234,9 @@ module.exports = exports = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,
             allowConnectionRequest: quResult[i].allowConnectionRequest,
-            view: quResult[i].view,
             response: quResult[i].response,
             status: quResult[i].status,
             question: quResult[i].question,
-            reaches: quResult[i].reaches,
             filter: quResult[i]?.filter,
             createdAt: quResult[i].createdAt,
             userName: quResult[i].createdBy.name,
@@ -248,11 +250,9 @@ module.exports = exports = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,
             allowConnectionRequest: quResult[i].allowConnectionRequest,
-            view: quResult[i].view,
             response: quResult[i].response,
             status: quResult[i].status,
             question: quResult[i].question,
-            reaches: quResult[i].reaches,
             filter: quResult[i]?.filter,
             createdAt: quResult[i].createdAt,
             userName: quResult[i].createdBy.name,
@@ -266,11 +266,9 @@ module.exports = exports = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,
             allowConnectionRequest: quResult[i].allowConnectionRequest,
-            view: quResult[i].view,
             response: quResult[i].response,
             status: quResult[i].status,
             question: quResult[i].question,
-            reaches: quResult[i].reaches,
             filter: quResult[i]?.filter,
             createdAt: quResult[i].createdAt,
             userName: quResult[i].createdBy.name,
@@ -284,11 +282,9 @@ module.exports = exports = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,
             allowConnectionRequest: quResult[i].allowConnectionRequest,
-            view: quResult[i].view,
             response: quResult[i].response,
             status: quResult[i].status,
             question: quResult[i].question,
-            reaches: quResult[i].reaches,
             filter: quResult[i]?.filter,
             createdAt: quResult[i].createdAt,
             userName: quResult[i].createdBy.name,
