@@ -80,7 +80,7 @@ module.exports = exports = {
           _id: { $nin: user.abuseQuestion },
 
           "filter.options.optionName": { $in: user.subject },
-          "filter.options.optionName": { $exists: false },
+          // "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
           ...criteria,
@@ -102,7 +102,7 @@ module.exports = exports = {
           _id: { $nin: user.removeQuestion },
           _id: { $nin: user.abuseQuestion },
           "filter.options.optionName": { $in: user.subject },
-          "filter.options.optionName": { $exists: false },
+          // "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
         });
@@ -125,7 +125,7 @@ module.exports = exports = {
           _id: { $nin: user.removeQuestion },
           _id: { $nin: user.abuseQuestion },
           "filter.options.optionName": { $in: user.subject },
-          "filter.options.optionName": { $exists: false },
+          // "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
           ...criteria,
@@ -146,7 +146,7 @@ module.exports = exports = {
           _id: { $nin: user.removeQuestion },
           _id: { $nin: user.abuseQuestion },
           "filter.options.optionName": { $in: user.subject },
-          "filter.options.optionName": { $exists: false },
+          // "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
         });
