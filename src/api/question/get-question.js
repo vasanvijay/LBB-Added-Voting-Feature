@@ -58,7 +58,6 @@ module.exports = exports = {
         count = await global.models.GLOBAL.QUESTION.count({
           createdBy: user._id,
         });
-        // res.send(quResult);
       } else if (!byUser && search) {
         console.log("SEARCH-->>", search);
         user.subject.push(user.currentRole);
@@ -74,14 +73,12 @@ module.exports = exports = {
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
 
-        // return res.send({ sub: subjects });
         quResult = await global.models.GLOBAL.QUESTION.find({
           question: { $regex: search, $options: "i" },
-          _id: {
-            $nin: user.answerLater,
-            $nin: user.removeQuestion,
-            $nin: user.abuseQuestion,
-          },
+          _id: { $nin: user.answerLater },
+          _id: { $nin: user.removeQuestion },
+          _id: { $nin: user.abuseQuestion },
+
           "filter.options.optionName": { $in: user.subject },
           "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
@@ -101,17 +98,14 @@ module.exports = exports = {
           .exec();
         count = await global.models.GLOBAL.QUESTION.count({
           question: { $regex: search, $options: "i" },
-          _id: {
-            $nin: user.answerLater,
-            $nin: user.removeQuestion,
-            $nin: user.abuseQuestion,
-          },
+          _id: { $nin: user.answerLater },
+          _id: { $nin: user.removeQuestion },
+          _id: { $nin: user.abuseQuestion },
           "filter.options.optionName": { $in: user.subject },
           "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
         });
-        // res.send(quResult);
       } else {
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
@@ -125,15 +119,11 @@ module.exports = exports = {
         user.subject.push(user.sexualOrientation);
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
-        // console.log("CRITERIA", criteria);
-        // console.log("dsfdsfsdf", user.subject);
-        // return res.send({ sub: subjects });
+
         quResult = await global.models.GLOBAL.QUESTION.find({
-          _id: {
-            $nin: user.answerLater,
-            $nin: user.removeQuestion,
-            $nin: user.abuseQuestion,
-          },
+          _id: { $nin: user.answerLater },
+          _id: { $nin: user.removeQuestion },
+          _id: { $nin: user.abuseQuestion },
           "filter.options.optionName": { $in: user.subject },
           "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
@@ -152,17 +142,14 @@ module.exports = exports = {
           })
           .exec();
         count = await global.models.GLOBAL.QUESTION.count({
-          _id: {
-            $nin: user.answerLater,
-            $nin: user.removeQuestion,
-            $nin: user.abuseQuestion,
-          },
+          _id: { $nin: user.answerLater },
+          _id: { $nin: user.removeQuestion },
+          _id: { $nin: user.abuseQuestion },
           "filter.options.optionName": { $in: user.subject },
           "filter.options.optionName": { $exists: false },
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
         });
-        // res.send(quResult);
       }
 
       // today's Questions Count

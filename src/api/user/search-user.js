@@ -269,6 +269,12 @@ module.exports = exports = {
             fil?.options?.map((opt) => {
               optionName.push(opt.optionName);
             });
+            // console.log("OTP NAME-->>", optionName[0]);
+            // let opt = optionName[0];
+            // const value = opt.split("-");
+            // console.log("VAL - 1 = ", value[0]);
+            // console.log("VAL - 2 = ", value[1]);
+            // let age =  moment(new Date()).diff('', 'years',true);
             criteria.push({
               age: { $in: optionName },
             });
