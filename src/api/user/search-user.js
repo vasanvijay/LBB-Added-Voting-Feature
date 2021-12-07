@@ -72,7 +72,7 @@ module.exports = exports = {
               countryOfOrigin: { $in: optionName },
             });
           }
-          if (fil.filterId == "61890a1dfec3b250c029cb05") {
+          if (fil.filterId == "6189098afec3b250c029cadd") {
             let optionName = [];
             fil?.options?.map((opt) => {
               optionName.push(opt.optionName);
@@ -201,7 +201,7 @@ module.exports = exports = {
               countryOfOrigin: { $in: optionName },
             });
           }
-          if (fil.filterId == "61890a1dfec3b250c029cb05") {
+          if (fil.filterId == "6189098afec3b250c029cadd") {
             let optionName = [];
             fil?.options?.map((opt) => {
               optionName.push(opt.optionName);
