@@ -1,5 +1,6 @@
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
+const ObjectId = require("mongodb").ObjectId;
 
 const logger = require("../../logger");
 const utils = require("../../utils");
@@ -110,6 +111,17 @@ module.exports = exports = {
           reportAbuse: false,
         });
       } else {
+        // for (var i = 0; i < user.blockUser.length; i++) {
+        //   user.blockUser[i] = ObjectId(user.blockUser[i]);
+        // }
+        // for (var i = 0; i < user.removeQuestion.length; i++) {
+        //   user.removeQuestion[i] = ObjectId(user.removeQuestion[i]);
+        // }
+        abuseQuestion = [];
+        for (var i = 0; i < user.abuseQuestion.length; i++) {
+          abuseQuestion.push(user.abuseQuestion[i].questionId);
+        }
+        console.log(user);
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
         user.subject.push(user.gender);
@@ -124,9 +136,12 @@ module.exports = exports = {
         user.subject = [...user.subject, ...user.countryOfOrigin];
 
         quResult = await global.models.GLOBAL.QUESTION.find({
-          _id: { $nin: user.answerLater },
-          _id: { $nin: user.removeQuestion },
-          _id: { $nin: user.abuseQuestion },
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
             { "filter.options.optionName": { $in: user.subject } },
@@ -147,9 +162,12 @@ module.exports = exports = {
           })
           .exec();
         count = await global.models.GLOBAL.QUESTION.count({
-          _id: { $nin: user.answerLater },
-          _id: { $nin: user.removeQuestion },
-          _id: { $nin: user.abuseQuestion },
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
             { "filter.options.optionName": { $in: user.subject } },

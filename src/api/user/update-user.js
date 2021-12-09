@@ -64,13 +64,20 @@ module.exports = exports = {
       }
     } else {
       try {
-        console.log("IMAGE--->>", req.body.profileImage);
-        if (req?.body?.profileImage?.include("base64")) {
+        // console.log("IMAGE--->>", req.body.profileImage);
+        if (req?.body?.profileImage?.includes("base64")) {
           let findUser = await global.models.GLOBAL.USER.findOne({
             _id: user._id,
           });
-          if (findUser.image !== null || undefined) {
-            const url = findUser.image.split(".com/").slice(-1)[0];
+          // console.log("Image hirenbhai", findUser);
+
+          if (
+            findUser?.profileImage !== null ||
+            findUser?.profileImage !== undefined ||
+            findUser?.profileImage !== ""
+          ) {
+            console.log("profileImage vishv", findUser?.profileImage);
+            const url = findUser?.profileImage?.split(".com/").slice(-1)[0];
             console.log(url);
             if (url) {
               utils.mediaDeleteS3(url, function (err) {

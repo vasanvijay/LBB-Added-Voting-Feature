@@ -13,11 +13,13 @@ module.exports = exports = {
     try {
       let getNotification = await global.models.GLOBAL.NOTIFICATION.find({
         receiverId: user._id,
-      }).populate({
-        path: "userId",
-        model: "user",
-        select: "subject profileImage currentRole",
-      });
+      })
+        .sort({ createdAt: -1 })
+        .populate({
+          path: "userId",
+          model: "user",
+          select: "subject profileImage currentRole",
+        });
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {
           if (getNotification[i].question !== null) {
