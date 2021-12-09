@@ -65,7 +65,7 @@ module.exports = exports = {
               createdBy: getNotification[i].createdBy,
               updatedAt: getNotification[i].updatedAt,
               updatedBy: getNotification[i].updatedBy,
-              isConnected: false,
+              isConnected: true,
             };
             notification.push(ntfObj);
           }
