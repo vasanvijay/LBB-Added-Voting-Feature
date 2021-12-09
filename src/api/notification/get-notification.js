@@ -18,7 +18,7 @@ module.exports = exports = {
         .populate({
           path: "userId",
           model: "user",
-          select: "subject profileImage currentRole",
+          select: "_id subject profileImage currentRole",
         });
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {
@@ -26,7 +26,18 @@ module.exports = exports = {
             let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
               _id: getNotification[i].question,
             });
-            let ntfObj = {
+            let ntfObj;
+            let isc = false;
+            for (let index = 0; index < user.accepted?.length; index++) {
+              if (
+                `${user?.accepted[1]}` == `${getNotification[i]?.userId?._id}`
+              ) {
+                isc = true;
+                console.log("HYYYY");
+              }
+            }
+
+            ntfObj = {
               _id: getNotification[i]._id,
               userId: getNotification[i].userId,
               receiverId: getNotification[i].receiverId,
@@ -38,7 +49,9 @@ module.exports = exports = {
               updatedAt: getNotification[i].updatedAt,
               updatedBy: getNotification[i].updatedBy,
               question: findQuestion,
+              isConnected: isc,
             };
+
             notification.push(ntfObj);
           } else {
             let ntfObj = {
@@ -52,6 +65,7 @@ module.exports = exports = {
               createdBy: getNotification[i].createdBy,
               updatedAt: getNotification[i].updatedAt,
               updatedBy: getNotification[i].updatedBy,
+              isConnected: false,
             };
             notification.push(ntfObj);
           }
