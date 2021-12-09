@@ -59,7 +59,7 @@ module.exports = exports = {
             userId: user._id,
             receiverId: receiverId,
             title: `Notification By ${user._id} to ${receiverId}`,
-            description: "Someones Accept Your Connection request.",
+            description: " Accept Your Connection request.",
             createdBy: user._id,
             updatedBy: user._id,
           };
