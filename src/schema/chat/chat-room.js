@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 module.exports = (connection) => {
   const chatRoomSchema = new mongoose.Schema({
-    participateIds: [{ type: mongoose.Schema.Types.ObjectId }],
+    participateIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() },

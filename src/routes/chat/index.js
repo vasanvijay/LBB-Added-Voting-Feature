@@ -16,6 +16,11 @@ router.get(
   validate("query", chatApi.getMessages.validation),
   chatApi.getMessages.handler
 );
+router.get(
+  "/get-last-message",
+  passport.authenticate(["jwt"], { session: false }),
+  chatApi.lastMessage.handler
+);
 
 // Post Methods
 router.post(

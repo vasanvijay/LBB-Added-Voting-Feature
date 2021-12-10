@@ -22,7 +22,7 @@ module.exports = exports = {
         });
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {
-          if (getNotification[i].question !== null) {
+          if (getNotification[i].question) {
             let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
               _id: getNotification[i].question,
             });

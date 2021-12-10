@@ -35,7 +35,7 @@ module.exports = exports = {
         const data4createResponseObject = {
           req: req,
           result: -1,
-          message: messages.INVALID_EMAIL,
+          message: "Specific user dose not exist.",
           payload: {},
           logPayload: false,
         };
@@ -68,7 +68,7 @@ module.exports = exports = {
             req: req,
             result: -1,
             message:
-              "SOmething Went Wrong to Update Password so please try again Later",
+              "Something Went Wrong to Update Password so please try again Later",
             payload: {},
             logPayload: false,
           };

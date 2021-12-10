@@ -1,3 +1,4 @@
+const { createCanvas, loadImage } = require("canvas");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -65,7 +66,42 @@ module.exports = exports = {
     } else {
       try {
         // console.log("IMAGE--->>", req.body.profileImage);
-        if (req?.body?.profileImage?.includes("base64")) {
+
+        const ImagesList = await global.models.GLOBAL.LEGENDS.aggregate([
+          {
+            $match: { legendsName: { $in: req.body.subject } },
+          },
+          {
+            $group: { _id: "$legendsIcon" },
+          },
+        ]);
+
+        console.log("LIST LENGHT", ImagesList?.length);
+
+        if (ImagesList.length !== 4) {
+          return res.status(400).json({
+            message: "Please provide 4 images",
+          });
+        } else {
+          const canvasWidth = 1024;
+          const canvasHeight = 1024;
+          //load canvas
+          const myCanvas = createCanvas(canvasWidth, canvasHeight, "PNG");
+          const context = myCanvas.getContext("2d");
+
+          //load images && draw image in existing canvas
+
+          let imageWidth = 0;
+          let imageHeight = 0;
+          for (i = 0; i < ImagesList.length; i++) {
+            await loadImage(ImagesList[i]._id).then(async (image) => {
+              await context.drawImage(image, imageWidth, imageHeight);
+              imageHeight =
+                canvasHeight > imageHeight * 2 ? imageWidth : imageHeight;
+              imageWidth =
+                canvasWidth > imageWidth * 2 ? 0.5 * canvasHeight : 0;
+            });
+          }
           let findUser = await global.models.GLOBAL.USER.findOne({
             _id: user._id,
           });
@@ -89,44 +125,45 @@ module.exports = exports = {
             }
           }
           req.body.profileImage = await utils.uploadBase(
-            req.body.profileImage,
+            myCanvas.toDataURL(),
             user._id
           );
-        }
-        let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
-          { _id: user._id },
-          {
-            $set: {
-              ...req.body,
-              updatedAt: new Date(),
-              updatedBy: user.email,
-            },
-          },
-          { new: true }
-        );
 
-        if (!updateUser) {
-          const data4createResponseObject = {
-            req: req,
-            result: -1,
-            message: messages.USER_DOES_NOT_EXIST,
-            payload: {},
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.NOT_FOUND)
-            .json(utils.createResponseObject(data4createResponseObject));
-        } else {
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_UPDATED,
-            payload: { updateUser },
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+            { _id: user._id },
+            {
+              $set: {
+                ...req.body,
+                updatedAt: new Date(),
+                updatedBy: user.email,
+              },
+            },
+            { new: true }
+          );
+
+          if (!updateUser) {
+            const data4createResponseObject = {
+              req: req,
+              result: -1,
+              message: messages.USER_DOES_NOT_EXIST,
+              payload: {},
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.NOT_FOUND)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_UPDATED,
+              payload: { updateUser },
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          }
         }
       } catch (error) {
         logger.error(

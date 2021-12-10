@@ -21,10 +21,16 @@ module.exports = exports = {
     try {
       let chats = await global.models.GLOBAL.CHAT.find({
         roomId: req,
-      }).populate({
-        path: "sender",
-        select: "name subject",
-      });
+      })
+        .populate({
+          path: "sender",
+          select: "name subject",
+        })
+        .populate({
+          path: "parentMessageId",
+          model: "chat",
+          select: "roomId sender message messageType type createdAt updatedAt",
+        });
       if (chats) {
         const data4createResponseObject = {
           req: req,

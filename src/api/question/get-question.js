@@ -121,7 +121,7 @@ module.exports = exports = {
         for (var i = 0; i < user.abuseQuestion.length; i++) {
           abuseQuestion.push(user.abuseQuestion[i].questionId);
         }
-        console.log(user);
+        // console.log(user);
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
         user.subject.push(user.gender);
@@ -244,8 +244,9 @@ module.exports = exports = {
           return users;
         }
       };
+
       for (let i = 0; i < quResult.length; i++) {
-        if (conectIdExist(quResult[i]._id)) {
+        if (conectIdExist(quResult[i].createdBy._id)) {
           let questionObj = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,
@@ -261,7 +262,7 @@ module.exports = exports = {
             reach: await reachCount(quResult[i]),
           };
           questionDetais.push(questionObj);
-        } else if (sentIdExist(quResult[i]._id)) {
+        } else if (sentIdExist(quResult[i].createdBy._id)) {
           let questionObj = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,
@@ -277,7 +278,7 @@ module.exports = exports = {
             reach: await reachCount(quResult[i]),
           };
           questionDetais.push(questionObj);
-        } else if (pandingIdExist(quResult[i]._id)) {
+        } else if (pandingIdExist(quResult[i].createdBy._id)) {
           let questionObj = {
             _id: quResult[i]._id,
             displayProfile: quResult[i].displayProfile,

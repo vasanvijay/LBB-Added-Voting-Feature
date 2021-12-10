@@ -15,7 +15,9 @@ module.exports = exports = {
     try {
       let criteria = [];
       let searchUser = [];
+      let renge = [];
       let distinctUser;
+
       if (filter && search) {
         filter.map((fil) => {
           if (fil.filterId == "6188f31e603a571b33b09585") {
@@ -43,6 +45,7 @@ module.exports = exports = {
             });
             criteria.push({
               industry: { $in: optionName },
+              industryShow: { $eq: true },
             });
           }
           if (fil.filterId == "6188f536603a571b33b09644") {
@@ -52,6 +55,7 @@ module.exports = exports = {
             });
             criteria.push({
               employeeNumber: { $in: optionName },
+              employeeNumberShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a1dfec3b250c029cb05") {
@@ -61,6 +65,7 @@ module.exports = exports = {
             });
             criteria.push({
               region: { $in: optionName },
+              regionShow: { $eq: true },
             });
           }
           if (fil.filterId == "6189098afec3b250c029cadd") {
@@ -70,6 +75,7 @@ module.exports = exports = {
             });
             criteria.push({
               countryOfOrigin: { $in: optionName },
+              countryOfOriginShow: { $eq: true },
             });
           }
           if (fil.filterId == "6189098afec3b250c029cadd") {
@@ -79,6 +85,8 @@ module.exports = exports = {
             });
             criteria.push({
               countryOfResidence: { $in: optionName },
+              countryOfResidenceShow: { $eq: true },
+              countryOfResidenceShow,
             });
           }
           if (fil.filterId == "6188f7caa06a481f928d6699") {
@@ -88,6 +96,7 @@ module.exports = exports = {
             });
             criteria.push({
               levelOfEducation: { $in: optionName },
+              levelOfEducationShow: { $eq: true },
             });
           }
           if (fil.filterId == "618909a2fec3b250c029cae2") {
@@ -97,6 +106,7 @@ module.exports = exports = {
             });
             criteria.push({
               ethnicity: { $in: optionName },
+              ethnicityShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a10fec3b250c029cb00") {
@@ -106,6 +116,7 @@ module.exports = exports = {
             });
             criteria.push({
               politicalAffiliation: { $in: optionName },
+              politicalAffiliationShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a36fec3b250c029cb0a") {
@@ -115,6 +126,7 @@ module.exports = exports = {
             });
             criteria.push({
               religiousAffiliation: { $in: optionName },
+              religiousAffiliationShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a4efec3b250c029cb0f") {
@@ -124,9 +136,95 @@ module.exports = exports = {
             });
             criteria.push({
               sexualOrientation: { $in: optionName },
+              sexualOrientationShow: { $eq: true },
             });
           }
+          if (fil.filterId == "619e0cf5641d2f00f887ece1") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              gender: { $in: optionName },
+              gendereShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "619e0cec641d2f00f887ecdc") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            let opts = optionName;
+            for (let i = 0; i < opts.length; i++) {
+              const value = opts[i].split("-");
+              console.log("VAL - 1 = ", value[0]);
+              console.log("VAL - 2 = ", value[1]);
+              renge.push({
+                age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
+              });
+            }
+          }
         });
+        let usersdata = await global.models.GLOBAL.USER.aggregate([
+          {
+            $match: {
+              DOB: { $ne: null },
+            },
+          },
+          {
+            $project: {
+              // password: 0,
+              date: {
+                $dateFromString: {
+                  dateString: "$DOB",
+                },
+              },
+            },
+          },
+          {
+            $addFields: {
+              age: {
+                $round: [
+                  {
+                    $divide: [
+                      { $subtract: [new Date(), "$date"] },
+                      365 * 24 * 60 * 60 * 1000,
+                    ],
+                  },
+                  0,
+                ],
+              },
+            },
+          },
+          {
+            $match: {
+              $or: [...renge],
+            },
+          },
+          {
+            $project: {
+              _id: "$_id",
+              test: "test",
+            },
+          },
+          {
+            $group: {
+              _id: "$test",
+              array: { $push: "$_id" },
+            },
+          },
+          {
+            $project: {
+              array: 1,
+              _id: 0,
+            },
+          },
+        ]);
+        criteria.push({
+          _id: { $in: usersdata[0].array },
+          DOBShow: { $eq: true },
+        });
+
         distinctUser = await global.models.GLOBAL.USER.find(
           {
             $and: [
@@ -163,6 +261,7 @@ module.exports = exports = {
             });
             criteria.push({
               currentRole: { $in: optionName },
+              currentRoleShow: { $eq: true },
             });
           }
           if (fil.filterId == "618909c5fec3b250c029caec") {
@@ -172,6 +271,7 @@ module.exports = exports = {
             });
             criteria.push({
               industry: { $in: optionName },
+              industryShow: { $eq: true },
             });
           }
           if (fil.filterId == "6188f536603a571b33b09644") {
@@ -181,6 +281,7 @@ module.exports = exports = {
             });
             criteria.push({
               employeeNumber: { $in: optionName },
+              employeeNumberShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a1dfec3b250c029cb05") {
@@ -190,6 +291,7 @@ module.exports = exports = {
             });
             criteria.push({
               region: { $in: optionName },
+              regionShow: { $eq: true },
             });
           }
           if (fil.filterId == "6189098afec3b250c029cadd") {
@@ -199,6 +301,7 @@ module.exports = exports = {
             });
             criteria.push({
               countryOfOrigin: { $in: optionName },
+              countryOfOriginShow: { $eq: true },
             });
           }
           if (fil.filterId == "6189098afec3b250c029cadd") {
@@ -208,6 +311,7 @@ module.exports = exports = {
             });
             criteria.push({
               countryOfResidence: { $in: optionName },
+              countryOfResidenceShow: { $eq: true },
             });
           }
           if (fil.filterId == "6188f7caa06a481f928d6699") {
@@ -217,6 +321,7 @@ module.exports = exports = {
             });
             criteria.push({
               levelOfEducation: { $in: optionName },
+              levelOfEducationShow: { $eq: true },
             });
           }
           if (fil.filterId == "618909a2fec3b250c029cae2") {
@@ -225,6 +330,7 @@ module.exports = exports = {
               optionName.push(opt.optionName);
             });
             criteria.push({
+              ethnicityShow: { $eq: true },
               ethnicity: { $in: optionName },
             });
           }
@@ -235,6 +341,7 @@ module.exports = exports = {
             });
             criteria.push({
               politicalAffiliation: { $in: optionName },
+              politicalAffiliationShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a36fec3b250c029cb0a") {
@@ -244,6 +351,7 @@ module.exports = exports = {
             });
             criteria.push({
               religiousAffiliation: { $in: optionName },
+              religiousAffiliationShow: { $eq: true },
             });
           }
           if (fil.filterId == "61890a4efec3b250c029cb0f") {
@@ -253,6 +361,7 @@ module.exports = exports = {
             });
             criteria.push({
               sexualOrientation: { $in: optionName },
+              sexualOrientationShow: { $eq: true },
             });
           }
           if (fil.filterId == "619e0cf5641d2f00f887ece1") {
@@ -262,6 +371,7 @@ module.exports = exports = {
             });
             criteria.push({
               gender: { $in: optionName },
+              gendereShow: { $eq: true },
             });
           }
           if (fil.filterId == "619e0cec641d2f00f887ecdc") {
@@ -269,17 +379,82 @@ module.exports = exports = {
             fil?.options?.map((opt) => {
               optionName.push(opt.optionName);
             });
-            // console.log("OTP NAME-->>", optionName[0]);
-            // let opt = optionName[0];
-            // const value = opt.split("-");
-            // console.log("VAL - 1 = ", value[0]);
-            // console.log("VAL - 2 = ", value[1]);
-            // let age =  moment(new Date()).diff('', 'years',true);
-            criteria.push({
-              age: { $in: optionName },
-            });
+            let opts = optionName;
+            for (let i = 0; i < opts.length; i++) {
+              const value = opts[i].split("-");
+              console.log("VAL - 1 = ", value[0]);
+              console.log("VAL - 2 = ", value[1]);
+              renge.push({
+                age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
+              });
+            }
           }
         });
+
+        let usersdata = await global.models.GLOBAL.USER.aggregate([
+          {
+            $match: {
+              DOB: { $ne: null },
+            },
+          },
+          {
+            $project: {
+              // password: 0,
+              date: {
+                $dateFromString: {
+                  dateString: "$DOB",
+                },
+              },
+            },
+          },
+          {
+            $addFields: {
+              age: {
+                $round: [
+                  {
+                    $divide: [
+                      { $subtract: [new Date(), "$date"] },
+                      365 * 24 * 60 * 60 * 1000,
+                    ],
+                  },
+                  0,
+                ],
+              },
+            },
+          },
+          {
+            $match: {
+              $or: [...renge],
+            },
+          },
+          {
+            $project: {
+              _id: "$_id",
+              test: "test",
+            },
+          },
+          {
+            $group: {
+              _id: "$test",
+              array: { $push: "$_id" },
+            },
+          },
+          {
+            $project: {
+              array: 1,
+              _id: 0,
+            },
+          },
+        ]);
+        criteria.push({
+          _id: { $in: usersdata[0].array },
+          DOBShow: { $eq: true },
+        });
+
+        console.log("criteria--->>", criteria);
+        // console.log("AGE--->", ...renge);
+        console.log("usersdata", usersdata[0].array);
+
         distinctUser = await global.models.GLOBAL.USER.find(
           {
             $and: [

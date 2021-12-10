@@ -15,7 +15,7 @@ module.exports = exports = {
     message: Joi.string().required(),
   }),
   handler: async (req, res) => {
-    const { roomId, sender, message, type } = req;
+    const { roomId, sender, message, type, parentMessageId } = req;
     // const { user } = req;
     try {
       let chat = {
@@ -23,6 +23,7 @@ module.exports = exports = {
         sender: sender || user._id,
         message: message,
         type: type,
+        parentMessageId: parentMessageId,
       };
 
       let newChat = await global.models.GLOBAL.CHAT(chat);

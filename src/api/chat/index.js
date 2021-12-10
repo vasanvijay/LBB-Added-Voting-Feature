@@ -4,6 +4,7 @@ const getRoom = require("./get-room");
 const initiateChat = require("./initiate-chat");
 const getMessages = require("./get-messages");
 const history = require("./get-history");
+const lastMessage = require("./get-last-message");
 
 module.exports = exports = {
   getAllChat,
@@ -12,4 +13,5 @@ module.exports = exports = {
   initiateChat,
   getMessages,
   history,
+  lastMessage,
 };
