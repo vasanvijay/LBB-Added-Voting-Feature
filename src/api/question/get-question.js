@@ -15,6 +15,7 @@ module.exports = exports = {
     const { byUser } = req.query;
     const { search } = req.query;
     let criteria;
+    console.log(user);
     if (byUser) {
       criteria = {
         createdBy: user._id,
@@ -41,18 +42,8 @@ module.exports = exports = {
       let quResult;
       let questionDetais = [];
       if (byUser) {
-        abuseQuestion = [];
-        for (var i = 0; i < user.abuseQuestion.length; i++) {
-          abuseQuestion.push(user.abuseQuestion[i].questionId);
-        }
         quResult = await global.models.GLOBAL.QUESTION.find({
           ...criteria,
-          $and: [
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: user.blockUser } },
-          ],
           createdBy: user._id,
         })
           .populate({
@@ -68,12 +59,6 @@ module.exports = exports = {
           .exec();
         count = await global.models.GLOBAL.QUESTION.count({
           ...criteria,
-          $and: [
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: user.blockUser } },
-          ],
           createdBy: user._id,
         });
       } else if (!byUser && search) {
@@ -100,7 +85,7 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: user.blockUser } },
+            { createdBy: { $nin: user.blockUser } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
@@ -127,7 +112,7 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: user.blockUser } },
+            { createdBy: { $nin: user.blockUser } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
@@ -166,7 +151,7 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: user.blockUser } },
+            { createdBy: { $nin: user.blockUser } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
@@ -192,7 +177,7 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: user.blockUser } },
+            { createdBy: { $nin: user.blockUser } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },

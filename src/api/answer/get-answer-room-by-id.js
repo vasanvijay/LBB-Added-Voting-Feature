@@ -25,6 +25,12 @@ module.exports = exports = {
           model: "question",
           select: "_id question response view createdBy",
         });
+      let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
+        _id: room,
+        "answer.answerBy": { $ne: user._id },
+        "answer.messageStar": { $eq: true },
+      });
+      console.log("StarCOunt--->>>", staredCount);
       if (findAnswerRoom) {
         // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
         //   questionId: question,

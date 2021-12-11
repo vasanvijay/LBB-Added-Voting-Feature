@@ -40,6 +40,19 @@ module.exports = exports = {
             model: "question",
             select: "_id question response view createdBy",
           });
+        let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
+          $and: [
+            {
+              participateIds: {
+                $size: participateIds.length,
+                $all: [...participateIds],
+              },
+            },
+            { "answer.answerBy": { $eq: user._id } },
+            { "answer.messageStar": true },
+          ],
+        });
+        console.log("StarCOunt--->>>", staredCount);
         // .populate({
         //   path: "participateIds",
         //   model: "user",
