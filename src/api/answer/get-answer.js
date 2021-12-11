@@ -54,7 +54,6 @@ module.exports = exports = {
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
             { createdBy: { $nin: user.blockUser } },
-            ,
           ],
         }).populate({
           path: "createdBy",

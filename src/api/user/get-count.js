@@ -25,12 +25,24 @@ module.exports = exports = {
         "question",
         { $and: [{ answerBy: user._id }] }
       );
+      let abuseQuestion = [];
+      for (var i = 0; i < user.abuseQuestion.length; i++) {
+        abuseQuestion.push(user.abuseQuestion[i].questionId);
+      }
+      let cc = 0;
       answer = await questionArray.map(async (ques) => {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
-          _id: ques,
+          $and: [
+            { _id: ques },
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { createdBy: { $nin: user.blockUser } },
+          ],
         });
-        return ans.length;
+        cc = cc + (ans != null ? ans.length : 0);
       });
+      console.log("count----------", cc);
       // let getAnswer = await global.models.GLOBAL.ANSWER.find({
       //   answerBy: ObjectID(user._id),
       // });
@@ -42,7 +54,7 @@ module.exports = exports = {
         payload: {
           questionAskedCount: questionAsked,
           answerLaterCount: answerLaterCount,
-          getAnswerCount: answer.length,
+          getAnswerCount: cc,
         },
         logPayload: false,
       };
