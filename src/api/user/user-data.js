@@ -1,3 +1,4 @@
+const { createCanvas, loadImage } = require("canvas");
 const Joi = require("joi");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
@@ -51,7 +52,6 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-
     try {
       let findUser = await global.models.GLOBAL.USER.findOne({
         $or: [{ email: { $eq: email } }],
@@ -65,9 +65,6 @@ module.exports = exports = {
             $group: { _id: "$legendsIcon" },
           },
         ]);
-
-        console.log("LIST LENGHT", ImagesList?.length);
-
         if (ImagesList.length !== 4) {
           return res.status(400).json({
             message: "Please provide 4 images",
