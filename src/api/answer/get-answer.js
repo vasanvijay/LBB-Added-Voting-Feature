@@ -41,16 +41,28 @@ module.exports = exports = {
           return users;
         }
       };
+      let abuseQuestion = [];
+      for (var i = 0; i < user.abuseQuestion.length; i++) {
+        abuseQuestion.push(user.abuseQuestion[i].questionId);
+      }
       let answer = [];
       for (let i = 0; i < questionArray.length; i++) {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
-          _id: questionArray[i],
+          $and: [
+            { _id: questionArray[i] },
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
         }).populate({
           path: "createdBy",
           model: "user",
           select: "_id name subject profileImage currentRole",
         });
-        answer.push(ans);
+        if (ans) {
+          answer.push(ans);
+        }
       }
 
       if (answer) {

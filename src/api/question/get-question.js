@@ -41,8 +41,18 @@ module.exports = exports = {
       let quResult;
       let questionDetais = [];
       if (byUser) {
+        abuseQuestion = [];
+        for (var i = 0; i < user.abuseQuestion.length; i++) {
+          abuseQuestion.push(user.abuseQuestion[i].questionId);
+        }
         quResult = await global.models.GLOBAL.QUESTION.find({
           ...criteria,
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
           createdBy: user._id,
         })
           .populate({
@@ -57,6 +67,13 @@ module.exports = exports = {
           })
           .exec();
         count = await global.models.GLOBAL.QUESTION.count({
+          ...criteria,
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
           createdBy: user._id,
         });
       } else if (!byUser && search) {
@@ -73,12 +90,18 @@ module.exports = exports = {
         user.subject.push(user.sexualOrientation);
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
-
+        abuseQuestion = [];
+        for (var i = 0; i < user.abuseQuestion.length; i++) {
+          abuseQuestion.push(user.abuseQuestion[i].questionId);
+        }
         quResult = await global.models.GLOBAL.QUESTION.find({
           question: { $regex: search, $options: "i" },
-          _id: { $nin: user.answerLater },
-          _id: { $nin: user.removeQuestion },
-          _id: { $nin: user.abuseQuestion },
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
             { "filter.options.optionName": { $in: user.subject } },
@@ -100,9 +123,12 @@ module.exports = exports = {
           .exec();
         count = await global.models.GLOBAL.QUESTION.count({
           question: { $regex: search, $options: "i" },
-          _id: { $nin: user.answerLater },
-          _id: { $nin: user.removeQuestion },
-          _id: { $nin: user.abuseQuestion },
+          $and: [
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: user.blockUser } },
+          ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
             { "filter.options.optionName": { $in: user.subject } },

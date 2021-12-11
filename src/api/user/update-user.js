@@ -66,104 +66,104 @@ module.exports = exports = {
     } else {
       try {
         // console.log("IMAGE--->>", req.body.profileImage);
+        if (req.body.subject) {
+          const ImagesList = await global.models.GLOBAL.LEGENDS.aggregate([
+            {
+              $match: { legendsName: { $in: req.body.subject } },
+            },
+            {
+              $group: { _id: "$legendsIcon" },
+            },
+          ]);
 
-        const ImagesList = await global.models.GLOBAL.LEGENDS.aggregate([
-          {
-            $match: { legendsName: { $in: req.body.subject } },
-          },
-          {
-            $group: { _id: "$legendsIcon" },
-          },
-        ]);
+          console.log("LIST LENGHT", ImagesList?.length);
 
-        console.log("LIST LENGHT", ImagesList?.length);
-
-        if (ImagesList.length !== 4) {
-          return res.status(400).json({
-            message: "Please provide 4 images",
-          });
-        } else {
-          const canvasWidth = 1024;
-          const canvasHeight = 1024;
-          //load canvas
-          const myCanvas = createCanvas(canvasWidth, canvasHeight, "PNG");
-          const context = myCanvas.getContext("2d");
-
-          //load images && draw image in existing canvas
-
-          let imageWidth = 0;
-          let imageHeight = 0;
-          for (i = 0; i < ImagesList.length; i++) {
-            await loadImage(ImagesList[i]._id).then(async (image) => {
-              await context.drawImage(image, imageWidth, imageHeight);
-              imageHeight =
-                canvasHeight > imageHeight * 2 ? imageWidth : imageHeight;
-              imageWidth =
-                canvasWidth > imageWidth * 2 ? 0.5 * canvasHeight : 0;
+          if (ImagesList.length !== 4) {
+            return res.status(400).json({
+              message: "Please provide 4 images",
             });
-          }
-          let findUser = await global.models.GLOBAL.USER.findOne({
-            _id: user._id,
-          });
-          // console.log("Image hirenbhai", findUser);
+          } else {
+            const canvasWidth = 1024;
+            const canvasHeight = 1024;
+            //load canvas
+            const myCanvas = createCanvas(canvasWidth, canvasHeight, "PNG");
+            const context = myCanvas.getContext("2d");
 
-          if (
-            findUser?.profileImage !== null ||
-            findUser?.profileImage !== undefined ||
-            findUser?.profileImage !== ""
-          ) {
-            console.log("profileImage vishv", findUser?.profileImage);
-            const url = findUser?.profileImage?.split(".com/").slice(-1)[0];
-            console.log(url);
-            if (url) {
-              utils.mediaDeleteS3(url, function (err) {
-                if (err) {
-                  console.log("s3 err", err);
-                  return next(err);
-                }
+            //load images && draw image in existing canvas
+
+            let imageWidth = 0;
+            let imageHeight = 0;
+            for (i = 0; i < ImagesList.length; i++) {
+              await loadImage(ImagesList[i]._id).then(async (image) => {
+                await context.drawImage(image, imageWidth, imageHeight);
+                imageHeight =
+                  canvasHeight > imageHeight * 2 ? imageWidth : imageHeight;
+                imageWidth =
+                  canvasWidth > imageWidth * 2 ? 0.5 * canvasHeight : 0;
               });
             }
-          }
-          req.body.profileImage = await utils.uploadBase(
-            myCanvas.toDataURL(),
-            user._id
-          );
+            let findUser = await global.models.GLOBAL.USER.findOne({
+              _id: user._id,
+            });
+            // console.log("Image hirenbhai", findUser);
 
-          let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
-            { _id: user._id },
-            {
-              $set: {
-                ...req.body,
-                updatedAt: new Date(),
-                updatedBy: user.email,
-              },
+            if (
+              findUser?.profileImage !== null ||
+              findUser?.profileImage !== undefined ||
+              findUser?.profileImage !== ""
+            ) {
+              console.log("profileImage vishv", findUser?.profileImage);
+              const url = findUser?.profileImage?.split(".com/").slice(-1)[0];
+              console.log(url);
+              if (url) {
+                utils.mediaDeleteS3(url, function (err) {
+                  if (err) {
+                    console.log("s3 err", err);
+                    return next(err);
+                  }
+                });
+              }
+            }
+            req.body.profileImage = await utils.uploadBase(
+              myCanvas.toDataURL(),
+              user._id
+            );
+          }
+        }
+        let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+          { _id: user._id },
+          {
+            $set: {
+              ...req.body,
+              updatedAt: new Date(),
+              updatedBy: user.email,
             },
-            { new: true }
-          );
+          },
+          { new: true }
+        );
 
-          if (!updateUser) {
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.USER_DOES_NOT_EXIST,
-              payload: {},
-              logPayload: false,
-            };
-            res
-              .status(enums.HTTP_CODES.NOT_FOUND)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_UPDATED,
-              payload: { updateUser },
-              logPayload: false,
-            };
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
-          }
+        if (!updateUser) {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.USER_DOES_NOT_EXIST,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.NOT_FOUND)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_UPDATED,
+            payload: { updateUser },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
         }
       } catch (error) {
         logger.error(

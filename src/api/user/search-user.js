@@ -1,4 +1,3 @@
-const { ObjectID, ObjectId } = require("bson");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -19,232 +18,8 @@ module.exports = exports = {
       let distinctUser;
 
       if (filter && search) {
-        filter.map((fil) => {
-          if (fil.filterId == "6188f31e603a571b33b09585") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              subject: { $in: optionName },
-            });
-          }
-          if (fil.filterId == "6188f41c603a571b33b095d9") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              currentRole: { $in: optionName },
-            });
-          }
-          if (fil.filterId == "618909c5fec3b250c029caec") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              industry: { $in: optionName },
-              industryShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "6188f536603a571b33b09644") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              employeeNumber: { $in: optionName },
-              employeeNumberShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "61890a1dfec3b250c029cb05") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              region: { $in: optionName },
-              regionShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "6189098afec3b250c029cadd") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              countryOfOrigin: { $in: optionName },
-              countryOfOriginShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "6189098afec3b250c029cadd") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              countryOfResidence: { $in: optionName },
-              countryOfResidenceShow: { $eq: true },
-              countryOfResidenceShow,
-            });
-          }
-          if (fil.filterId == "6188f7caa06a481f928d6699") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              levelOfEducation: { $in: optionName },
-              levelOfEducationShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "618909a2fec3b250c029cae2") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              ethnicity: { $in: optionName },
-              ethnicityShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "61890a10fec3b250c029cb00") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              politicalAffiliation: { $in: optionName },
-              politicalAffiliationShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "61890a36fec3b250c029cb0a") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              religiousAffiliation: { $in: optionName },
-              religiousAffiliationShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "61890a4efec3b250c029cb0f") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              sexualOrientation: { $in: optionName },
-              sexualOrientationShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "619e0cf5641d2f00f887ece1") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            criteria.push({
-              gender: { $in: optionName },
-              gendereShow: { $eq: true },
-            });
-          }
-          if (fil.filterId == "619e0cec641d2f00f887ecdc") {
-            let optionName = [];
-            fil?.options?.map((opt) => {
-              optionName.push(opt.optionName);
-            });
-            let opts = optionName;
-            for (let i = 0; i < opts.length; i++) {
-              const value = opts[i].split("-");
-              console.log("VAL - 1 = ", value[0]);
-              console.log("VAL - 2 = ", value[1]);
-              renge.push({
-                age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
-              });
-            }
-          }
-        });
-        let usersdata = await global.models.GLOBAL.USER.aggregate([
-          {
-            $match: {
-              DOB: { $ne: null },
-            },
-          },
-          {
-            $project: {
-              // password: 0,
-              date: {
-                $dateFromString: {
-                  dateString: "$DOB",
-                },
-              },
-            },
-          },
-          {
-            $addFields: {
-              age: {
-                $round: [
-                  {
-                    $divide: [
-                      { $subtract: [new Date(), "$date"] },
-                      365 * 24 * 60 * 60 * 1000,
-                    ],
-                  },
-                  0,
-                ],
-              },
-            },
-          },
-          {
-            $match: {
-              $or: [...renge],
-            },
-          },
-          {
-            $project: {
-              _id: "$_id",
-              test: "test",
-            },
-          },
-          {
-            $group: {
-              _id: "$test",
-              array: { $push: "$_id" },
-            },
-          },
-          {
-            $project: {
-              array: 1,
-              _id: 0,
-            },
-          },
-        ]);
-        criteria.push({
-          _id: { $in: usersdata[0].array },
-          DOBShow: { $eq: true },
-        });
-
-        distinctUser = await global.models.GLOBAL.USER.find(
-          {
-            $and: [
-              { subject: { $regex: search, $options: "i" } },
-              {
-                $or: criteria,
-              },
-            ],
-          },
-          { password: 0 }
-        );
-      } else if (search) {
-        distinctUser = await global.models.GLOBAL.USER.find(
-          {
-            subject: { $regex: search, $options: "i" },
-          },
-          { password: 0 }
-        );
-      } else if (filter) {
-        filter.map((fil) => {
+        for (let i = 0; i < filter.length; i++) {
+          fil = filter[i];
           if (fil.filterId == "6188f31e603a571b33b09585") {
             let optionName = [];
             fil?.options?.map((opt) => {
@@ -388,72 +163,301 @@ module.exports = exports = {
                 age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
               });
             }
-          }
-        });
-
-        let usersdata = await global.models.GLOBAL.USER.aggregate([
-          {
-            $match: {
-              DOB: { $ne: null },
-            },
-          },
-          {
-            $project: {
-              // password: 0,
-              date: {
-                $dateFromString: {
-                  dateString: "$DOB",
+            let usersdata = await global.models.GLOBAL.USER.aggregate([
+              {
+                $match: {
+                  DOB: { $ne: null },
                 },
               },
-            },
-          },
-          {
-            $addFields: {
-              age: {
-                $round: [
-                  {
-                    $divide: [
-                      { $subtract: [new Date(), "$date"] },
-                      365 * 24 * 60 * 60 * 1000,
+              {
+                $project: {
+                  // password: 0,
+                  date: {
+                    $dateFromString: {
+                      dateString: "$DOB",
+                    },
+                  },
+                },
+              },
+              {
+                $addFields: {
+                  age: {
+                    $round: [
+                      {
+                        $divide: [
+                          { $subtract: [new Date(), "$date"] },
+                          365 * 24 * 60 * 60 * 1000,
+                        ],
+                      },
+                      0,
                     ],
                   },
-                  0,
-                ],
+                },
               },
-            },
-          },
-          {
-            $match: {
-              $or: [...renge],
-            },
-          },
-          {
-            $project: {
-              _id: "$_id",
-              test: "test",
-            },
-          },
-          {
-            $group: {
-              _id: "$test",
-              array: { $push: "$_id" },
-            },
-          },
-          {
-            $project: {
-              array: 1,
-              _id: 0,
-            },
-          },
-        ]);
-        criteria.push({
-          _id: { $in: usersdata[0].array },
-          DOBShow: { $eq: true },
-        });
+              {
+                $match: {
+                  $or: [...renge],
+                },
+              },
+              {
+                $project: {
+                  _id: "$_id",
+                  test: "test",
+                },
+              },
+              {
+                $group: {
+                  _id: "$test",
+                  array: { $push: "$_id" },
+                },
+              },
+              {
+                $project: {
+                  array: 1,
+                  _id: 0,
+                },
+              },
+            ]);
+            if (usersdata) {
+              criteria.push({
+                _id: { $in: usersdata[0].array },
+                DOBShow: { $eq: true },
+              });
+            }
+          }
+        }
 
-        console.log("criteria--->>", criteria);
+        distinctUser = await global.models.GLOBAL.USER.find(
+          {
+            $and: [
+              { subject: { $regex: search, $options: "i" } },
+              {
+                $or: criteria,
+              },
+            ],
+          },
+          { password: 0 }
+        );
+      } else if (search) {
+        distinctUser = await global.models.GLOBAL.USER.find(
+          {
+            subject: { $regex: search, $options: "i" },
+          },
+          { password: 0 }
+        );
+      } else if (filter) {
+        for (let i = 0; i < filter.length; i++) {
+          fil = filter[i];
+          if (fil.filterId == "6188f31e603a571b33b09585") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              subject: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "6188f41c603a571b33b095d9") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              currentRole: { $in: optionName },
+              currentRoleShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "618909c5fec3b250c029caec") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              industry: { $in: optionName },
+              industryShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "6188f536603a571b33b09644") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              employeeNumber: { $in: optionName },
+              employeeNumberShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "61890a1dfec3b250c029cb05") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              region: { $in: optionName },
+              regionShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "6189098afec3b250c029cadd") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              countryOfOrigin: { $in: optionName },
+              countryOfOriginShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "6189098afec3b250c029cadd") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              countryOfResidence: { $in: optionName },
+              countryOfResidenceShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "6188f7caa06a481f928d6699") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              levelOfEducation: { $in: optionName },
+              levelOfEducationShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "618909a2fec3b250c029cae2") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              ethnicityShow: { $eq: true },
+              ethnicity: { $in: optionName },
+            });
+          }
+          if (fil.filterId == "61890a10fec3b250c029cb00") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              politicalAffiliation: { $in: optionName },
+              politicalAffiliationShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "61890a36fec3b250c029cb0a") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              religiousAffiliation: { $in: optionName },
+              religiousAffiliationShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "61890a4efec3b250c029cb0f") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              sexualOrientation: { $in: optionName },
+              sexualOrientationShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "619e0cf5641d2f00f887ece1") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            criteria.push({
+              gender: { $in: optionName },
+              gendereShow: { $eq: true },
+            });
+          }
+          if (fil.filterId == "619e0cec641d2f00f887ecdc") {
+            let optionName = [];
+            fil?.options?.map((opt) => {
+              optionName.push(opt.optionName);
+            });
+            let opts = optionName;
+            for (let i = 0; i < opts.length; i++) {
+              const value = opts[i].split("-");
+              console.log("VAL - 1 = ", value[0]);
+              console.log("VAL - 2 = ", value[1]);
+              renge.push({
+                age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
+              });
+            }
+            let usersdata = await global.models.GLOBAL.USER.aggregate([
+              {
+                $match: {
+                  DOB: { $ne: null },
+                },
+              },
+              {
+                $project: {
+                  // password: 0,
+                  date: {
+                    $dateFromString: {
+                      dateString: "$DOB",
+                    },
+                  },
+                },
+              },
+              {
+                $addFields: {
+                  age: {
+                    $round: [
+                      {
+                        $divide: [
+                          { $subtract: [new Date(), "$date"] },
+                          365 * 24 * 60 * 60 * 1000,
+                        ],
+                      },
+                      0,
+                    ],
+                  },
+                },
+              },
+              {
+                $match: {
+                  $or: [...renge],
+                },
+              },
+              {
+                $project: {
+                  _id: "$_id",
+                  test: "test",
+                },
+              },
+              {
+                $group: {
+                  _id: "$test",
+                  array: { $push: "$_id" },
+                },
+              },
+              {
+                $project: {
+                  array: 1,
+                  _id: 0,
+                },
+              },
+            ]);
+            if (usersdata) {
+              criteria.push({
+                _id: { $in: usersdata[0].array },
+                DOBShow: { $eq: true },
+              });
+            }
+          }
+        }
+
+        // console.log("criteria--->>", criteria);
         // console.log("AGE--->", ...renge);
-        console.log("usersdata", usersdata[0].array);
+        // console.log("usersdata", usersdata[0].array);
 
         distinctUser = await global.models.GLOBAL.USER.find(
           {

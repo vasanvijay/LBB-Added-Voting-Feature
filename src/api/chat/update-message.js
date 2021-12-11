@@ -8,15 +8,8 @@ const ObjectId = require("mongodb").ObjectId;
 
 // Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
-  //  route validation
-  validation: Joi.object({
-    roomId: Joi.string().required(),
-  }),
-
   // route handler
   handler: async (req, res) => {
-    const { roomId } = req;
-    const { user } = req;
     const { star } = req.queary;
     const { messageId } = req.params;
 

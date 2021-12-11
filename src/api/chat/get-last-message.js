@@ -21,7 +21,7 @@ module.exports = exports = {
         match: {
           _id: { $ne: user._id },
         },
-        select: "subject _id ",
+        select: "_id name subject profileImage currentRole",
       });
       //   return res.send(chats);
       chats.map((id) => {
@@ -106,17 +106,38 @@ module.exports = exports = {
             createAt: "$data.createAt",
           },
         },
+        {
+          $lookup: {
+            from: "chat_room",
+            localField: "roomId",
+            foreignField: "_id",
+            as: "room",
+          },
+        },
       ]);
       //   return res.send({ lastChats, chats.participateIds });
-
+      let chatsData = [];
+      for (let i = 0; i < chats.length; i++) {
+        for (let j = 0; j < lastChats.length; j++) {
+          if (
+            (chats[i].participateIds[0]._id,
+            lastChats[j].room[0].participateIds[1] ==
+              `${chats[i].participateIds[0]._id}`)
+          ) {
+            console.log("test-------");
+            chats[i].data = lastChats[j];
+            chatsData.push({ lastChat: { ...lastChats[j], chat: chats[i] } });
+            break;
+          }
+        }
+      }
       if (lastChats) {
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.MESSAGES_FETCH_SUCCESS,
           payload: {
-            lastMessage: lastChats,
-            user: chats,
+            chats: chatsData,
           },
           logPayload: false,
         };
