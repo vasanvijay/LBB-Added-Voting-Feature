@@ -33,6 +33,7 @@ module.exports = exports = {
     }
 
     try {
+      let newAnswer;
       let answerRoom;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
@@ -55,33 +56,50 @@ module.exports = exports = {
         });
 
         if (answerRoom != null) {
-          let newAnswer = {
+          let addAnswer = {
+            answer: answer,
+            answerBy: user._id,
+            question: question,
+            answerAt: Date.now(),
+          };
+          newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
+          newAnswer.save();
+          let roomAnswer = {
+            answerId: newAnswer._id,
             answer: answer,
             answerBy: user._id,
           };
-
           let updateAnswer =
             await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
               { _id: ObjectID(answerRoom._id) },
               {
                 $push: {
-                  answer: newAnswer,
+                  answer: roomAnswer,
                 },
               },
               { new: true }
             );
           if (updateAnswer) {
-            console.log("UPDATED----->>>>", updateAnswer);
+            // console.log("UPDATED----->>>>", updateAnswer);
           }
         } else {
-          let newAnswer = {
+          let addAnswer = {
+            answer: answer,
+            answerBy: user._id,
+            question: question,
+            answerAt: Date.now(),
+          };
+          newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
+          newAnswer.save();
+          let roomAnswer = {
+            answerId: newAnswer._id,
             answer: answer,
             answerBy: user._id,
           };
           let roomObj = {
             participateIds: participateIds,
             questionId: question,
-            answer: newAnswer,
+            answer: roomAnswer,
             createdAt: Date.now(),
           };
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM(roomObj);
@@ -89,14 +107,6 @@ module.exports = exports = {
           answerRoom.save();
         }
 
-        let addAnswer = {
-          answer: answer,
-          answerBy: user._id,
-          question: question,
-          answerAt: Date.now(),
-        };
-        const newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
-        newAnswer.save();
         await global.models.GLOBAL.QUESTION.updateOne(
           { _id: question },
           { $inc: { response: 1 } },

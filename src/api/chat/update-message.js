@@ -1,59 +1,64 @@
-const Joi = require("joi");
 const enums = require("../../../json/enums.json");
+
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const ObjectId = require("mongodb").ObjectId;
 
 // Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { star } = req.queary;
+    const { user } = req;
+    const { message } = req.body;
     const { messageId } = req.params;
-
     try {
       if (messageId) {
-        let starMessage;
-        if (star) {
-          starMessage = await global.models.GLOBAL.CHAT.findByIdAndUpdate(
-            {
-              _id: messageId,
-            },
-            {
-              $set: {
-                isStar: true,
-              },
-            },
-            {
-              new: true,
+        let findMessage = await global.models.GLOBAL.CHAT.findOne({
+          _id: messageId,
+        });
+        {
+          if (findMessage) {
+            if (findMessage.sender.toString() !== user._id.toString()) {
+              const data4createResponseObject = {
+                req: req,
+                result: -1,
+                message:
+                  "Sorry, You have not access to change message of other.",
+                payload: {},
+                logPayload: false,
+              };
+              return res
+                .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+                .json(utils.createResponseObject(data4createResponseObject));
             }
-          );
-        } else {
-          starMessage = await global.models.GLOBAL.CHAT.findByIdAndUpdate(
-            {
-              _id: messageId,
-            },
-            {
-              $set: {
-                isStar: false,
-              },
-            },
-            {
-              new: true,
+            let updateMessage =
+              await global.models.GLOBAL.CHAT.findByIdAndUpdate(
+                {
+                  _id: messageId,
+                },
+                {
+                  $set: {
+                    message: message,
+                  },
+                },
+                {
+                  new: true,
+                }
+              );
+            if (updateMessage) {
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: "Message updated successfully.",
+                payload: { updateMessage },
+                logPayload: false,
+              };
+              return res
+                .status(enums.HTTP_CODES.OK)
+                .json(utils.createResponseObject(data4createResponseObject));
             }
-          );
-        }
-        if (starMessage) {
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: "Message status changed successfullyr",
-            payload: { starMessage },
-            logPayload: false,
-          };
-          return data4createResponseObject;
+          }
         }
       }
     } catch (error) {

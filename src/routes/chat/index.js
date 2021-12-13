@@ -37,10 +37,15 @@ router.post(
 );
 
 // Put Methods
-router.post(
-  "/star/id=:id",
+router.put(
+  "/star/id=:messageId",
   passport.authenticate(["jwt"], { session: false }),
   chatApi.starMesssage.handler
+);
+router.put(
+  "/id=:messageId",
+  passport.authenticate(["jwt"], { session: false }),
+  chatApi.updateMessage.handler
 );
 
 module.exports = exports = router;

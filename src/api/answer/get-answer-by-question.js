@@ -28,7 +28,7 @@ module.exports = exports = {
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
       let answer = await global.models.GLOBAL.ANSWER.find({
-        question: question,
+        $and: [{ isAbuse: false }, { question: question }],
       })
         .populate({
           path: "question",

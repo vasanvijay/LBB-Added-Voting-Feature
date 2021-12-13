@@ -16,9 +16,8 @@ module.exports = exports = {
   // }),
 
   handler: async (req, res) => {
-    console.log("vijayvasan");
     const { userId } = req.params;
-    console.log("userId", userId);
+    // console.log("userId", userId);
     const ContactExists = await global.models.GLOBAL.CONTACT.findById(userId);
     if (!ContactExists) {
       const ContactExistsNotexits = {
@@ -38,7 +37,7 @@ module.exports = exports = {
       if (userId) {
         const responseDelete =
           await global.models.GLOBAL.CONTACT.findByIdAndRemove(userId);
-        console.log("responseDelete", responseDelete);
+        // console.log("responseDelete", responseDelete);
         const allowuserId = {
           req: req,
           result: 0,

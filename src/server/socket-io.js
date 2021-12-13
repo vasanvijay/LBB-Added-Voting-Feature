@@ -37,7 +37,7 @@ module.exports = (server, logger) => {
 
       try {
         let chatHistory = await chatCtrl.getMessages.handler(roomId);
-        console.log("history", chatHistory.payload.chats);
+        // console.log("history", chatHistory.payload.chats);
         io.in(socket.id).emit("history", { chats: chatHistory.payload.chats });
         console.log("history sent");
       } catch (error) {
@@ -47,18 +47,19 @@ module.exports = (server, logger) => {
 
     socket.on(
       "new-message",
-      async function ({ roomId, sender, message, type }) {
-        console.log({ roomId, sender, message });
+      async function ({ roomId, sender, message, type, parentMessageId }) {
+        // console.log({ roomId, sender, message, parentMessageId });
         try {
           let newMsg = await chatCtrl.sendMessage.handler({
             roomId: roomId,
             sender: sender,
             message: message,
             type: type,
+            parentMessageId: parentMessageId,
           });
           // newMsg = JSON.parse(JSON.stringify(newMsg));
           // newMsg["network"] = "1"
-          console.log("new-message", newMsg.payload.newChat);
+          // console.log("new-message", newMsg.payload.newChat);
           io.in(roomId).emit("new-message", newMsg.payload.newChat);
           console.log("message-sent");
         } catch (error) {

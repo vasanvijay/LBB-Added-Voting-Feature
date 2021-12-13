@@ -33,7 +33,6 @@ module.exports = exports = {
                 `${user?.accepted[1]}` == `${getNotification[i]?.userId?._id}`
               ) {
                 isc = true;
-                console.log("HYYYY");
               }
             }
 

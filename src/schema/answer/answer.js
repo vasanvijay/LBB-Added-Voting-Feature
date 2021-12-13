@@ -8,6 +8,7 @@ module.exports = (connection) => {
     updatedAt: { type: Date, default: Date.now },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },
     updated: { type: Boolean, default: false },
+    isAbuse: { type: Boolean, default: false },
   });
   return connection.model("answer", answerSchema, "answer");
 };

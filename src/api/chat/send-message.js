@@ -16,6 +16,7 @@ module.exports = exports = {
   }),
   handler: async (req, res) => {
     const { roomId, sender, message, type, parentMessageId } = req;
+    // console.log("ID-->>", parentMessageId);
     // const { user } = req;
     try {
       let chat = {

@@ -30,6 +30,7 @@ module.exports = exports = {
       };
     }
     try {
+      let abuseQuestion = [];
       const { filter } = req.body;
       let distinctQue;
       const QuestionsArray = [];
@@ -43,13 +44,17 @@ module.exports = exports = {
         if (search) {
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
+              abuseQuestion = [];
+              for (let j = 0; j < user.abuseQuestion.length; j++) {
+                abuseQuestion.push(user.abuseQuestion[j].questionId);
+              }
               // console.log("Criteria ni moj", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
                 question: { $regex: search, $options: "i" },
                 $and: [
                   { _id: { $nin: user.answerLater } },
-                  // { _id: { $nin: user.abuseQuestion } },
+                  { _id: { $nin: abuseQuestion } },
                   { createdBy: { $nin: user.blockUser } },
                   { "filter.options.optionName": filter[i] },
                   { reportAbuse: { $nin: true } },
@@ -93,21 +98,25 @@ module.exports = exports = {
             }
           );
         } else if (!byUser) {
+          abuseQuestion = [];
+          for (let j = 0; j < user.abuseQuestion.length; j++) {
+            abuseQuestion.push(user.abuseQuestion[j].questionId);
+          }
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 // $and: [
-                _id: {
-                  $nin: user.answerLater,
-                  $nin: user.removeQuestion,
-                  $nin: user.abuseQuestion,
-                },
-                "filter.options.optionName": filter[i],
-                createdBy: { $nin: user.blockUser, $nin: user._id },
-                reportAbuse: { $nin: true },
-                criteria,
-                // ],
+                $and: [
+                  { _id: { $nin: user.answerLater } },
+                  { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: abuseQuestion } },
+                  { createdBy: { $nin: user.blockUser } },
+                  { createdBy: { $nin: user._id } },
+                  { reportAbuse: { $nin: true } },
+                  { "filter.options.optionName": filter[i] },
+                ],
+                ...criteria,
               })
                 .populate({
                   path: "createdBy",
@@ -115,28 +124,7 @@ module.exports = exports = {
                   select: "_id name subject profileImage currentRole",
                 })
                 .exec();
-              // return res.send(quResult);
-              // let quResult = await global.models.GLOBAL.QUESTION.aggregate([
-              //   { $unwind: "$filter" },
-              //   {
-              //     $project: {
-              //       "filter._id": {
-              //         $cond: [
-              //           { $in: [{ optionName: filter[i] }, "$filter.options"] },
-              //           null,
-              //           "$filter.options",
-              //         ],
-              //       },
-              //       options: {
-              //         $filter: {
-              //           input: "$filter.options",
-              //           as: "item",
-              //           cond: { $eq: ["$$item.optionName", filter[i]] },
-              //         },
-              //       },
-              //     },
-              //   },
-              // ]);
+
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
                   Questions.push(quResult[j]);
@@ -163,18 +151,23 @@ module.exports = exports = {
             }
           );
         } else {
+          abuseQuestion = [];
+          for (let j = 0; j < user.abuseQuestion.length; j++) {
+            abuseQuestion.push(user.abuseQuestion[j].questionId);
+          }
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
-                // $and: [
-                _id: { $nin: user.answerLater },
-                "filter.options.optionName": filter[i],
-                _id: { $nin: user.removeQuestion },
-                _id: { $nin: user.abuseQuestion },
-                reportAbuse: { $nin: true },
-                createdBy: criteria.createdBy,
-                // ],
+                $and: [
+                  { _id: { $nin: user.answerLater } },
+                  { _id: { $nin: user.removeQuestion } },
+                  { _id: { $nin: abuseQuestion } },
+                  { createdBy: { $nin: user.blockUser } },
+                  { createdBy: { $nin: user._id } },
+                  { reportAbuse: { $nin: true } },
+                  { "filter.options.optionName": filter[i] },
+                ],
               })
                 .populate({
                   path: "createdBy",
@@ -214,22 +207,6 @@ module.exports = exports = {
             }
           );
         }
-        // Questions.map((quest, i) => {
-        //   return quest?.filter.map((filt, j) => {
-        //     return filt?.options.map(async (opt, k) => {
-        //       return filt?.filterId?.options?.filter((o) => {
-        //         if (o._id.toString() === opt._id.toString()) {
-        //           allQuestion = [
-        //             ...Questions,
-        //             (Questions[i].filter[j].options[k] = o),
-        //           ];
-        //         }
-        //       });
-        //     });
-        //   });
-        // });
-        // let distinctQue = [...new Set(Questions.map((q) => q._id))];
-
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
         });

@@ -21,14 +21,14 @@ module.exports = exports = {
         match: {
           _id: { $ne: user._id },
         },
-        select: "_id name subject profileImage currentRole",
+        select: "_id name subject profileImage currentRole email blockUser",
       });
       //   return res.send(chats);
       chats.map((id) => {
         return rooms.push(id._id);
       });
-      console.log("rooms ", rooms);
-      console.log("chats", chats);
+      // console.log("rooms ", rooms);
+      // console.log("chats", chats);
 
       let lastChats = await global.models.GLOBAL.CHAT.aggregate([
         {
@@ -115,6 +115,7 @@ module.exports = exports = {
           },
         },
       ]);
+      // console.log("lastchat ------------", lastChats);
       //   return res.send({ lastChats, chats.participateIds });
       let chatsData = [];
       for (let i = 0; i < chats.length; i++) {
@@ -123,10 +124,13 @@ module.exports = exports = {
           if (
             (chats[i].participateIds[0]._id,
             lastChats[j].room[0].participateIds[1] ==
+              `${chats[i].participateIds[0]._id}`) ||
+            (chats[i].participateIds[0]._id,
+            lastChats[j].room[0].participateIds[0] ==
               `${chats[i].participateIds[0]._id}`)
           ) {
             f = 1;
-            console.log("test-------");
+            // console.log("test-------");
             //chats[i] = { chat: chats[i], lastChat: lastChats[j] };
             chatsData.push({ chat: chats[i], lastChat: lastChats[j] });
             break;
@@ -134,12 +138,12 @@ module.exports = exports = {
         }
 
         if (f == 0) {
-          console.log("elsetest-------");
+          // console.log("elsetest-------");
           // chats[i] = { chat: chats[i] };
           chatsData.push({ chat: chats[i] });
         }
       }
-      console.log("chatData", chatsData);
+      // console.log("chatData", chatsData);
       if (lastChats) {
         const data4createResponseObject = {
           req: req,

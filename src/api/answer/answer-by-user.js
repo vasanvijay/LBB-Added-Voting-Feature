@@ -52,21 +52,13 @@ module.exports = exports = {
             { "answer.messageStar": true },
           ],
         });
-        console.log("StarCOunt--->>>", staredCount);
-        // .populate({
-        //   path: "participateIds",
-        //   model: "user",
-        //   select: "_id name email region currentRole profileImage",
-        // });
+        // console.log("StarCOunt--->>>", staredCount);
         if (answerRoom != null) {
-          // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-          //   questionId: question,
-          // });
           const data4createResponseObject = {
             req: req,
             result: 0,
             message: messages.ITEM_FETCHED,
-            payload: { answerRoom },
+            payload: { answerRoom, staredCount },
             logPayload: false,
           };
           res

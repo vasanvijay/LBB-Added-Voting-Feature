@@ -12,25 +12,78 @@ module.exports = exports = {
     try {
       let { user } = req;
       let { room } = req.params;
-      let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-        _id: room,
-      })
-        .populate({
-          path: "answer.answerBy",
-          model: "user",
-          select: "_id name email region currentRole profileImage subject",
+      let abuseAnswer = [];
+      for (var i = 0; i < user.abuseAnswer.length; i++) {
+        abuseAnswer.push(user.abuseAnswer[i].answerId);
+      }
+      let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate[
+        ({
+          $match: {
+            _id: room,
+          },
+        },
+        {
+          $unwind: {
+            path: "$answer",
+          },
+        },
+        {
+          $match: {
+            "answer.answerId": {
+              $nin: [abuseAnswer],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "user",
+            localField: "answer.answerBy",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $lookup: {
+            from: "question",
+            localField: "questionId",
+            foreignField: "_id",
+            as: "question",
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            participateIds: 1,
+            createdAt: 1,
+            answer: 1,
+            "user._id": 1,
+            "user.profileImage": 1,
+            "user.currentRole": 1,
+            "user.subject": 1,
+            "user.email": 1,
+            "user.region": 1,
+            "user.name": 1,
+            question: 1,
+          },
         })
-        .populate({
-          path: "questionId",
-          model: "question",
-          select: "_id question response view createdBy",
-        });
+      ];
+      // console.log("findAnswerRoom--->>", findAnswerRoom);
+      // .populate({
+      //   path: "answer.answerBy",
+      //   model: "user",
+      //   select: "_id name email region currentRole profileImage subject",
+      // })
+      // .populate({
+      //   path: "questionId",
+      //   model: "question",
+      //   select: "_id question response view createdBy",
+      // });
       let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
         _id: room,
         "answer.answerBy": { $ne: user._id },
         "answer.messageStar": { $eq: true },
       });
-      console.log("StarCOunt--->>>", staredCount);
+      // console.log("StarCOunt--->>>", staredCount);
       if (findAnswerRoom) {
         // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
         //   questionId: question,
@@ -39,7 +92,7 @@ module.exports = exports = {
           req: req,
           result: 0,
           message: messages.ITEM_FETCHED,
-          payload: { findAnswerRoom },
+          payload: { findAnswerRoom, staredCount },
           logPayload: false,
         };
         res

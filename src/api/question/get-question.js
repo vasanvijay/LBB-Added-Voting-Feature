@@ -15,7 +15,6 @@ module.exports = exports = {
     const { byUser } = req.query;
     const { search } = req.query;
     let criteria;
-    console.log(user);
     if (byUser) {
       criteria = {
         createdBy: user._id,

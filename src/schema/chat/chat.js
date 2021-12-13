@@ -12,11 +12,7 @@ module.exports = (connection) => {
     isStar: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
-    parentMessageId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "chat",
-      default: null,
-    },
+    parentMessageId: { type: mongoose.Schema.Types.ObjectId, default: null },
   });
 
   // return chat Schema;

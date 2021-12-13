@@ -25,28 +25,39 @@ module.exports = exports = {
         "question",
         { $and: [{ answerBy: user._id }] }
       );
+
       let abuseQuestion = [];
       for (var i = 0; i < user.abuseQuestion.length; i++) {
         abuseQuestion.push(user.abuseQuestion[i].questionId);
       }
       let cc = 0;
-      answer = await questionArray.map(async (ques) => {
-        let ans = await global.models.GLOBAL.QUESTION.findOne({
-          $and: [
-            { _id: ques },
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { createdBy: { $nin: user.blockUser } },
-          ],
-        });
-        cc = cc + (ans != null ? ans.length : 0);
-      });
-      console.log("count----------", cc);
-      // let getAnswer = await global.models.GLOBAL.ANSWER.find({
-      //   answerBy: ObjectID(user._id),
-      // });
 
+      let ans = await global.models.GLOBAL.QUESTION.count({
+        _id: { $in: questionArray },
+        $and: [
+          { _id: { $nin: user.answerLater } },
+          { _id: { $nin: user.removeQuestion } },
+          { _id: { $nin: abuseQuestion } },
+          { createdBy: { $nin: user.blockUser } },
+        ],
+      });
+
+      cc = cc + ans;
+
+      let allQuestion = await global.models.GLOBAL.QUESTION.count({
+        $and: [
+          { _id: { $nin: user.answerLater } },
+          { _id: { $nin: user.removeQuestion } },
+          { _id: { $nin: abuseQuestion } },
+          { createdBy: { $nin: user.blockUser } },
+        ],
+        $or: [
+          { "filter.options.optionName": { $exists: false } },
+          { "filter.options.optionName": { $in: user.subject } },
+        ],
+        createdBy: { $nin: user.blockUser, $nin: user._id },
+        reportAbuse: false,
+      });
       const data4createResponseObject = {
         req: req,
         result: 0,
@@ -55,6 +66,7 @@ module.exports = exports = {
           questionAskedCount: questionAsked,
           answerLaterCount: answerLaterCount,
           getAnswerCount: cc,
+          questionReceivedCount: allQuestion,
         },
         logPayload: false,
       };

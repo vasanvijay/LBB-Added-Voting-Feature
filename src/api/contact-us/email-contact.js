@@ -238,7 +238,7 @@ module.exports = exports = {
           await global.models.GLOBAL.CONTACT.findByIdAndUpdate(id, {
             reply: true,
           });
-        console.log("Replayfiledtrue", Replayfiledtrue);
+        // console.log("Replayfiledtrue", Replayfiledtrue);
         if (Replayfiledtrue) {
           await Replayfiledtrue.save();
 
