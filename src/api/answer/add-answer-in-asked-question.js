@@ -41,7 +41,16 @@ module.exports = exports = {
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
           _id: roomId,
         });
+        let addAnswer = {
+          answer: answer,
+          answerBy: user._id,
+          question: questionId,
+          answerAt: Date.now(),
+        };
+        const addNewAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
+        addNewAnswer.save();
         let newAnswer = {
+          answerId: addNewAnswer._id,
           answer: answer,
           answerBy: user._id,
         };
@@ -70,15 +79,6 @@ module.exports = exports = {
             select: "_id question response view createdBy",
           });
         if (updateAnswer) {
-          let addAnswer = {
-            answer: answer,
-            answerBy: user._id,
-            question: questionId,
-            answerAt: Date.now(),
-          };
-
-          const newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
-          newAnswer.save();
           const data4createResponseObject = {
             req: req,
             result: 0,

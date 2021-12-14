@@ -17,19 +17,19 @@ module.exports = exports = {
     const { user } = req;
     const { answerId } = req.params;
     const { reason } = req.body;
-    const answerExists = await global.models.GLOBAL.ANSWER.findById(answerId);
-    if (!answerExists) {
-      const data4createResponseObject = {
-        req: req,
-        result: -1,
-        message: messages.NOT_FOUND,
-        payload: {},
-        logPayload: false,
-      };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
-    }
+    // const answerExists = await global.models.GLOBAL.ANSWER.findOne(answerId);
+    // if (!answerExists) {
+    //   const data4createResponseObject = {
+    //     req: req,
+    //     result: -1,
+    //     message: messages.NOT_FOUND,
+    //     payload: {},
+    //     logPayload: false,
+    //   };
+    //   return res
+    //     .status(enums.HTTP_CODES.BAD_REQUEST)
+    //     .json(utils.createResponseObject(data4createResponseObject));
+    // }
 
     try {
       if (answerId) {

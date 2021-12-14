@@ -52,6 +52,11 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.removeRoomAnswer.handler
 );
+router.put(
+  "/abuse/id=:answerId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.abuseAnswer.handler
+);
 
 // POST Method
 router.post(

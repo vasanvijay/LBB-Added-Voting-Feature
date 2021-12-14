@@ -18,9 +18,10 @@ module.exports = exports = {
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      let questionArray = await global.models.GLOBAL.ANSWER.find({
-        isAbuse: false,
-      }).distinct("question", { $and: [{ answerBy: user._id }] });
+      let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
+        "question",
+        { $and: [{ answerBy: user._id }] }
+      );
       let optionNames = [];
       let reachCount = async (question) => {
         for (let k = 0; k < question.filter.length; k++) {

@@ -41,9 +41,9 @@ module.exports = exports = {
           { createdBy: { $nin: user.blockUser } },
         ],
       });
-
+      console.log("ANS-->>", ans);
       cc = cc + ans;
-
+      console.log("CC--->>", cc);
       let allQuestion = await global.models.GLOBAL.QUESTION.count({
         $and: [
           { _id: { $nin: user.answerLater } },
@@ -73,17 +73,6 @@ module.exports = exports = {
       res
         .status(enums.HTTP_CODES.OK)
         .json(utils.createResponseObject(data4createResponseObject));
-
-      //   const data4createResponseObject = {
-      //     req: req,
-      //     result: -1,
-      //     message: messages.NOT_FOUND,
-      //     payload: {},
-      //     logPayload: false,
-      //   };
-      //   res
-      //     .status(enums.HTTP_CODES.NOT_FOUND)
-      //     .json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
       logger.error(
         `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`

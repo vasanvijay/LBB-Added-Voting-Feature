@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { ObjectId } = require("mongodb");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -11,6 +12,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let { user } = req;
+      // console.log("USER--->>>", user);
       let { question } = req.params;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
@@ -24,22 +26,107 @@ module.exports = exports = {
         participateIds.push(answerBy);
         participateIds.push(id);
         participateIds.push(questionBy);
-        let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
+        let abuseAnswer = [];
+        for (let i = 0; i < user.abuseAnswer.length; i++) {
+          abuseAnswer.push(user.abuseAnswer[i].answerId);
+        }
+        console.log("ABUSE--->>>", abuseAnswer);
+        let findRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
             $all: [...participateIds],
           },
-        })
-          .populate({
-            path: "answer.answerBy",
-            model: "user",
-            select: "_id name email region currentRole profileImage subject",
-          })
-          .populate({
-            path: "questionId",
-            model: "question",
-            select: "_id question response view createdBy",
-          });
+        });
+        let ids = [];
+        for (let i = 0; i < findRoom.length; i++) {
+          ids.push(findRoom[i]._id);
+        }
+        console.log("ROOM-->>", ids);
+        let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate([
+          {
+            $match: {
+              _id: { $in: ids },
+            },
+          },
+          {
+            $unwind: {
+              path: "$answer",
+            },
+          },
+          {
+            $match: {
+              "answer.answerId": {
+                $nin: abuseAnswer,
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "user",
+              localField: "answer.answerBy",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+            $lookup: {
+              from: "question",
+              localField: "questionId",
+              foreignField: "_id",
+              as: "question",
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              participateIds: 1,
+              createdAt: 1,
+              answer: 1,
+              "user._id": 1,
+              "user.profileImage": 1,
+              "user.currentRole": 1,
+              "user.subject": 1,
+              "user.email": 1,
+              "user.region": 1,
+              "user.name": 1,
+              question: 1,
+            },
+          },
+          {
+            $group: {
+              _id: "$_id",
+              data: {
+                $push: {
+                  participateIds: "$participateIds",
+                  createdAt: "$createdAt",
+                  answer: "$answer",
+                  user: "$user",
+                  question: "$question",
+                },
+              },
+            },
+          },
+        ]);
+
+        console.log("answerRoom--->>", answerRoom);
+
+        // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
+        //   participateIds: {
+        //     $size: participateIds.length,
+        //     $all: [...participateIds],
+        //   },
+        // })
+        //   .populate({
+        //     path: "answer.answerBy",
+        //     model: "user",
+        //     select: "_id name email region currentRole profileImage subject",
+        //   })
+        //   .populate({
+        //     path: "questionId",
+        //     model: "question",
+        //     select: "_id question response view createdBy",
+        //   });
+        // console.log("answerRoom--->>", answerRoom);
         let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
           $and: [
             {

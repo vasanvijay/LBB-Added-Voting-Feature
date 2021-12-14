@@ -36,6 +36,7 @@ module.exports = exports = {
       let findUser = await global.models.GLOBAL.USER.findOne({
         email: email,
       });
+      console.log("USER--->>", findUser);
       if (!findUser) {
         const data4createResponseObject = {
           req: req,
@@ -102,6 +103,7 @@ module.exports = exports = {
                   .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
                   .json(utils.createResponseObject(data4createResponseObject));
               } else {
+                console.log("ABUSE--->>>", findUser.abuseAnswer);
                 const data4token = {
                   id: findUser._id,
                   date: new Date(),
@@ -110,6 +112,7 @@ module.exports = exports = {
                   userType: findUser.userType,
                   subject: findUser.subject,
                   abuseQuestion: findUser.abuseQuestion,
+                  abuseAnswer: findUser.abuseAnswer,
                   scope: "login",
                 };
 

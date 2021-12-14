@@ -11,13 +11,14 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-
+    console.log("USER--->>", user);
     try {
       let rooms = [];
       let chats = await global.models.GLOBAL.CHAT_ROOM.find({
         participateIds: { $in: ObjectId(user._id) },
       }).populate({
         path: "participateIds",
+        model: "user",
         match: {
           _id: { $ne: user._id },
         },
@@ -28,7 +29,7 @@ module.exports = exports = {
         return rooms.push(id._id);
       });
       // console.log("rooms ", rooms);
-      // console.log("chats", chats);
+      console.log("chats-------", chats);
 
       let lastChats = await global.models.GLOBAL.CHAT.aggregate([
         {
@@ -115,7 +116,7 @@ module.exports = exports = {
           },
         },
       ]);
-      // console.log("lastchat ------------", lastChats);
+      console.log("lastchat ------------", lastChats);
       //   return res.send({ lastChats, chats.participateIds });
       let chatsData = [];
       for (let i = 0; i < chats.length; i++) {

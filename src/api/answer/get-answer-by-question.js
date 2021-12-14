@@ -22,13 +22,22 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     }
     try {
+      const { user } = req;
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
+      let abuseAnswer = [];
+      for (let i = 0; i < user.abuseAnswer.length; i++) {
+        abuseAnswer.push(user.abuseAnswer[i].answerId);
+      }
       let answer = await global.models.GLOBAL.ANSWER.find({
-        $and: [{ isAbuse: false }, { question: question }],
+        $and: [
+          { isAbuse: false },
+          { question: question },
+          { _id: { $nin: abuseAnswer } },
+        ],
       })
         .populate({
           path: "question",

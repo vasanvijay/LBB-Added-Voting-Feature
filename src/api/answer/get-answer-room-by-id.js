@@ -16,6 +16,7 @@ module.exports = exports = {
       for (var i = 0; i < user.abuseAnswer.length; i++) {
         abuseAnswer.push(user.abuseAnswer[i].answerId);
       }
+      console.log("ABUSE--->>", abuseAnswer);
       let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate[
         ({
           $match: {
@@ -67,7 +68,7 @@ module.exports = exports = {
           },
         })
       ];
-      // console.log("findAnswerRoom--->>", findAnswerRoom);
+      console.log("findAnswerRoom--->>", findAnswerRoom);
       // .populate({
       //   path: "answer.answerBy",
       //   model: "user",
