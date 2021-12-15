@@ -11,7 +11,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    console.log("USER--->>", user);
+    // console.log("USER--->>", user);
     try {
       let rooms = [];
       let chats = await global.models.GLOBAL.CHAT_ROOM.find({

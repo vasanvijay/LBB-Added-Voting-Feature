@@ -36,7 +36,7 @@ module.exports = exports = {
       let findUser = await global.models.GLOBAL.USER.findOne({
         email: email,
       });
-      console.log("USER--->>", findUser);
+      // console.log("USER--->>", findUser);
       if (!findUser) {
         const data4createResponseObject = {
           req: req,
