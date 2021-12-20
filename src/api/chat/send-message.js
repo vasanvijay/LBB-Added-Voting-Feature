@@ -27,9 +27,17 @@ module.exports = exports = {
         parentMessageId: parentMessageId,
       };
 
-      let newChat = await global.models.GLOBAL.CHAT(chat);
-      await newChat.save();
+      let newMessage = await global.models.GLOBAL.CHAT(chat);
+      await newMessage.save();
 
+      let newChat = await global.models.GLOBAL.CHAT.findOne({
+        _id: newMessage._id,
+      }).populate({
+        path: "parentMessageId",
+        model: "chat",
+        select: "roomId sender message messageType type createdAt updatedAt",
+      });
+      // console.log("NEW CHAT---->>", newChat);
       const data4createResponseObject = {
         req: req,
         result: 0,

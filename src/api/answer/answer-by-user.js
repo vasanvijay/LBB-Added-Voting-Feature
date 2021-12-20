@@ -6,13 +6,11 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 
-// Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     try {
       let { user } = req;
-      // console.log("USER--->>>", user);
       let { question } = req.params;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
@@ -21,7 +19,7 @@ module.exports = exports = {
         const id = question;
         const answerBy = user._id;
         const questionBy = findQuestion.createdBy;
-        // let answerRoom;
+
         let participateIds = [];
         participateIds.push(answerBy);
         participateIds.push(id);
@@ -30,7 +28,6 @@ module.exports = exports = {
         for (let i = 0; i < user.abuseAnswer.length; i++) {
           abuseAnswer.push(user.abuseAnswer[i].answerId);
         }
-        console.log("ABUSE--->>>", abuseAnswer);
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
@@ -41,7 +38,6 @@ module.exports = exports = {
         for (let i = 0; i < findRoom.length; i++) {
           ids.push(findRoom[i]._id);
         }
-        console.log("ROOM-->>", ids);
         let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate([
           {
             $match: {
@@ -106,27 +102,11 @@ module.exports = exports = {
               },
             },
           },
+          {
+            $sort: { "data.createdAt": -1 },
+          },
         ]);
 
-        console.log("answerRoom--->>", answerRoom);
-
-        // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
-        //   participateIds: {
-        //     $size: participateIds.length,
-        //     $all: [...participateIds],
-        //   },
-        // })
-        //   .populate({
-        //     path: "answer.answerBy",
-        //     model: "user",
-        //     select: "_id name email region currentRole profileImage subject",
-        //   })
-        //   .populate({
-        //     path: "questionId",
-        //     model: "question",
-        //     select: "_id question response view createdBy",
-        //   });
-        // console.log("answerRoom--->>", answerRoom);
         let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
           $and: [
             {
@@ -139,7 +119,6 @@ module.exports = exports = {
             { "answer.messageStar": true },
           ],
         });
-        // console.log("StarCOunt--->>>", staredCount);
         if (answerRoom != null) {
           const data4createResponseObject = {
             req: req,

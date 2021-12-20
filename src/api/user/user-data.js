@@ -137,6 +137,17 @@ module.exports = exports = {
               .json(utils.createResponseObject(data4createResponseObject));
           }
         }
+      } else {
+        const data4createResponseObject = {
+          req: req,
+          result: -1,
+          message: messages.USER_DOES_NOT_EXIST,
+          payload: {},
+          logPayload: false,
+        };
+        return res
+          .status(enums.HTTP_CODES.NOT_FOUND)
+          .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
       logger.error(

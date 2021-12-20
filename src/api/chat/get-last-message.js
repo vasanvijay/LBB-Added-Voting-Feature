@@ -29,7 +29,7 @@ module.exports = exports = {
         return rooms.push(id._id);
       });
       // console.log("rooms ", rooms);
-      console.log("chats-------", chats);
+      // console.log("chats-------", chats);
 
       let lastChats = await global.models.GLOBAL.CHAT.aggregate([
         {
@@ -116,7 +116,7 @@ module.exports = exports = {
           },
         },
       ]);
-      console.log("lastchat ------------", lastChats);
+      // console.log("lastchat ------------", lastChats);
       //   return res.send({ lastChats, chats.participateIds });
       let chatsData = [];
       for (let i = 0; i < chats.length; i++) {
