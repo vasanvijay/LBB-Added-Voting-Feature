@@ -37,20 +37,21 @@ module.exports = exports = {
       }
     }
     try {
-      let findUser = await global.models.GLOBAL.USER.find(criteria).sort({
-        createdAt: -1,
-      });
+      let findUser = await global.models.GLOBAL.USER.find(criteria)
+        .sort({
+          createdAt: -1,
+        })
+        .populate({
+          path: "abuseQuestion.questionId",
+          model: "question",
+          select: "_id question",
+        })
+        .populate({
+          path: "abuseAnswer.answerId",
+          model: "answer",
+          select: "_id answer",
+        });
       let count = await global.models.GLOBAL.USER.count(criteria);
-
-      // let TodayUser = await global.models.GLOBAL.USER.find(
-
-      //   { //query today up to tonight
-      //     created_on: {
-      //         $lt: new Date(2021, 10, 23),
-      //         $gte: new Date(2021, 10, 20)
-
-      //     }
-      // }
 
       let TodayUser = await global.models.GLOBAL.USER.find({
         createdAt: {

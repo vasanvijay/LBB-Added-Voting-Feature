@@ -95,7 +95,7 @@ module.exports = exports = {
             let imageHeight = 0;
             for (i = 0; i < ImagesList.length; i++) {
               await loadImage(ImagesList[i]._id).then(async (image) => {
-                await context.drawImage(image, imageWidth, imageHeight);
+                context.drawImage(image, imageWidth, imageHeight);
                 imageHeight =
                   canvasHeight > imageHeight * 2 ? imageWidth : imageHeight;
                 imageWidth =
@@ -105,14 +105,13 @@ module.exports = exports = {
             let findUser = await global.models.GLOBAL.USER.findOne({
               _id: user._id,
             });
-            // console.log("Image hirenbhai", findUser);
 
             if (
-              findUser?.profileImage !== null ||
-              findUser?.profileImage !== undefined ||
-              findUser?.profileImage !== ""
+              findUser.profileImage !== null ||
+              findUser.profileImage !== undefined ||
+              findUser.profileImage !== ""
             ) {
-              console.log("profileImage vishv", findUser?.profileImage);
+              // console.log("profileImage", findUser.profileImage);
               const url = findUser?.profileImage?.split(".com/").slice(-1)[0];
               console.log(url);
               if (url) {
@@ -122,14 +121,22 @@ module.exports = exports = {
                     return next(err);
                   }
                 });
+                req.body.profileImage = await utils.uploadBase(
+                  myCanvas.toDataURL(),
+                  user._id
+                );
+                // console.log("IF IMAGE-->>", req.body.profileImage);
+              } else {
+                req.body.profileImage = await utils.uploadBase(
+                  myCanvas.toDataURL(),
+                  user._id
+                );
+                // console.log("ELSE IMAGE-->>", req.body.profileImage);
               }
             }
-            req.body.profileImage = await utils.uploadBase(
-              myCanvas.toDataURL(),
-              user._id
-            );
           }
         }
+        // console.log("BODY-->>", req.body);
         let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
           { _id: user._id },
           {
@@ -141,7 +148,7 @@ module.exports = exports = {
           },
           { new: true }
         );
-
+        // console.log("UPDATED--->>", updateUser);
         if (!updateUser) {
           const data4createResponseObject = {
             req: req,

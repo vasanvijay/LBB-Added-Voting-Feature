@@ -17,8 +17,8 @@ module.exports = exports = {
         abuseAnswer.push(user.abuseAnswer[i].answerId);
       }
       console.log("ABUSE--->>", abuseAnswer);
-      let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate[
-        ({
+      let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate([
+        {
           $match: {
             _id: room,
           },
@@ -31,7 +31,7 @@ module.exports = exports = {
         {
           $match: {
             "answer.answerId": {
-              $nin: [abuseAnswer],
+              $nin: abuseAnswer,
             },
           },
         },
@@ -66,19 +66,10 @@ module.exports = exports = {
             "user.name": 1,
             question: 1,
           },
-        })
-      ];
+        },
+      ]);
       console.log("findAnswerRoom--->>", findAnswerRoom);
-      // .populate({
-      //   path: "answer.answerBy",
-      //   model: "user",
-      //   select: "_id name email region currentRole profileImage subject",
-      // })
-      // .populate({
-      //   path: "questionId",
-      //   model: "question",
-      //   select: "_id question response view createdBy",
-      // });
+
       let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
         _id: room,
         "answer.answerBy": { $ne: user._id },
@@ -86,9 +77,6 @@ module.exports = exports = {
       });
       // console.log("StarCOunt--->>>", staredCount);
       if (findAnswerRoom) {
-        // let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-        //   questionId: question,
-        // });
         const data4createResponseObject = {
           req: req,
           result: 0,

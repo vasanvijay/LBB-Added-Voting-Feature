@@ -10,8 +10,8 @@ const utils = require("../../utils");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { questionId } = req.params;
-    if (!questionId) {
+    const { answerId } = req.params;
+    if (!answerId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -25,21 +25,20 @@ module.exports = exports = {
     }
 
     try {
-      const updateQuestion =
-        await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
-          { _id: questionId },
-          {
-            $set: {
-              reportAbuse: true,
-            },
+      const updateAnswer = await global.models.GLOBAL.ANSWER.findByIdAndUpdate(
+        { _id: answerId },
+        {
+          $set: {
+            reportAbuse: true,
           },
-          { new: true }
-        );
+        },
+        { new: true }
+      );
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.ITEM_UPDATED,
-        payload: { updateQuestion },
+        payload: { updateAnswer },
         logPayload: false,
       };
       res

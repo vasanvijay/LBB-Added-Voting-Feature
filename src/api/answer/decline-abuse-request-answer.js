@@ -1,5 +1,5 @@
+const { ObjectID } = require("bson");
 const Joi = require("joi");
-
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -8,10 +8,15 @@ const utils = require("../../utils");
 
 // Add category by admin
 module.exports = exports = {
+  //route validation
+  validation: Joi.object({
+    answerId: Joi.string().required(),
+  }),
   // route handler
   handler: async (req, res) => {
-    const { questionId } = req.params;
-    if (!questionId) {
+    const { userId } = req.params;
+    const { answerId } = req.body;
+    if (!userId || !answerId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -25,21 +30,22 @@ module.exports = exports = {
     }
 
     try {
-      const updateQuestion =
-        await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
-          { _id: questionId },
-          {
-            $set: {
-              reportAbuse: true,
+      const declineRequest = await global.models.GLOBAL.USER.findByIdAndUpdate(
+        { _id: userId },
+        {
+          $pull: {
+            abuseAnswer: {
+              answerId: ObjectID(answerId),
             },
           },
-          { new: true }
-        );
+        },
+        { new: true }
+      );
       const data4createResponseObject = {
         req: req,
         result: 0,
         message: messages.ITEM_UPDATED,
-        payload: { updateQuestion },
+        payload: {},
         logPayload: false,
       };
       res
