@@ -10,12 +10,12 @@ const utils = require("../../utils");
 module.exports = exports = {
   //route validation
   validation: Joi.object({
-    answerId: Joi.string().required(),
+    userId: Joi.string().required(),
   }),
   // route handler
   handler: async (req, res) => {
-    const { userId } = req.params;
-    const { answerId } = req.body;
+    const { answerId } = req.params;
+    const { userId } = req.body;
     if (!userId || !answerId) {
       const data4createResponseObject = {
         req: req,

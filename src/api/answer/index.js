@@ -13,6 +13,8 @@ const addAnswerInAsked = require("./add-answer-in-asked-question");
 const starAnswer = require("./star-message");
 const removeRoomAnswer = require("./delete-into-room");
 const abuseAnswer = require("./abuse-answer");
+const acceptAbuse = require("./accept-abuse-reason-answer");
+const declineAbuse = require("./decline-abuse-request-answer");
 
 module.exports = exports = {
   addAnswer,
@@ -30,4 +32,6 @@ module.exports = exports = {
   starAnswer,
   removeRoomAnswer,
   abuseAnswer,
+  acceptAbuse,
+  declineAbuse,
 };

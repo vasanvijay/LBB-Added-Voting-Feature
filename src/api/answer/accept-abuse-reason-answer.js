@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { ObjectID } = require("mongodb");
 
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
@@ -8,9 +9,14 @@ const utils = require("../../utils");
 
 // Add category by admin
 module.exports = exports = {
+  validation: Joi.object({
+    userId: Joi.string().required(),
+  }),
+
   // route handler
   handler: async (req, res) => {
     const { answerId } = req.params;
+    const { userId } = req.body;
     if (!answerId) {
       const data4createResponseObject = {
         req: req,
@@ -30,6 +36,18 @@ module.exports = exports = {
         {
           $set: {
             reportAbuse: true,
+          },
+        },
+        { new: true }
+      );
+
+      const removeFromUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+        { _id: userId },
+        {
+          $pull: {
+            abuseAnswer: {
+              answerId: ObjectID(answerId),
+            },
           },
         },
         { new: true }

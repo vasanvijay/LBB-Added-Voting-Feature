@@ -57,7 +57,7 @@ router.put(
   api4Question.acceptAbuse.handler
 );
 router.put(
-  "/decline/id=:userId",
+  "/decline/id=:questionId",
   passport.authenticate(["jwt"], { session: false }),
   validate("body", api4Question.declineRequest.validation),
   api4Question.declineRequest.handler

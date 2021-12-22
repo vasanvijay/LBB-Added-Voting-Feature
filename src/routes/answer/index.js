@@ -57,6 +57,17 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.abuseAnswer.handler
 );
+router.put(
+  "/report/id=:answerId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.acceptAbuse.handler
+);
+router.put(
+  "/decline/id=:answerId",
+  passport.authenticate(["jwt"], { session: false }),
+  validate("body", api4Answer.declineAbuse.validation),
+  api4Answer.declineAbuse.handler
+);
 
 // POST Method
 router.post(
