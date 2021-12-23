@@ -45,7 +45,7 @@ module.exports = exports = {
               displayProfile: displayProfile,
               allowConnectionRequest: allowConnectionRequest,
               filter: filter,
-              updatedAt: Date.now(),
+              updatedAt: new Date(),
               updatedBy: user._id,
             },
           },

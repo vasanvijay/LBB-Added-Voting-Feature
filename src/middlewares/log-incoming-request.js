@@ -22,17 +22,23 @@ module.exports = exports = async (req, res, next) => {
   }
 
   if (!isEmpty(req.body)) {
-     if (req.originalUrl !== "/user/kyc") {
-         let body = { ...req.body };
-         if (req.originalUrl === "/webhook/adyen" && body.notificationItems && body.notificationItems.length > 0) {
-             for (let i = 0; i < body.notificationItems.length; i++) {
-                 body.notificationItems[i].NotificationRequestItem.additionalData =
-                     utils.sortByKeys(body.notificationItems[i].NotificationRequestItem.additionalData);
-             }
-         }
-         body = flatten(body); // flattening the body for logging
-         messageToLog += "\nbody: " + JSON.stringify(body, null, 4);
-     }
+    if (req.originalUrl !== "/user/kyc") {
+      let body = { ...req.body };
+      if (
+        req.originalUrl === "/webhook/adyen" &&
+        body.notificationItems &&
+        body.notificationItems.length > 0
+      ) {
+        for (let i = 0; i < body.notificationItems.length; i++) {
+          body.notificationItems[i].NotificationRequestItem.additionalData =
+            utils.sortByKeys(
+              body.notificationItems[i].NotificationRequestItem.additionalData
+            );
+        }
+      }
+      body = flatten(body); // flattening the body for logging
+      messageToLog += "\nbody: " + JSON.stringify(body, null, 4);
+    }
   }
 
   if (!isEmpty(req.headers)) {
@@ -70,7 +76,7 @@ module.exports = exports = async (req, res, next) => {
         hostname: os.hostname(),
         networkInterfaces: networkInterfaces,
       },
-      time: Date.now(),
+      time: new Date(),
     };
 
     try {

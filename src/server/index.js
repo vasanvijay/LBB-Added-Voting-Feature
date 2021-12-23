@@ -50,7 +50,7 @@ const runServer = async () => {
     );
     await global.models.GLOBAL.LOG({
       description: `${process.env.APP_RELEASE} server STARTED on port: ${process.env.APP_PORT}`,
-      time: Date.now(),
+      time: new Date(),
       parameters: {},
     }).save();
 

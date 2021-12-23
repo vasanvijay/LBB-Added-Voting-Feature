@@ -157,7 +157,7 @@ module.exports = exports = {
       const entry = global.models.GLOBAL.CODE_REGISTRATION({
         email: email,
         code: token,
-        date: Date.now(),
+        date: new Date(),
       });
       logger.info("/verify-code - Saving registration-code in database");
       try {

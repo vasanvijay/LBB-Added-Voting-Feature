@@ -166,8 +166,8 @@ module.exports = exports = {
           entry = global.models.GLOBAL.CODE_VERIFICATION({
             email: email,
             code: code,
-            date: Date.now(),
-            expirationDate: Date.now() + 300 * 1000,
+            date: new Date(),
+            expirationDate: new Date() + 300 * 1000,
             failedAttempts: 0,
           });
 

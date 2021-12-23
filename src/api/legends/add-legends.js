@@ -53,7 +53,7 @@ module.exports = exports = {
           legendsIcon: legendsIcon,
           legendsName: legendsName,
           legendsDescription: legendsDescription,
-          createdAt: Date.now(),
+          createdAt: new Date(),
           createdBy: user._id,
         };
         if (user.userType === enums.USER_TYPE.ADMIN) {

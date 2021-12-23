@@ -4,9 +4,9 @@ module.exports = (connection) => {
     legendsIcon: String,
     legendsName: String,
     legendsDescription: String,
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date, default: new Date() },
     createdBy: { type: mongoose.Schema.Types.ObjectId },
-    updatedAt: { type: Date, default: Date.now() },
+    updatedAt: { type: Date, default: new Date() },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },
   });
   return connection.model("legends", legendsSchema, "legends");

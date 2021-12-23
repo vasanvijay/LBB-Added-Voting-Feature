@@ -46,6 +46,17 @@ module.exports = exports = {
           res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.METHOD_NOT_ALLOWED,
+            payload: {},
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
         const data4createResponseObject = {
