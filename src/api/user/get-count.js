@@ -44,6 +44,18 @@ module.exports = exports = {
       console.log("ANS-->>", ans);
       cc = cc + ans;
       console.log("CC--->>", cc);
+      user.subject.push(user.currentRole);
+      user.subject.push(user.region);
+      user.subject.push(user.gender);
+      user.subject.push(user.countryOfResidence);
+      user.subject.push(user.industry);
+      user.subject.push(user.employeeNumber);
+      user.subject.push(user.politicalAffiliation);
+      user.subject.push(user.religiousAffiliation);
+      user.subject.push(user.levelOfEducation);
+      user.subject.push(user.sexualOrientation);
+      user.subject = [...user.subject, ...user.ethnicity];
+      user.subject = [...user.subject, ...user.countryOfOrigin];
       let allQuestion = await global.models.GLOBAL.QUESTION.count({
         $and: [
           { _id: { $nin: user.answerLater } },
