@@ -16,7 +16,6 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { email } = req.body;
-    const NOW = new Date();
     let code = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
     console.log("Code---------->>>", code);
     // const locale = utils.getLocale(req);
@@ -162,6 +161,7 @@ module.exports = exports = {
           // If (dummyAccount) {
           code = code;
           // Save the code in database
+          const NOW = new Date();
           entry = global.models.GLOBAL.CODE_VERIFICATION({
             email: email,
             code: code,
