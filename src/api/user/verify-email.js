@@ -16,7 +16,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { email } = req.body;
-
+    const NOW = new Date();
     let code = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
     console.log("Code---------->>>", code);
     // const locale = utils.getLocale(req);
@@ -166,7 +166,7 @@ module.exports = exports = {
             email: email,
             code: code,
             date: new Date(),
-            expirationDate: new Date(NOW + 300 * 1000),
+            expirationDate: new Date(NOW.getTime() + 300 * 1000),
             failedAttempts: 0,
           });
           logger.info("/verify-email - Saving verification-code in database");
