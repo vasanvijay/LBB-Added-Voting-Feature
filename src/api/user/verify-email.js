@@ -161,16 +161,14 @@ module.exports = exports = {
         if (config.MONGODB.GLOBAL.USE_TEST_PIN) {
           // If (dummyAccount) {
           code = code;
-          console.log("CODE NEw----=======>>>>>", code);
           // Save the code in database
           entry = global.models.GLOBAL.CODE_VERIFICATION({
             email: email,
             code: code,
             date: new Date(),
-            expirationDate: new Date() + 300 * 1000,
+            expirationDate: new Date(NOW + 300 * 1000),
             failedAttempts: 0,
           });
-
           logger.info("/verify-email - Saving verification-code in database");
           try {
             await entry.save();

@@ -71,6 +71,9 @@ module.exports = async () => {
         NOTIFICATION: require("../schema/notification/notification")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        MATCHING: require("../schema/matching/matching")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
       },
     };
 

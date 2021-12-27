@@ -19,7 +19,8 @@
             "CONNECTION": "connection",
             "LEGENDS": "legends",
             "ANSWER_ROOM": "answer_room",
-            "NOTIFICATION": "notification"
+            "NOTIFICATION": "notification",
+            "MATCHING": "matching"
           },
           "NAME": "leaderBridge"
         }
