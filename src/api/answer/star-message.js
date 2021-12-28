@@ -21,7 +21,7 @@ module.exports = exports = {
           answerObj = ansObj.answer.map((ansId) => {
             if (ansId._id == answerId) {
               return {
-                answerAt: new Date(),
+                answerAt: Date.now(),
                 _id: ansId._id,
                 answer: answer ? answer : ansId?.answer,
                 // messageStar:

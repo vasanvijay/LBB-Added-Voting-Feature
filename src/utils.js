@@ -111,7 +111,7 @@ functions.serviceImageUploadS3 = multer({
           "-" +
           "ser" +
           "-" +
-          new Date().toString() +
+          Date.now().toString() +
           "." +
           file.mimetype.split("/")[file.mimetype.split("/").length - 1]
       );

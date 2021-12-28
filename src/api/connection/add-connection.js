@@ -56,7 +56,7 @@ module.exports = exports = {
             userId: user._id,
             receiverId: receiverId,
             title: `Notification By ${user._id} to ${receiverId}`,
-            description: `${user.subject} Sent You the Connection Request.`,
+            description: `${user.subject} sent you a connection request.`,
             createdBy: user._id,
             updatedBy: user._id,
           };

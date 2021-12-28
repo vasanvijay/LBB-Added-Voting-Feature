@@ -161,11 +161,11 @@ module.exports = exports = {
           // If (dummyAccount) {
           code = code;
           // Save the code in database
-          const NOW = new Date();
+          const NOW = Date.now();
           entry = global.models.GLOBAL.CODE_VERIFICATION({
             email: email,
             code: code,
-            date: new Date(),
+            date: Date.now(),
             expirationDate: new Date(NOW.getTime() + 300 * 1000),
             failedAttempts: 0,
           });

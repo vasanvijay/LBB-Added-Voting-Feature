@@ -55,7 +55,7 @@ module.exports = exports = {
 
       let TodayUser = await global.models.GLOBAL.USER.find({
         createdAt: {
-          $gte: moment(new Date()).format("YYYY-MM-DD"),
+          $gte: moment(Date.now()).format("YYYY-MM-DD"),
         },
       });
       const user = await global.models.GLOBAL.USER.aggregate([

@@ -26,8 +26,9 @@ module.exports = exports = {
         participateIds.push(questionBy);
         let abuseAnswer = [];
         for (let i = 0; i < user.abuseAnswer.length; i++) {
-          abuseAnswer.push(user.abuseAnswer[i].answerId);
+          abuseAnswer.push(ObjectId(user.abuseAnswer[i].answerId));
         }
+        console.log("ABUSE--->>", abuseAnswer);
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
@@ -51,7 +52,7 @@ module.exports = exports = {
           },
           {
             $match: {
-              "answer.answerId": {
+              "answer._id": {
                 $nin: abuseAnswer,
               },
             },

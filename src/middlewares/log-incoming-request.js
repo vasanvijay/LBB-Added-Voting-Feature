@@ -76,7 +76,7 @@ module.exports = exports = async (req, res, next) => {
         hostname: os.hostname(),
         networkInterfaces: networkInterfaces,
       },
-      time: new Date(),
+      time: Date.now(),
     };
 
     try {

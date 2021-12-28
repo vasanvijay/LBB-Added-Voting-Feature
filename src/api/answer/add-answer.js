@@ -60,7 +60,7 @@ module.exports = exports = {
             answer: answer,
             answerBy: user._id,
             question: question,
-            answerAt: new Date(),
+            answerAt: Date.now(),
           };
           newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
           newAnswer.save();
@@ -87,7 +87,7 @@ module.exports = exports = {
             answer: answer,
             answerBy: user._id,
             question: question,
-            answerAt: new Date(),
+            answerAt: Date.now(),
           };
           newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
           newAnswer.save();
@@ -100,7 +100,7 @@ module.exports = exports = {
             participateIds: participateIds,
             questionId: question,
             answer: roomAnswer,
-            createdAt: new Date(),
+            createdAt: Date.now(),
           };
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM(roomObj);
 

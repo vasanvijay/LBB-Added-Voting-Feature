@@ -45,7 +45,7 @@ module.exports = exports = {
           answer: answer,
           answerBy: user._id,
           question: questionId,
-          answerAt: new Date(),
+          answerAt: Date.now(),
         };
         const addNewAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
         addNewAnswer.save();

@@ -120,7 +120,7 @@ module.exports = exports = {
       // User found - create JWT and return it
       const data4token = {
         id: user._id,
-        date: new Date(),
+        date: Date.now(),
         environment: process.env.APP_ENVIRONMENT,
         email: email,
         scope: "login",
@@ -150,14 +150,14 @@ module.exports = exports = {
       // Generate token and enter into the registration collection
       const payload = {
         email: email,
-        date: new Date(),
+        date: Date.now(),
         scope: "verification",
       };
       const token = jwt.sign(payload, jwtOptions.secretOrKey);
       const entry = global.models.GLOBAL.CODE_REGISTRATION({
         email: email,
         code: token,
-        date: new Date(),
+        date: Date.now(),
       });
       logger.info("/verify-code - Saving registration-code in database");
       try {

@@ -39,7 +39,7 @@ module.exports = exports = {
         displayProfile: displayProfile,
         allowConnectionRequest: allowConnectionRequest,
         filter: filter,
-        createdAt: new Date(),
+        createdAt: Date.now(),
         createdBy: user._id,
       };
       const newQuestion = await global.models.GLOBAL.QUESTION(questionCreate);

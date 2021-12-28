@@ -16,7 +16,7 @@ module.exports = exports = {
           {
             $set: {
               ...req.body,
-              updatedAt: new Date(),
+              updatedAt: Date.now(),
               updatedBy: user._id,
             },
           },

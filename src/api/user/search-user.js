@@ -185,7 +185,7 @@ module.exports = exports = {
                     $round: [
                       {
                         $divide: [
-                          { $subtract: [new Date(), "$date"] },
+                          { $subtract: [Date.now(), "$date"] },
                           365 * 24 * 60 * 60 * 1000,
                         ],
                       },
@@ -413,7 +413,7 @@ module.exports = exports = {
                     $round: [
                       {
                         $divide: [
-                          { $subtract: [new Date(), "$date"] },
+                          { $subtract: [Date.now(), "$date"] },
                           365 * 24 * 60 * 60 * 1000,
                         ],
                       },

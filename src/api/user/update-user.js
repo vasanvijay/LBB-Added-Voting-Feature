@@ -19,7 +19,7 @@ module.exports = exports = {
           {
             $set: {
               name: name,
-              updatedAt: new Date(),
+              updatedAt: Date.now(),
               updatedBy: user.email,
             },
           },
@@ -142,7 +142,7 @@ module.exports = exports = {
           {
             $set: {
               ...req.body,
-              updatedAt: new Date(),
+              updatedAt: Date.now(),
               updatedBy: user.email,
             },
           },

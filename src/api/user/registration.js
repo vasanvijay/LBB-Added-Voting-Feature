@@ -51,11 +51,11 @@ module.exports = exports = {
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4token = {
-          date: new Date(),
+          date: Date.now(),
           environment: process.env.APP_ENVIRONMENT,
           name: name,
           email: email,
-          date: new Date(),
+          date: Date.now(),
           scope: "signup",
         };
         let userRegistration = {

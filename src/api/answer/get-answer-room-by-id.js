@@ -30,7 +30,7 @@ module.exports = exports = {
         },
         {
           $match: {
-            "answer.answerId": {
+            "answer._id": {
               $nin: abuseAnswer,
             },
           },

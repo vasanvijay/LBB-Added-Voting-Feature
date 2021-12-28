@@ -4,8 +4,8 @@ module.exports = (connection) => {
     matchingBy: { type: mongoose.Schema.Types.ObjectId },
     matchingTo: { type: mongoose.Schema.Types.ObjectId },
     status: String,
-    matchingAt: { type: Date, default: new Date() },
-    acceptedAt: { type: Date, default: new Date() },
+    matchingAt: { type: Date, default: Date.now() },
+    acceptedAt: { type: Date, default: Date.now() },
     acceptedBy: { type: mongoose.Schema.Types.ObjectId, default: null },
   });
   return connection.model("matching", matchingSchema, "matching");

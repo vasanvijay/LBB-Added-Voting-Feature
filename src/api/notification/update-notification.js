@@ -38,7 +38,7 @@ module.exports = exports = {
           {
             $set: {
               status: status,
-              updatedAt: new Date(),
+              updatedAt: Date.now(),
               updatedBy: user._id,
             },
           },

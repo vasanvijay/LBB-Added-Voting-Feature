@@ -4,7 +4,7 @@ module.exports = (connection) => {
     answerId: { type: mongoose.Schema.Types.ObjectId },
     answer: String,
     answerBy: { type: mongoose.Schema.Types.ObjectId },
-    answerAt: { type: Date, default: new Date() },
+    answerAt: { type: Date, default: Date.now() },
     messageStar: { type: Boolean, default: false },
     isAbuse: { type: Boolean, default: false },
   });
@@ -13,7 +13,7 @@ module.exports = (connection) => {
     participateIds: [{ type: mongoose.Schema.Types.ObjectId }],
     questionId: { type: mongoose.Schema.Types.ObjectId },
     answer: [answerSchema],
-    createdAt: { type: Date, default: new Date() },
+    createdAt: { type: Date, default: Date.now() },
   });
 
   return connection.model("answer_room", answerRoomSchema, "answer_room");

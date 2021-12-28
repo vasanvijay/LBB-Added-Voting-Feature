@@ -206,7 +206,7 @@ module.exports = exports = {
       // today's Questions Count
       let TodayQuestion = await global.models.GLOBAL.QUESTION.count({
         createdAt: {
-          $gte: moment(new Date()).format("YYYY-MM-DD"),
+          $gte: moment(Date.now()).format("YYYY-MM-DD"),
         },
       });
 

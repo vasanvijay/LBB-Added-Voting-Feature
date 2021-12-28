@@ -106,7 +106,7 @@ module.exports = exports = {
                 console.log("ABUSE--->>>", findUser.abuseAnswer);
                 const data4token = {
                   id: findUser._id,
-                  date: new Date(),
+                  date: Date.now(),
                   environment: process.env.APP_ENVIRONMENT,
                   email: email,
                   userType: findUser.userType,
@@ -119,7 +119,7 @@ module.exports = exports = {
                 await global.models.GLOBAL.USER.findByIdAndUpdate(
                   findUser._id,
                   {
-                    $set: { lastLogin: new Date() },
+                    $set: { lastLogin: Date.now() },
                   }
                 );
                 delete findUser.password;
