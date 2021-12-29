@@ -161,7 +161,7 @@ module.exports = exports = {
           // If (dummyAccount) {
           code = code;
           // Save the code in database
-          const NOW = Date.now();
+          const NOW = new Date();
           entry = global.models.GLOBAL.CODE_VERIFICATION({
             email: email,
             code: code,
