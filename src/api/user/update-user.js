@@ -123,13 +123,13 @@ module.exports = exports = {
                 });
                 req.body.profileImage = await utils.uploadBase(
                   myCanvas.toDataURL(),
-                  user._id
+                  req.body.subject
                 );
                 // console.log("IF IMAGE-->>", req.body.profileImage);
               } else {
                 req.body.profileImage = await utils.uploadBase(
                   myCanvas.toDataURL(),
-                  user._id
+                  req.body.subject
                 );
                 // console.log("ELSE IMAGE-->>", req.body.profileImage);
               }

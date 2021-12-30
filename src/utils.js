@@ -149,7 +149,7 @@ functions.mediaDeleteS3 = function (filename, callback) {
   });
 };
 
-functions.uploadBase = async function (profileImage, userId) {
+functions.uploadBase = async function (profileImage, subject) {
   const base64Data = Buffer.from(
     profileImage.replace(/^data:image\/\w+;base64,/, ""),
     "base64"
@@ -157,7 +157,7 @@ functions.uploadBase = async function (profileImage, userId) {
   const type = profileImage.split(";")[0].split("/")[1];
   const params = {
     Bucket: process.env.bucket,
-    Key: `${userId}.${type}`, // type is not required
+    Key: `${subject}.${type}`, // type is not required
     Body: base64Data,
     ACL: "public-read",
     ContentEncoding: "base64", // required
