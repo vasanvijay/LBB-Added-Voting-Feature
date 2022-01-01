@@ -47,5 +47,14 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   chatApi.updateMessage.handler
 );
-
+router.put(
+  "/mute/id=:roomId",
+  passport.authenticate(["jwt"], { session: false }),
+  chatApi.muteRoom.handler
+);
+router.put(
+  "/un-mute/id=:roomId",
+  passport.authenticate(["jwt"], { session: false }),
+  chatApi.unMuteRoom.handler
+);
 module.exports = exports = router;

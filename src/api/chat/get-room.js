@@ -10,7 +10,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     try {
-      const chatRoom = await global.models.GLOBAL.CHAT({ roomId: req });
+      const chatRoom = await global.models.GLOBAL.CHAT_ROOM({ roomId: req });
       const data4createResponseObject = {
         req: req,
         result: 0,

@@ -6,6 +6,7 @@ module.exports = (connection) => {
     isDeleted: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
+    mutedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
   });
 
   // return chat Schema;

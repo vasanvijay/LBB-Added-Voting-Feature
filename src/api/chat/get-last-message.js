@@ -115,6 +115,11 @@ module.exports = exports = {
             as: "room",
           },
         },
+        {
+          $sort: {
+            createAt: -1,
+          },
+        },
       ]);
       // console.log("lastchat ------------", lastChats);
       //   return res.send({ lastChats, chats.participateIds });

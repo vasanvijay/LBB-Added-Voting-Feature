@@ -32,8 +32,14 @@ module.exports = exports = {
       for (let i = 0; i < user.abuseAnswer.length; i++) {
         abuseAnswer.push(user.abuseAnswer[i].answerId);
       }
+      let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+        _id: question,
+      });
+      console.log("findQue-->>", findQuestion);
       let answer = await global.models.GLOBAL.ANSWER.find({
         $and: [
+          // { answerBy: user._id },
+          // { answerBy: findQuestion.createdBy },
           { isAbuse: false },
           { question: question },
           { _id: { $nin: abuseAnswer } },
@@ -51,7 +57,7 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
-
+      console.log("AND-->", answer);
       if (answer) {
         answer = JSON.parse(JSON.stringify(answer));
         const data4createResponseObject = {

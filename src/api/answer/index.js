@@ -15,6 +15,8 @@ const removeRoomAnswer = require("./delete-into-room");
 const abuseAnswer = require("./abuse-answer");
 const acceptAbuse = require("./accept-abuse-reason-answer");
 const declineAbuse = require("./decline-abuse-request-answer");
+const requestProfile = require("./request-profile-access");
+const requestAccept = require("./accept-request");
 
 module.exports = exports = {
   addAnswer,
@@ -34,4 +36,6 @@ module.exports = exports = {
   abuseAnswer,
   acceptAbuse,
   declineAbuse,
+  requestProfile,
+  requestAccept,
 };

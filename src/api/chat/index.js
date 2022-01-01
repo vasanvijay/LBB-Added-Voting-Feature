@@ -7,6 +7,8 @@ const history = require("./get-history");
 const lastMessage = require("./get-last-message");
 const starMesssage = require("./star-message");
 const updateMessage = require("./update-message");
+const muteRoom = require("./mute-chat-room");
+const unMuteRoom = require("./unmute-chat-room");
 
 module.exports = exports = {
   getAllChat,
@@ -18,4 +20,6 @@ module.exports = exports = {
   lastMessage,
   starMesssage,
   updateMessage,
+  muteRoom,
+  unMuteRoom,
 };
