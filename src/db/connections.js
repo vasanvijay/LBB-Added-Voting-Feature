@@ -74,6 +74,10 @@ module.exports = async () => {
         MATCHING: require("../schema/matching/matching")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        REQUEST_PROFILE_ACCESS:
+          require("../schema/requestProfileAccess/requestProfile")(
+            mongooseConnections.GLOBAL.LEADER_BRIDGE
+          ),
       },
     };
 

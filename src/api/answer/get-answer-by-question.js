@@ -57,24 +57,83 @@ module.exports = exports = {
         })
         .skip(skip)
         .limit(limit);
+      let findRequest =
+        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+          { requestBy: user._id },
+          { requestTo: findQuestion.createdBy }
+        ).populate({
+          path: "requestBy",
+          model: "user",
+          select: "_id name email region currentRole subject profileImage",
+        });
+      let receivedRequest =
+        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+          { requestBy: findQuestion.createdBy },
+          { requestTo: user._id }
+        ).populate({
+          path: "requestTo",
+          model: "user",
+          select: "_id name email region currentRole subject profileImage",
+        });
       console.log("AND-->", answer);
       if (answer) {
         answer = JSON.parse(JSON.stringify(answer));
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.SUCCESS,
-          payload: {
-            answer,
-            count: answer.length,
-            page,
-            limit,
-          },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        if (findRequest) {
+          let text = "You have requested access to view profile.";
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.SUCCESS,
+            payload: {
+              answer,
+              count: answer.length,
+              text,
+              request: findRequest,
+              page,
+              limit,
+            },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else if (receivedRequest) {
+          let text =
+            "You have received request to access to view your profile.";
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.SUCCESS,
+            payload: {
+              answer,
+              count: answer.length,
+              text,
+              request: receivedRequest,
+              page,
+              limit,
+            },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.SUCCESS,
+            payload: {
+              answer,
+              count: answer.length,
+              page,
+              limit,
+            },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
       }
     } catch (error) {
       logger.error(

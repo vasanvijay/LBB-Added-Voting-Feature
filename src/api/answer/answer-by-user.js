@@ -39,6 +39,24 @@ module.exports = exports = {
         for (let i = 0; i < findRoom.length; i++) {
           ids.push(findRoom[i]._id);
         }
+        let findRequest =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+            { requestBy: user._id },
+            { requestTo: findQuestion.createdBy }
+          ).populate({
+            path: "requestBy",
+            model: "user",
+            select: "_id name email region currentRole subject profileImage",
+          });
+        let receivedRequest =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+            { requestBy: findQuestion.createdBy },
+            { requestTo: user._id }
+          ).populate({
+            path: "requestTo",
+            model: "user",
+            select: "_id name email region currentRole subject profileImage",
+          });
         let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate([
           {
             $match: {
@@ -121,16 +139,48 @@ module.exports = exports = {
           ],
         });
         if (answerRoom != null) {
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_FETCHED,
-            payload: { answerRoom, staredCount },
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          if (findRequest) {
+            let text = "You have requested access to view profile.";
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_FETCHED,
+              payload: { answerRoom, text, request: findRequest, staredCount },
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else if (receivedRequest) {
+            let text =
+              "You have received request to access to view your profile.";
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_FETCHED,
+              payload: {
+                answerRoom,
+                text,
+                request: receivedRequest,
+                staredCount,
+              },
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_FETCHED,
+              payload: { answerRoom, staredCount },
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          }
         } else {
           const data4createResponseObject = {
             req: req,

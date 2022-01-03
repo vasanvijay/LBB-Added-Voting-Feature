@@ -33,89 +33,18 @@ module.exports = exports = {
         _id: question,
       });
       if (findQuestion) {
-        const id = findQuestion._id;
-        const answerBy = user._id;
+        // const id = findQuestion._id;
+        // const answerBy = user._id;
         const questionBy = findQuestion.createdBy;
 
-        let newRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS({});
-
-        let participateIds = [];
-        participateIds.push(answerBy);
-        participateIds.push(id);
-        participateIds.push(questionBy);
-
-        answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-          participateIds: {
-            $size: participateIds.length,
-            $all: [...participateIds],
-          },
-        });
-
-        if (answerRoom != null) {
-          let addAnswer = {
-            answer: "You have requested access to view profile.",
-            answerBy: user._id,
-            question: question,
-            answerAt: Date.now(),
-          };
-          newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
-          newAnswer.save();
-          let roomAnswer = {
-            answerId: newAnswer._id,
-            answer: "You have requested access to view profile.",
-            answerBy: user._id,
-          };
-          let updateAnswer =
-            await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
-              { _id: ObjectID(answerRoom._id) },
-              {
-                $push: {
-                  answer: roomAnswer,
-                },
-              },
-              { new: true }
-            );
-          if (updateAnswer) {
-            // console.log("UPDATED----->>>>", updateAnswer);
-          }
-        } else {
-          let addAnswer = {
-            answer: "You have requested access to view profile.",
-            answerBy: user._id,
-            question: question,
-            answerAt: Date.now(),
-          };
-          newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
-          newAnswer.save();
-          let roomAnswer = {
-            answerId: newAnswer._id,
-            answer: "You have requested access to view profile.",
-            answerBy: user._id,
-          };
-          let roomObj = {
-            participateIds: participateIds,
-            questionId: question,
-            answer: roomAnswer,
-            createdAt: Date.now(),
-          };
-          answerRoom = await global.models.GLOBAL.ANSWER_ROOM(roomObj);
-
-          answerRoom.save();
-        }
-
-        await global.models.GLOBAL.QUESTION.updateOne(
-          { _id: question },
-          { $inc: { response: 1 } },
-          { new: true }
+        let newRequestObj = {
+          requestBy: user._id,
+          requestTo: questionBy,
+        };
+        let newRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS(
+          newRequestObj
         );
-        await global.models.GLOBAL.USER.findOneAndUpdate(
-          { _id: user._id },
-          {
-            $pull: {
-              answerLater: question,
-            },
-          }
-        );
+        newRequest.save();
         let ntfObj = {
           userId: user._id,
           receiverId: questionBy,
@@ -133,7 +62,7 @@ module.exports = exports = {
           req: req,
           result: 0,
           message: messages.ITEM_INSERTED,
-          payload: { newAnswer },
+          payload: { newRequest },
           logPayload: false,
         };
         res
