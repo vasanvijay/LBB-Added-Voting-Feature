@@ -20,7 +20,8 @@
             "LEGENDS": "legends",
             "ANSWER_ROOM": "answer_room",
             "NOTIFICATION": "notification",
-            "MATCHING": "matching"
+            "MATCHING": "matching",
+            "REQUEST_PROFILE_ACCESS": "requestProfile"
           },
           "NAME": "leaderBridge"
         }

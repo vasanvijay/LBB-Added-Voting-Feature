@@ -37,6 +37,8 @@ module.exports = exports = {
         const answerBy = user._id;
         const questionBy = findQuestion.createdBy;
 
+        let newRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS({});
+
         let participateIds = [];
         participateIds.push(answerBy);
         participateIds.push(id);
