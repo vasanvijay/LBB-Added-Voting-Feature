@@ -23,7 +23,6 @@ module.exports = exports = {
       // check user type
       participateIds.push(user._id);
       participateIds.push(id);
-
       let chatRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
         participateIds: {
           $size: participateIds.length,
@@ -31,31 +30,107 @@ module.exports = exports = {
         },
       });
       if (chatRoom) {
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.INITIATION_SUCCESS,
-          payload: { chatRoom },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            {
+              _id: user._id,
+            },
+            { blockUser: { $in: [id] } },
+          ],
+        });
+        let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
+          $and: [{ _id: id }, { blockUser: { $in: [user._id] } }],
+        });
+        if (checkBlockByMe) {
+          let text =
+            "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.";
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, text },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else if (checkBlockByOther) {
+          let text = "You are blocked by this user.";
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, text },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
       } else {
         chatRoom = await global.models.GLOBAL.CHAT_ROOM({
           participateIds: participateIds,
         });
         chatRoom.save();
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.INITIATION_SUCCESS,
-          payload: { chatRoom },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            {
+              _id: user._id,
+            },
+            { blockUser: { $in: [id] } },
+          ],
+        });
+        let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
+          $and: [{ _id: id }, { blockUser: { $in: [user._id] } }],
+        });
+        if (checkBlockByMe) {
+          let text =
+            "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.";
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, text },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else if (checkBlockByOther) {
+          let text = "You are blocked by this user.";
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, text },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+        }
       }
     } catch (error) {
       logger.error(
