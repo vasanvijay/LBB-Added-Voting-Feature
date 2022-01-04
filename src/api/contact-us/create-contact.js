@@ -55,6 +55,7 @@ module.exports = exports = {
           name: name,
           subject: subject,
           message: message,
+          createdAt: Date.now(),
         };
 
         try {

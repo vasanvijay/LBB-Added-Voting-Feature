@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 module.exports = (connection) => {
   const questionSchema = new mongoose.Schema({
     question: String,
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
     },

@@ -4,7 +4,7 @@ module.exports = (connection) => {
     participateIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now() },
     mutedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
   });

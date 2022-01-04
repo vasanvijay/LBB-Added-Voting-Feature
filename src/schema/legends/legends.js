@@ -4,7 +4,7 @@ module.exports = (connection) => {
     legendsIcon: String,
     legendsName: String,
     legendsDescription: String,
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date },
     createdBy: { type: mongoose.Schema.Types.ObjectId },
     updatedAt: { type: Date, default: Date.now() },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },

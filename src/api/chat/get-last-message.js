@@ -126,6 +126,38 @@ module.exports = exports = {
       let chatsData = [];
       for (let i = 0; i < chats.length; i++) {
         let f = 0;
+        let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            {
+              _id: user._id,
+            },
+            { blockUser: { $in: [chats[i].participateIds[0]._id] } },
+          ],
+        });
+        let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            { _id: chats[i].participateIds[0]._id },
+            { blockUser: { $in: [user._id] } },
+          ],
+        });
+        let requestByMe =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+            $and: [
+              {
+                requestBy: user._id,
+              },
+              { requestTo: chats[i].participateIds[0]._id },
+            ],
+          });
+        let requestByOther =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+            $and: [
+              {
+                requestTo: user._id,
+              },
+              { requestBy: chats[i].participateIds[0]._id },
+            ],
+          });
         for (let j = 0; j < lastChats.length; j++) {
           if (
             (chats[i].participateIds[0]._id,
@@ -136,17 +168,171 @@ module.exports = exports = {
               `${chats[i].participateIds[0]._id}`)
           ) {
             f = 1;
-            // console.log("test-------");
-            //chats[i] = { chat: chats[i], lastChat: lastChats[j] };
-            chatsData.push({ chat: chats[i], lastChat: lastChats[j] });
+            console.log("F === 1---->>", requestByMe, requestByOther);
+            if (requestByMe !== null) {
+              if (checkBlockByMe !== null) {
+                // console.log("elsetest-------");
+                // chats[i] = { chat: chats[i] };
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  text: "Go To Settings & unblock users",
+                  request: "You sent a profile access request",
+                  request: requestByMe,
+                });
+              } else if (checkBlockByOther !== null) {
+                // console.log("elsetest-------");
+                // chats[i] = { chat: chats[i] };
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  text: "You are blocked by this user.",
+                  request: "You sent a profile access request",
+                  request: requestByMe,
+                });
+              } else {
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  request: "You sent a profile access request",
+                  request: requestByMe,
+                });
+              }
+            } else if (requestByOther !== null) {
+              if (checkBlockByMe !== null) {
+                // console.log("elsetest-------");
+                // chats[i] = { chat: chats[i] };
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  text: "Go To Settings & unblock users",
+                  request: "You received a request for accessing your profile.",
+                  request: requestByOther,
+                });
+              } else if (checkBlockByOther !== null) {
+                // console.log("elsetest-------");
+                // chats[i] = { chat: chats[i] };
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  text: "You are blocked by this user.",
+                  request: "You received a request for accessing your profile.",
+                  request: requestByOther,
+                });
+              } else {
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  request: "You received a request for accessing your profile.",
+                  request: requestByOther,
+                });
+              }
+            } else {
+              if (checkBlockByMe !== null) {
+                // console.log("elsetest-------");
+                // chats[i] = { chat: chats[i] };
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  text: "Go To Settings & unblock users",
+                });
+              } else if (checkBlockByOther !== null) {
+                // console.log("elsetest-------");
+                // chats[i] = { chat: chats[i] };
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                  text: "You are blocked by this user.",
+                });
+              } else {
+                chatsData.push({
+                  chat: chats[i],
+                  lastChat: lastChats[j],
+                });
+              }
+            }
+
             break;
           }
         }
 
-        if (f == 0) {
-          // console.log("elsetest-------");
-          // chats[i] = { chat: chats[i] };
-          chatsData.push({ chat: chats[i] });
+        if (requestByMe !== null) {
+          console.log("F === 0---->>", requestByMe, requestByOther);
+          if (f == 0 && checkBlockByMe !== null) {
+            // console.log("elsetest-------");
+            // chats[i] = { chat: chats[i] };
+            chatsData.push({
+              chat: chats[i],
+              text: "Go To Settings & unblock users",
+              request: "You sent a profile access request",
+              request: requestByMe,
+            });
+          } else if (f == 0 && checkBlockByOther !== null) {
+            // console.log("elsetest-------");
+            // chats[i] = { chat: chats[i] };
+            chatsData.push({
+              chat: chats[i],
+              text: "You are blocked by this user.",
+              request: "You sent a profile access request",
+              request: requestByMe,
+            });
+          } else if (f == 0) {
+            chatsData.push({
+              chat: chats[i],
+              request: "You sent a profile access request",
+              request: requestByMe,
+            });
+          }
+        } else if (requestByOther !== null) {
+          console.log("F === 0  ELSE IF---->>", requestByMe, requestByOther);
+
+          if (f == 0 && checkBlockByMe !== null) {
+            // console.log("elsetest-------");
+            // chats[i] = { chat: chats[i] };
+            chatsData.push({
+              chat: chats[i],
+              text: "Go To Settings & unblock users",
+              request: "You received a request for accessing your profile.",
+              request: requestByOther,
+            });
+          } else if (f == 0 && checkBlockByOther !== null) {
+            // console.log("elsetest-------");
+            // chats[i] = { chat: chats[i] };
+            chatsData.push({
+              chat: chats[i],
+              text: "You are blocked by this user.",
+              request: "You received a request for accessing your profile.",
+              request: requestByOther,
+            });
+          } else if (f == 0) {
+            chatsData.push({
+              chat: chats[i],
+              request: "You sent a profile access request",
+              request: "You received a request for accessing your profile.",
+              request: requestByOther,
+            });
+          }
+        } else {
+          console.log("F === 0  ELSE---->>", requestByMe, requestByOther);
+          if (f == 0 && checkBlockByMe !== null) {
+            // console.log("elsetest-------");
+            // chats[i] = { chat: chats[i] };
+            chatsData.push({
+              chat: chats[i],
+              text: "Go To Settings & unblock users",
+            });
+          } else if (f == 0 && checkBlockByOther !== null) {
+            // console.log("elsetest-------");
+            // chats[i] = { chat: chats[i] };
+            chatsData.push({
+              chat: chats[i],
+              text: "You are blocked by this user.",
+            });
+          } else if (f == 0) {
+            chatsData.push({
+              chat: chats[i],
+            });
+          }
         }
       }
       // console.log("chatData", chatsData);

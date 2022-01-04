@@ -6,7 +6,7 @@ module.exports = (connection) => {
     title: String,
     description: String,
     status: { type: Boolean, default: true },
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date },
     createdBy: { type: mongoose.Schema.Types.ObjectId },
     updatedAt: { type: Date, default: Date.now() },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },

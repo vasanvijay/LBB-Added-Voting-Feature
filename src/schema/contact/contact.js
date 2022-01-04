@@ -4,11 +4,11 @@ module.exports = (connection) => {
     name: String,
     email: String,
     subject: String,
-    message:String,
+    message: String,
     status: { type: Boolean, default: true },
     reply: { type: Boolean, default: false },
     userType: { type: String, default: "user" },
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now },
     createdBy: {
       type: String,
@@ -18,7 +18,6 @@ module.exports = (connection) => {
       type: String,
       default: "Admin",
     },
-     
   });
   return connection.model("contact", userSchema, "contact");
 };

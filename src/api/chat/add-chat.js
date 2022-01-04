@@ -8,8 +8,7 @@ const utils = require("../../utils");
 module.exports = exports = {
   handler: async (req, res) => {
     try {
-      const newChat = await global.models.GLOBAL.CHAT(req);
-      newChat.save();
+      const newChat = await global.models.GLOBAL.CHAT.create(req);
       const data4createResponseObject = {
         req: req,
         result: 0,

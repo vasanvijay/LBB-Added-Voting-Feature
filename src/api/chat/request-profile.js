@@ -12,8 +12,8 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { question } = req.params;
-    if (!question) {
+    const { id } = req.params;
+    if (!id) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -27,43 +27,24 @@ module.exports = exports = {
     }
 
     try {
-      let newAnswer;
-      let answerRoom;
-      let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
-        _id: question,
+      let findUser = await global.models.GLOBAL.USER.findOne({
+        _id: id,
       });
-      if (findQuestion) {
-        // const id = findQuestion._id;
-        // const answerBy = user._id;
-        const questionBy = findQuestion.createdBy;
-
+      if (findUser) {
         let newRequestObj = {
           requestBy: user._id,
-          requestTo: questionBy,
+          requestTo: id,
+          createdAt: Date.now(),
         };
         let newRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(
             newRequestObj
           );
-        let ntfObj = {
-          userId: user._id,
-          receiverId: questionBy,
-          title: `Notification By ${user._id} to ${questionBy}`,
-          description: `You have received request to access to view your profile in ${findQuestion.question}`,
-          createdBy: user._id,
-          updatedBy: user._id,
-          question: question,
-          createdAt: Date.now(),
-        };
-
-        let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          ntfObj
-        );
 
         const data4createResponseObject = {
           req: req,
           result: 0,
-          message: messages.ITEM_INSERTED,
+          message: "Requested Successfully.",
           payload: { newRequest },
           logPayload: false,
         };

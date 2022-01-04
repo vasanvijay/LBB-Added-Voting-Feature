@@ -8,7 +8,7 @@ module.exports = (connection) => {
     verified: { type: Boolean, default: false },
     formFilled: { type: Boolean, default: false },
     userType: { type: String, default: "user" },
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now },
     createdBy: {
       type: String,

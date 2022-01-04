@@ -47,10 +47,8 @@ module.exports = exports = {
             receiverId: receiverId,
             status: "Pending",
           };
-          const updatedReceiverData = await global.models.GLOBAL.CONNECTION(
-            request
-          );
-          updatedReceiverData.save();
+          const updatedReceiverData =
+            await global.models.GLOBAL.CONNECTION.create(request);
 
           let ntfObj = {
             userId: user._id,
@@ -59,10 +57,12 @@ module.exports = exports = {
             description: `${user.subject} sent you a connection request.`,
             createdBy: user._id,
             updatedBy: user._id,
+            createdAt: Date.now(),
           };
 
-          let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);
-          notification.save();
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
 
           const data4createResponseObject = {
             req: req,

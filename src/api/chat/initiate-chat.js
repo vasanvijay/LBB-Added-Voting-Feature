@@ -79,10 +79,10 @@ module.exports = exports = {
             .json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
-        chatRoom = await global.models.GLOBAL.CHAT_ROOM({
+        chatRoom = await global.models.GLOBAL.CHAT_ROOM.create({
           participateIds: participateIds,
+          createdAt: Date.now(),
         });
-        chatRoom.save();
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
             {

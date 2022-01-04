@@ -62,8 +62,7 @@ module.exports = exports = {
             question: question,
             answerAt: Date.now(),
           };
-          newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
-          newAnswer.save();
+          newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
           let roomAnswer = {
             answerId: newAnswer._id,
             answer: answer,
@@ -89,8 +88,7 @@ module.exports = exports = {
             question: question,
             answerAt: Date.now(),
           };
-          newAnswer = await global.models.GLOBAL.ANSWER(addAnswer);
-          newAnswer.save();
+          newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
           let roomAnswer = {
             answerId: newAnswer._id,
             answer: answer,
@@ -102,9 +100,7 @@ module.exports = exports = {
             answer: roomAnswer,
             createdAt: Date.now(),
           };
-          answerRoom = await global.models.GLOBAL.ANSWER_ROOM(roomObj);
-
-          answerRoom.save();
+          answerRoom = await global.models.GLOBAL.ANSWER_ROOM.create(roomObj);
         }
 
         await global.models.GLOBAL.QUESTION.updateOne(
@@ -128,10 +124,12 @@ module.exports = exports = {
           createdBy: user._id,
           updatedBy: user._id,
           question: question,
+          createdAt: Date.now(),
         };
 
-        let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);
-        notification.save();
+        let notification = await global.models.GLOBAL.NOTIFICATION.create(
+          ntfObj
+        );
 
         const data4createResponseObject = {
           req: req,

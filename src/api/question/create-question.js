@@ -42,8 +42,9 @@ module.exports = exports = {
         createdAt: Date.now(),
         createdBy: user._id,
       };
-      const newQuestion = await global.models.GLOBAL.QUESTION(questionCreate);
-      newQuestion.save();
+      const newQuestion = await global.models.GLOBAL.QUESTION.create(
+        questionCreate
+      );
       const data4createResponseObject = {
         req: req,
         result: 0,

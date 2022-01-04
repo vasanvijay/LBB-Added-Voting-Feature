@@ -25,10 +25,10 @@ module.exports = exports = {
         message: message,
         type: type,
         parentMessageId: parentMessageId,
+        createdAt: Date.now(),
       };
 
-      let newMessage = await global.models.GLOBAL.CHAT(chat);
-      await newMessage.save();
+      let newMessage = await global.models.GLOBAL.CHAT.create(chat);
 
       let newChat = await global.models.GLOBAL.CHAT.findOne({
         _id: newMessage._id,

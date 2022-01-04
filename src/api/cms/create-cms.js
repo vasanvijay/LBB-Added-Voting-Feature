@@ -32,6 +32,7 @@ module.exports = exports = {
       let createCms = {
         title: title,
         description: description,
+        createdAt: Date.now(),
       };
 
       const newCms = await global.models.GLOBAL.CMS(createCms).save();

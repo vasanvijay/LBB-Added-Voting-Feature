@@ -9,6 +9,7 @@ const starMesssage = require("./star-message");
 const updateMessage = require("./update-message");
 const muteRoom = require("./mute-chat-room");
 const unMuteRoom = require("./unmute-chat-room");
+const requestProfile = require("./request-profile");
 
 module.exports = exports = {
   getAllChat,
@@ -22,4 +23,5 @@ module.exports = exports = {
   updateMessage,
   muteRoom,
   unMuteRoom,
+  requestProfile,
 };

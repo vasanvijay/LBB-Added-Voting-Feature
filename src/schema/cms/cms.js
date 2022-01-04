@@ -4,7 +4,7 @@ module.exports = (connection) => {
     title: String,
     description: String,
     isActive: { type: Boolean, default: true },
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now },
   });
   return connection.model("cms", cmsSchema, "cms");

@@ -62,10 +62,12 @@ module.exports = exports = {
             description: " Accept Your Connection request.",
             createdBy: user._id,
             updatedBy: user._id,
+            createdAt: Date.now(),
           };
 
-          let notification = await global.models.GLOBAL.NOTIFICATION(ntfObj);
-          notification.save();
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
 
           const data4createResponseObject = {
             req: req,

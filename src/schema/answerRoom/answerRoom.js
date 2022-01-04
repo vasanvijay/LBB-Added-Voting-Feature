@@ -13,7 +13,7 @@ module.exports = (connection) => {
     participateIds: [{ type: mongoose.Schema.Types.ObjectId }],
     questionId: { type: mongoose.Schema.Types.ObjectId },
     answer: [answerSchema],
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date },
   });
 
   return connection.model("answer_room", answerRoomSchema, "answer_room");

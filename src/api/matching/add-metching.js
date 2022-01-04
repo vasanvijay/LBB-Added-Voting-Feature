@@ -45,8 +45,9 @@ module.exports = exports = {
           matchingTo: id,
           status: "Pending",
         };
-        const newMatching = await global.models.GLOBAL.MATCHING(matchingObj);
-        newMatching.save();
+        const newMatching = await global.models.GLOBAL.MATCHING.create(
+          matchingObj
+        );
         const data4createResponseObject = {
           req: req,
           result: 0,

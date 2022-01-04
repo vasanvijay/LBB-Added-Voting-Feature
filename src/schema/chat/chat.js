@@ -10,7 +10,7 @@ module.exports = (connection) => {
     readBy: { type: Array },
     isActive: { type: Boolean, default: true },
     isStar: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now() },
     parentMessageId: { type: mongoose.Schema.Types.ObjectId, default: null },
   });
