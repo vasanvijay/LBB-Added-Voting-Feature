@@ -76,7 +76,7 @@ module.exports = exports = {
             },
           ]);
 
-          console.log("LIST LENGHT", ImagesList?.length);
+          // console.log("LIST LENGHT", ImagesList?.length);
 
           if (ImagesList.length !== 4) {
             return res.status(400).json({

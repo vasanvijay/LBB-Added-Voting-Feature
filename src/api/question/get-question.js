@@ -62,7 +62,7 @@ module.exports = exports = {
           createdBy: user._id,
         });
       } else if (!byUser && search) {
-        console.log("SEARCH-->>", search);
+        // console.log("SEARCH-->>", search);
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
         user.subject.push(user.gender);

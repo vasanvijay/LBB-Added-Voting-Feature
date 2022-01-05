@@ -17,6 +17,7 @@ const acceptAbuse = require("./accept-abuse-reason-answer");
 const declineAbuse = require("./decline-abuse-request-answer");
 const requestProfile = require("./request-profile-access");
 const requestAccept = require("./accept-request");
+const requestInSeeAnswer = require("./request-profile-in-see-answer");
 
 module.exports = exports = {
   addAnswer,
@@ -38,4 +39,5 @@ module.exports = exports = {
   declineAbuse,
   requestProfile,
   requestAccept,
+  requestInSeeAnswer,
 };

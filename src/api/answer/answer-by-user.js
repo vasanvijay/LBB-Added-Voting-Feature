@@ -28,7 +28,7 @@ module.exports = exports = {
         for (let i = 0; i < user.abuseAnswer.length; i++) {
           abuseAnswer.push(ObjectId(user.abuseAnswer[i].answerId));
         }
-        console.log("ABUSE--->>", abuseAnswer);
+        // console.log("ABUSE--->>", abuseAnswer);
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
@@ -39,24 +39,7 @@ module.exports = exports = {
         for (let i = 0; i < findRoom.length; i++) {
           ids.push(findRoom[i]._id);
         }
-        let findRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
-            { requestBy: user._id },
-            { requestTo: findQuestion.createdBy }
-          ).populate({
-            path: "requestBy",
-            model: "user",
-            select: "_id name email region currentRole subject profileImage",
-          });
-        let receivedRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
-            { requestBy: findQuestion.createdBy },
-            { requestTo: user._id }
-          ).populate({
-            path: "requestTo",
-            model: "user",
-            select: "_id name email region currentRole subject profileImage",
-          });
+
         let answerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate([
           {
             $match: {
@@ -125,7 +108,28 @@ module.exports = exports = {
             $sort: { "data.createdAt": -1 },
           },
         ]);
-
+        console.log("ANSWER-->>", answerRoom[0].data[0].answer.answerBy);
+        for (let i = 0; i < answerRoom.length; i++) {
+          console.log("I-->>", i);
+        }
+        let findRequest =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+            { requestBy: user._id },
+            { requestTo: answerRoom[0].data[0].answer.answerBy }
+          ).populate({
+            path: "requestBy",
+            model: "user",
+            select: "_id name email region currentRole subject profileImage",
+          });
+        let receivedRequest =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+            { requestBy: answerRoom[0].data[0].answer.answerBy },
+            { requestTo: user._id }
+          ).populate({
+            path: "requestTo",
+            model: "user",
+            select: "_id name email region currentRole subject profileImage",
+          });
         let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
           $and: [
             {

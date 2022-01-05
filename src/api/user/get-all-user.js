@@ -26,7 +26,7 @@ module.exports = exports = {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
         });
-        console.log("Find Connection --->", findConection);
+        // console.log("Find Connection --->", findConection);
         let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
           receiverId: user._id,
         });

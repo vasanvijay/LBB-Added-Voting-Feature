@@ -103,7 +103,7 @@ module.exports = exports = {
                   .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
                   .json(utils.createResponseObject(data4createResponseObject));
               } else {
-                console.log("ABUSE--->>>", findUser.abuseAnswer);
+                // console.log("ABUSE--->>>", findUser.abuseAnswer);
                 const data4token = {
                   id: findUser._id,
                   date: Date.now(),

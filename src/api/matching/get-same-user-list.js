@@ -131,7 +131,7 @@ module.exports = exports = {
       ])
         .skip(skip)
         .limit(limit);
-      console.log("USER-->>", findSameSubjectUser.length);
+      // console.log("USER-->>", findSameSubjectUser.length);
 
       //   return res.send(findSameSubjectUser);
       const data4createResponseObject = {

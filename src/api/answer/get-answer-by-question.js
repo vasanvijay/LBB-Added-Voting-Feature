@@ -35,7 +35,7 @@ module.exports = exports = {
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
-      console.log("findQue-->>", findQuestion);
+      // console.log("findQue-->>", findQuestion);
       let answer = await global.models.GLOBAL.ANSWER.find({
         $and: [
           // { answerBy: user._id },
@@ -75,7 +75,7 @@ module.exports = exports = {
           model: "user",
           select: "_id name email region currentRole subject profileImage",
         });
-      console.log("AND-->", answer);
+      // console.log("AND-->", answer);
       if (answer) {
         answer = JSON.parse(JSON.stringify(answer));
         if (findRequest) {

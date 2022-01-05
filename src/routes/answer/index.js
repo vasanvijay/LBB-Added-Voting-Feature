@@ -96,7 +96,11 @@ router.post(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.requestProfile.handler
 );
-
+router.post(
+  "/new-request/id=:id",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.requestInSeeAnswer.handler
+);
 // DELETE Method
 router.delete(
   "/id=:answerId",

@@ -33,6 +33,7 @@ module.exports = (connection) => {
     currentRole: { type: String, default: null },
     region: { type: String, default: null },
     organizationEmail: { type: String, default: null },
+    organizationEmailVerified: { type: Boolean, default: false },
     linkedinProfile: { type: String, default: null },
     organizationWebsite: { type: String, default: null },
     otherLink: { type: String, default: null },

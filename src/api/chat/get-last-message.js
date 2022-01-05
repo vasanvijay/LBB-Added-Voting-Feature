@@ -29,7 +29,6 @@ module.exports = exports = {
         return rooms.push(id._id);
       });
       // console.log("rooms ", rooms);
-      // console.log("chats-------", chats);
 
       let lastChats = await global.models.GLOBAL.CHAT.aggregate([
         {
@@ -121,7 +120,19 @@ module.exports = exports = {
           },
         },
       ]);
+      // console.log("chats-------", chats);
       // console.log("lastchat ------------", lastChats);
+      let chatss = [];
+      for (i = 0; i < lastChats.length; i++) {
+        for (j = 0; j < chats.length; j++) {
+          if (lastChats[i]?._id.toString() == chats[j]?._id.toString()) {
+            chatss.push(chats[j]);
+            break;
+          }
+        }
+      }
+      chats = chatss;
+      // console.log("chatss----------------------------->>", chats);
       //   return res.send({ lastChats, chats.participateIds });
       let chatsData = [];
       for (let i = 0; i < chats.length; i++) {
@@ -168,7 +179,7 @@ module.exports = exports = {
               `${chats[i].participateIds[0]._id}`)
           ) {
             f = 1;
-            console.log("F === 1---->>", requestByMe, requestByOther);
+            // console.log("F === 1---->>", requestByMe, requestByOther);
             if (requestByMe !== null) {
               if (checkBlockByMe !== null) {
                 // console.log("elsetest-------");
@@ -257,7 +268,7 @@ module.exports = exports = {
         }
 
         if (requestByMe !== null) {
-          console.log("F === 0---->>", requestByMe, requestByOther);
+          // console.log("F === 0---->>", requestByMe, requestByOther);
           if (f == 0 && checkBlockByMe !== null) {
             // console.log("elsetest-------");
             // chats[i] = { chat: chats[i] };
@@ -284,7 +295,7 @@ module.exports = exports = {
             });
           }
         } else if (requestByOther !== null) {
-          console.log("F === 0  ELSE IF---->>", requestByMe, requestByOther);
+          // console.log("F === 0  ELSE IF---->>", requestByMe, requestByOther);
 
           if (f == 0 && checkBlockByMe !== null) {
             // console.log("elsetest-------");
@@ -313,7 +324,7 @@ module.exports = exports = {
             });
           }
         } else {
-          console.log("F === 0  ELSE---->>", requestByMe, requestByOther);
+          // console.log("F === 0  ELSE---->>", requestByMe, requestByOther);
           if (f == 0 && checkBlockByMe !== null) {
             // console.log("elsetest-------");
             // chats[i] = { chat: chats[i] };

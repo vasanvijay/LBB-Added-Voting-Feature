@@ -10,7 +10,7 @@ module.exports = exports = {
     const { user } = req;
     const { search } = req.query;
     const { filter } = req.body;
-
+    console.log("BODY--->>", filter);
     try {
       let criteria = [];
       let searchUser = [];
@@ -69,7 +69,7 @@ module.exports = exports = {
               regionShow: { $eq: true },
             });
           }
-          if (fil.filterId == "6189098afec3b250c029cadd") {
+          if (fil.filterId == "6188f6d1a06a481f928d6667") {
             let optionName = [];
             fil?.options?.map((opt) => {
               optionName.push(opt.optionName);
@@ -157,8 +157,8 @@ module.exports = exports = {
             let opts = optionName;
             for (let i = 0; i < opts.length; i++) {
               const value = opts[i].split("-");
-              console.log("VAL - 1 = ", value[0]);
-              console.log("VAL - 2 = ", value[1]);
+              // console.log("VAL - 1 = ", value[0]);
+              // console.log("VAL - 2 = ", value[1]);
               renge.push({
                 age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
               });
@@ -297,7 +297,7 @@ module.exports = exports = {
               regionShow: { $eq: true },
             });
           }
-          if (fil.filterId == "6189098afec3b250c029cadd") {
+          if (fil.filterId == "6188f6d1a06a481f928d6667") {
             let optionName = [];
             fil?.options?.map((opt) => {
               optionName.push(opt.optionName);
@@ -385,8 +385,8 @@ module.exports = exports = {
             let opts = optionName;
             for (let i = 0; i < opts.length; i++) {
               const value = opts[i].split("-");
-              console.log("VAL - 1 = ", value[0]);
-              console.log("VAL - 2 = ", value[1]);
+              // console.log("VAL - 1 = ", value[0]);
+              // console.log("VAL - 2 = ", value[1]);
               renge.push({
                 age: { $gte: parseInt(value[0]), $lte: parseInt(value[1]) },
               });
@@ -493,7 +493,7 @@ module.exports = exports = {
       });
 
       const sentIdExist = (id) => {
-        console.log("INSENT--->>", id);
+        // console.log("INSENT--->>", id);
         let check = findConection.filter(function (elc) {
           return elc.receiverId.toString() === id.toString();
         });
@@ -501,7 +501,7 @@ module.exports = exports = {
       };
 
       const pandingIdExist = (id) => {
-        console.log("INPENDING--->>", id);
+        // console.log("INPENDING--->>", id);
         let panding = pandingConnection.filter(function (elf) {
           return elf.senderId.toString() === id.toString();
         });
