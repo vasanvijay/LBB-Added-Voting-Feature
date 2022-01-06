@@ -140,7 +140,7 @@ module.exports = exports = {
             let info = await transporter.sendMail({
               from: process.env.EMAIL,
               to: email,
-              subject: "LeaderBridge | Welcome to LeaderBridge®",
+              subject: "LeaderBridge | Welcome",
               html: `<!DOCTYPE html>
               <html lang="en">
               <head>

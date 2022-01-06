@@ -11,19 +11,19 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     // console.log("USER--->>", req);
-    // let user = await utils.getHeaderFromToken(req.token);
+    let user = await utils.getHeaderFromToken(req.token);
     // console.log("USER--->>", user);
 
-    const { user } = req;
+    // const { user } = req;
     try {
       let rooms = [];
       let chats = await global.models.GLOBAL.CHAT_ROOM.find({
-        participateIds: { $in: ObjectId(user._id) },
+        participateIds: { $in: ObjectId(user.id) },
       }).populate({
         path: "participateIds",
         model: "user",
         match: {
-          _id: { $ne: user._id },
+          _id: { $ne: user.id },
         },
         select: "_id name subject profileImage currentRole email blockUser",
       });
@@ -143,7 +143,7 @@ module.exports = exports = {
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
             {
-              _id: user._id,
+              _id: user.id,
             },
             { blockUser: { $in: [chats[i].participateIds[0]._id] } },
           ],
@@ -151,14 +151,14 @@ module.exports = exports = {
         let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
           $and: [
             { _id: chats[i].participateIds[0]._id },
-            { blockUser: { $in: [user._id] } },
+            { blockUser: { $in: [user.id] } },
           ],
         });
         let requestByMe =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
             $and: [
               {
-                requestBy: user._id,
+                requestBy: user.id,
               },
               { requestTo: chats[i].participateIds[0]._id },
             ],
@@ -167,7 +167,7 @@ module.exports = exports = {
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
             $and: [
               {
-                requestTo: user._id,
+                requestTo: user.id,
               },
               { requestBy: chats[i].participateIds[0]._id },
             ],
@@ -349,7 +349,7 @@ module.exports = exports = {
           }
         }
       }
-      // console.log("chatData", chatsData);
+      console.log("chatData", chatsData);
       if (lastChats) {
         const data4createResponseObject = {
           req: req,
@@ -360,9 +360,10 @@ module.exports = exports = {
           },
           logPayload: false,
         };
-        return res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
+        // return res
+        //   .status(enums.HTTP_CODES.OK)
+        //   .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
       logger.error(

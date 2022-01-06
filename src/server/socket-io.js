@@ -53,7 +53,7 @@ module.exports = (server, logger) => {
         io.in(socket.id).emit("last-message", {
           chats: lastMessage.payload.chats,
         });
-        console.log("last-message data sent", user);
+        console.log("last-message data sent");
       } catch (error) {
         console.log("Error in finding Chats ", error);
       }

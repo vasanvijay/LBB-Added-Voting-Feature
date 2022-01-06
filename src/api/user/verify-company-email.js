@@ -10,14 +10,14 @@ const nodemailer = require("nodemailer");
 module.exports = exports = {
   // route validation
   validation: Joi.object({
-    email: Joi.string().required(),
+    organizationEmail: Joi.string().required(),
   }),
 
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { organizationEmail, isVerified } = req.body;
-    let entry;
+    console.log("USER-->>", user);
+    const { organizationEmail } = req.body;
 
     let findUser = await global.models.GLOBAL.USER.findOne({
       _id: user._id,

@@ -55,11 +55,15 @@ module.exports = exports = {
             { _id: { $nin: abuseQuestion } },
             { createdBy: { $nin: user.blockUser } },
           ],
-        }).populate({
-          path: "createdBy",
-          model: "user",
-          select: "_id name subject profileImage currentRole",
-        });
+        })
+          .populate({
+            path: "createdBy",
+            model: "user",
+            select: "_id name subject profileImage currentRole",
+          })
+          .sort({
+            createdAt: -1,
+          });
         if (ans) {
           answer.push(ans);
         }

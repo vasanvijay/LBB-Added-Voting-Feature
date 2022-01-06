@@ -38,11 +38,11 @@ module.exports = exports = {
       // console.log("findQue-->>", findQuestion);
       let answer = await global.models.GLOBAL.ANSWER.find({
         $and: [
-          // { answerBy: user._id },
-          // { answerBy: findQuestion.createdBy },
           { isAbuse: false },
           { question: question },
           { _id: { $nin: abuseAnswer } },
+          { answerBy: { $eq: user._id } },
+          { answerBy: { $eq: findQuestion.createdBy } },
         ],
       })
         .populate({
@@ -56,7 +56,10 @@ module.exports = exports = {
           select: "_id name email region currentRole subject profileImage",
         })
         .skip(skip)
-        .limit(limit);
+        .limit(limit)
+        .sort({
+          createdAt: -1,
+        });
       let findRequest =
         await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
           { requestBy: user._id },

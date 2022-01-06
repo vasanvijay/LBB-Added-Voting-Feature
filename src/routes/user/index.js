@@ -110,6 +110,7 @@ router.put(
 router.put(
   "/work-email",
   validate("body", api4User.verifyWorkEmail.validation),
+  passport.authenticate(["jwt"], { session: false }),
   api4User.verifyWorkEmail.handler
 );
 

@@ -180,7 +180,6 @@ functions.getHeaderFromToken = async (token) => {
   const decodedToken = jwtDecode(token, {
     complete: true,
   });
-  console.log("TOKEN--->>", decodedToken);
   if (!decodedToken) {
     return null;
   }
