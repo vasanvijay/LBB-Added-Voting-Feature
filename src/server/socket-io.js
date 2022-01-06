@@ -45,6 +45,20 @@ module.exports = (server, logger) => {
       }
     });
 
+    socket.on("last-message", async function (user) {
+      console.log("LAST MESSAGE------------->>>>>>");
+      try {
+        let lastMessage = await chatCtrl.lastMessage.handler(user);
+        // console.log("history", chatHistory.payload.chats);
+        io.in(socket.id).emit("last-message", {
+          chats: lastMessage.payload.chats,
+        });
+        console.log("last-message data sent", user);
+      } catch (error) {
+        console.log("Error in finding Chats ", error);
+      }
+    });
+
     socket.on(
       "new-message",
       async function ({ roomId, sender, message, type, parentMessageId }) {

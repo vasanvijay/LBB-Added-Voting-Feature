@@ -175,4 +175,17 @@ functions.uploadBase = async function (profileImage, subject) {
     console.log("image upload error --> ", error);
   }
 };
+
+functions.getHeaderFromToken = async (token) => {
+  const decodedToken = jwtDecode(token, {
+    complete: true,
+  });
+  console.log("TOKEN--->>", decodedToken);
+  if (!decodedToken) {
+    return null;
+  }
+
+  return decodedToken;
+};
+
 module.exports = exports = functions;

@@ -10,8 +10,11 @@ const ObjectId = require("mongodb").ObjectId;
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
+    // console.log("USER--->>", req);
+    // let user = await utils.getHeaderFromToken(req.token);
     // console.log("USER--->>", user);
+
+    const { user } = req;
     try {
       let rooms = [];
       let chats = await global.models.GLOBAL.CHAT_ROOM.find({

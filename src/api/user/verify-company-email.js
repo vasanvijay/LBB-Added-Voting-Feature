@@ -50,7 +50,7 @@ module.exports = exports = {
         let info = await transporter.sendMail({
           from: process.env.EMAIL,
           to: organizationEmail,
-          subject: "LeaderBridge | Your Work Email",
+          subject: "LeaderBridge | Verify Your Work Email",
           html: `<!DOCTYPE html>
                 <html lang="en">
                 
@@ -108,7 +108,7 @@ module.exports = exports = {
                                     </tr>
                                     <tr>
                                         <td style="padding: 3rem 2rem 2rem 2rem;">
-                                          <h2 align="center" style="color: #585d6a; font-size: 30px; ">Verify your Email Address</h2>
+                                          <h2 align="center" style="color: #585d6a; font-size: 30px; ">Verify Your Email Address</h2>
                                           <p align="center" style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Please find below your verification link.</p>
                                           
                                           <a href="" align="center" style="font-size: 40px; color: #585d6a; margin: 0;  margin-top: 0; cursor:pointer;">Verify</a>

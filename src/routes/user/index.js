@@ -107,4 +107,10 @@ router.put(
   validate("body", api4User.forgetPassword.validation),
   api4User.forgetPassword.handler
 );
+router.put(
+  "/work-email",
+  validate("body", api4User.verifyWorkEmail.validation),
+  api4User.verifyWorkEmail.handler
+);
+
 module.exports = exports = router;
