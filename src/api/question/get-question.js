@@ -128,11 +128,16 @@ module.exports = exports = {
         // for (var i = 0; i < user.removeQuestion.length; i++) {
         //   user.removeQuestion[i] = ObjectId(user.removeQuestion[i]);
         // }
-        abuseQuestion = [];
+        let abuseQuestion = [];
         for (var i = 0; i < user.abuseQuestion.length; i++) {
           abuseQuestion.push(user.abuseQuestion[i].questionId);
         }
-        // console.log(user);
+
+        let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
+          "question",
+          { $and: [{ answerBy: user._id }] }
+        );
+
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
         user.subject.push(user.gender);
@@ -151,6 +156,7 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
+            { _id: { $nin: questionArray } },
             { createdBy: { $nin: user.blockUser } },
           ],
           $or: [
@@ -172,6 +178,7 @@ module.exports = exports = {
             createdAt: -1,
           })
           .exec();
+        console.log("LENGTH-->>", quResult.length);
         if (criteria) {
           quResult = await global.models.GLOBAL.QUESTION.find(criteria)
             .populate({

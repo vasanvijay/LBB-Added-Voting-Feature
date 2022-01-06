@@ -109,9 +109,9 @@ module.exports = exports = {
           },
         ]);
         console.log("ANSWER-->>", answerRoom[0].data[0].answer.answerBy);
-        for (let i = 0; i < answerRoom.length; i++) {
-          console.log("I-->>", i);
-        }
+        // for (let i = 0; i < answerRoom.length; i++) {
+        //   console.log("I-->>", i);
+        // }
         let findRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
             { requestBy: user._id },

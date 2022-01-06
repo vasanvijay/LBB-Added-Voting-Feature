@@ -60,6 +60,7 @@ module.exports = exports = {
         $and: [
           { _id: { $nin: user.answerLater } },
           { _id: { $nin: user.removeQuestion } },
+          { _id: { $nin: questionArray } },
           { _id: { $nin: abuseQuestion } },
           { createdBy: { $nin: user.blockUser } },
         ],
@@ -67,7 +68,8 @@ module.exports = exports = {
           { "filter.options.optionName": { $exists: false } },
           { "filter.options.optionName": { $in: user.subject } },
         ],
-        createdBy: { $nin: user.blockUser, $nin: user._id },
+        createdBy: { $nin: user.blockUser },
+        createdBy: { $nin: user._id },
         reportAbuse: false,
       });
       const data4createResponseObject = {
