@@ -4,9 +4,11 @@ module.exports = (connection) => {
     answerId: { type: mongoose.Schema.Types.ObjectId },
     answer: String,
     answerBy: { type: mongoose.Schema.Types.ObjectId },
-    answerAt: { type: Date, default: Date.now() },
+    answerAt: { type: Date },
+    updatedAt: { type: Date },
     messageStar: { type: Boolean, default: false },
     isAbuse: { type: Boolean, default: false },
+    updated: { type: Boolean, default: false },
   });
 
   const answerRoomSchema = new mongoose.Schema({

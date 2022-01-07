@@ -108,24 +108,28 @@ module.exports = exports = {
             $sort: { "data.createdAt": -1 },
           },
         ]);
-        console.log("ANSWER-->>", answerRoom[0].data[0].answer.answerBy);
+        console.log("ANSWER-->>", answerRoom[0]?.data[0]?.answer?.answerBy);
         // for (let i = 0; i < answerRoom.length; i++) {
         //   console.log("I-->>", i);
         // }
         let findRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
-            { requestBy: user._id },
-            { requestTo: answerRoom[0].data[0].answer.answerBy }
-          ).populate({
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+            $and: [
+              { requestBy: user._id },
+              { requestTo: answerRoom[0]?.data[0]?.answer?.answerBy },
+            ],
+          }).populate({
             path: "requestBy",
             model: "user",
             select: "_id name email region currentRole subject profileImage",
           });
         let receivedRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
-            { requestBy: answerRoom[0].data[0].answer.answerBy },
-            { requestTo: user._id }
-          ).populate({
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+            $and: [
+              { requestBy: answerRoom[0]?.data[0]?.answer?.answerBy },
+              { requestTo: user._id },
+            ],
+          }).populate({
             path: "requestTo",
             model: "user",
             select: "_id name email region currentRole subject profileImage",

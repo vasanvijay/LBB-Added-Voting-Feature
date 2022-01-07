@@ -41,8 +41,12 @@ module.exports = exports = {
           { isAbuse: false },
           { question: question },
           { _id: { $nin: abuseAnswer } },
-          { answerBy: { $eq: user._id } },
-          { answerBy: { $eq: findQuestion.createdBy } },
+          {
+            $or: [
+              { answerBy: { $in: [user._id] } },
+              { answerBy: { $in: [findQuestion.createdBy] } },
+            ],
+          },
         ],
       })
         .populate({
@@ -56,10 +60,8 @@ module.exports = exports = {
           select: "_id name email region currentRole subject profileImage",
         })
         .skip(skip)
-        .limit(limit)
-        .sort({
-          createdAt: -1,
-        });
+        .limit(limit);
+
       let findRequest =
         await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
           { requestBy: user._id },

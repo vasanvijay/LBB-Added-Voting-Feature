@@ -54,6 +54,7 @@ module.exports = exports = {
           answerId: addNewAnswer._id,
           answer: answer,
           answerBy: user._id,
+          answerAt: Date.now(),
         };
         let updateAnswer =
           await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(

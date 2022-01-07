@@ -67,6 +67,7 @@ module.exports = exports = {
             answerId: newAnswer._id,
             answer: answer,
             answerBy: user._id,
+            answerAt: Date.now(),
           };
           let updateAnswer =
             await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
@@ -93,6 +94,7 @@ module.exports = exports = {
             answerId: newAnswer._id,
             answer: answer,
             answerBy: user._id,
+            answerAt: Date.now(),
           };
           let roomObj = {
             participateIds: participateIds,

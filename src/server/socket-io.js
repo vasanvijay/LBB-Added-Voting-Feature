@@ -82,6 +82,81 @@ module.exports = (server, logger) => {
       }
     );
 
+    // Socket "Join-Profile"
+    socket.on("join-profile", async function ({ profileId }) {
+      socket.profileId = String(profileId);
+      activeUsers.add(String(profileId));
+      socket.join(String(profileId));
+      console.log("join-profile");
+      io.in(socket.id).emit("user join profile");
+    });
+
+    // Socket "Call Connect"
+    socket.on(
+      "connectCall",
+      async function ({ channelName, otherId, isForVideoCall, token }) {
+        console.log("channelname on connectcall...", channelName);
+        console.log("otherid on connectcall...", otherId);
+        console.log("token on connectcall...", token);
+        if (token) {
+          let data = {
+            msg: "call Requested",
+            channelName: String(channelName),
+            otherId: String(otherId),
+            isForVideoCall: Boolean(isForVideoCall),
+            token: token,
+          };
+          io.in(String(channelName)).emit("onCallRequest", data);
+          io.in(String(otherId)).emit("onCallRequest", data);
+          console.log("data on connectcall...", data);
+        }
+      }
+    );
+
+    //  socket "acceptCall"
+    socket.on(
+      "acceptCall",
+      async function ({ channelName, otherId, isForVideoCall, token }) {
+        console.log("chanel name................. Accept", channelName);
+        console.log("otherId............++++++++++Accept", otherId);
+        console.log("isForVideoCall------------->", isForVideoCall);
+        console.log("token...........++++++++++++ accept", token);
+        const res = {
+          msg: "call accepted",
+          channelName: String(channelName),
+          otherId: String(otherId),
+          isForVideoCall: Boolean(isForVideoCall),
+          token: token,
+        };
+        io.in(String(channelName)).emit("onAcceptCall", res);
+        io.in(String(otherId)).emit("onAcceptCall", res);
+        console.log("channelNameonAcceptCall...................", res);
+        console.log("otherIdonAcceptCall...................", res);
+      }
+    );
+
+    // Socket "Call Reject"
+    socket.on(
+      "rejectCall",
+      async function ({ channelName, otherId, isForVideoCall, token }) {
+        console.log("chanel name............ reject", channelName);
+        console.log("otherId........++++++++++ reject", otherId);
+        console.log("token.........+++++++++++ reject", token);
+        const res = {
+          msg: "call disconnected",
+          channelName: String(channelName),
+          otherId: String(otherId),
+          isForVideoCall: Boolean(isForVideoCall),
+          token: token,
+        };
+        io.in(String(channelName)).emit("onRejectCall", res);
+        io.in(String(otherId)).emit("onRejectCall", res);
+
+        console.log("channelNamedisconnect...................", res);
+        console.log("otherIddisconnect...................", res);
+      }
+    );
+
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });

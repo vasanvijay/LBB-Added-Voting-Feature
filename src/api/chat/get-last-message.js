@@ -349,7 +349,7 @@ module.exports = exports = {
           }
         }
       }
-      console.log("chatData", chatsData);
+      // console.log("chatData", chatsData);
       if (lastChats) {
         const data4createResponseObject = {
           req: req,

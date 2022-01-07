@@ -21,7 +21,9 @@ module.exports = exports = {
           answerObj = ansObj.answer.map((ansId) => {
             if (ansId._id == answerId) {
               return {
-                answerAt: Date.now(),
+                // answerAt: Date.now(),
+                updatedAt: Date.now(),
+                updated: true,
                 _id: ansId._id,
                 answer: answer ? answer : ansId?.answer,
                 // messageStar:
@@ -31,7 +33,9 @@ module.exports = exports = {
               };
             } else {
               return {
-                answerAt: ansId.answerAt,
+                // answerAt: ansId.answerAt,
+                updatedAt: Date.now(),
+                updated: true,
                 _id: ansId._id,
                 answer: ansId.answer,
                 messageStar: ansId.messageStar,
