@@ -57,7 +57,8 @@ module.exports = exports = {
         .populate({
           path: "answerBy",
           model: "user",
-          select: "_id name email region currentRole subject profileImage",
+          select:
+            "_id name email region currentRole subject profileImage countryOfResidence",
         })
         .skip(skip)
         .limit(limit);
@@ -69,7 +70,8 @@ module.exports = exports = {
         ).populate({
           path: "requestBy",
           model: "user",
-          select: "_id name email region currentRole subject profileImage",
+          select:
+            "_id name email region currentRole subject profileImage countryOfResidence",
         });
       let receivedRequest =
         await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
@@ -78,7 +80,8 @@ module.exports = exports = {
         ).populate({
           path: "requestTo",
           model: "user",
-          select: "_id name email region currentRole subject profileImage",
+          select:
+            "_id name email region currentRole subject profileImage countryOfResidence",
         });
       // console.log("AND-->", answer);
       if (answer) {

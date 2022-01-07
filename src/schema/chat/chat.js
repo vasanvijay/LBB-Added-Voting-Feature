@@ -12,6 +12,7 @@ module.exports = (connection) => {
     isStar: { type: Boolean, default: false },
     createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now() },
+    status: { type: Boolean, default: false },
     parentMessageId: { type: mongoose.Schema.Types.ObjectId, default: null },
   });
 

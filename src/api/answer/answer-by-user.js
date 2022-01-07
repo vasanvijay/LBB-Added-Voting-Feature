@@ -87,6 +87,7 @@ module.exports = exports = {
               "user.email": 1,
               "user.region": 1,
               "user.name": 1,
+              "user.countryOfResidence": 1,
               question: 1,
             },
           },
@@ -121,7 +122,8 @@ module.exports = exports = {
           }).populate({
             path: "requestBy",
             model: "user",
-            select: "_id name email region currentRole subject profileImage",
+            select:
+              "_id name email region currentRole subject profileImage countryOfResidence",
           });
         let receivedRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
@@ -132,7 +134,8 @@ module.exports = exports = {
           }).populate({
             path: "requestTo",
             model: "user",
-            select: "_id name email region currentRole subject profileImage",
+            select:
+              "_id name email region currentRole subject profileImage countryOfResidence",
           });
         let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
           $and: [

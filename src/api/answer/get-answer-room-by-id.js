@@ -64,6 +64,7 @@ module.exports = exports = {
             "user.email": 1,
             "user.region": 1,
             "user.name": 1,
+            "user.countryOfResidence": 1,
             question: 1,
           },
         },

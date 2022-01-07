@@ -21,6 +21,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   chatApi.lastMessage.handler
 );
+router.get(
+  "/unread",
+  passport.authenticate(["jwt"], { session: false }),
+  chatApi.unreadCount.handler
+);
 
 // Post Methods
 router.post(

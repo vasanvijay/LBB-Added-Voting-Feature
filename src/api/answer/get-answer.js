@@ -59,7 +59,8 @@ module.exports = exports = {
           .populate({
             path: "createdBy",
             model: "user",
-            select: "_id name subject profileImage currentRole",
+            select:
+              "_id name subject profileImage currentRole countryOfResidence",
           })
           .sort({
             createdAt: -1,
