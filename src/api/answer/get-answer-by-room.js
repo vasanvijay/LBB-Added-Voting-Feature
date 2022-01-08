@@ -11,32 +11,20 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let { user } = req;
-      let { question } = req.params;
-      let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
-        _id: question,
+      let { room } = req.params;
+      let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+        _id: room,
       });
-      if (findQuestion) {
-        const id = question;
-        const answerBy = user._id;
-        const questionBy = findQuestion.createdBy;
-
-        let participateIds = [];
-        participateIds.push(answerBy);
-        participateIds.push(id);
-        participateIds.push(questionBy);
-
-        let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
-          participateIds: {
-            $size: participateIds.length,
-            $all: [...participateIds],
-          },
+      if (findRoom) {
+        let findAnswer = await global.models.GLOBAL.ANSWER.find({
+          roomId: findRoom._id,
         });
 
-        if (!findAnswerRoom) {
+        if (!findAnswer.length < 0) {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: messages.ITEM_FETCHED,
+            message: messages.GENERAL,
             payload: {},
             logPayload: false,
           };
@@ -49,7 +37,7 @@ module.exports = exports = {
             result: 0,
             message: messages.ITEM_FETCHED,
             payload: {
-              findAnswerRoom,
+              findAnswer,
             },
             logPayload: false,
           };

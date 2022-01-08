@@ -178,7 +178,6 @@ module.exports = exports = {
             createdAt: -1,
           })
           .exec();
-        console.log("LENGTH-->>", quResult.length);
         if (criteria) {
           quResult = await global.models.GLOBAL.QUESTION.find(criteria)
             .populate({
@@ -261,20 +260,22 @@ module.exports = exports = {
       let optionNames = [];
       let reachCount = async (question) => {
         for (let k = 0; k < question.filter.length; k++) {
-          question.filter[k]?.options.map(async (item) => {
+          question?.filter[k]?.options?.map(async (item) => {
             optionNames.push(item.optionName);
           });
         }
 
-        const users = await global.models.GLOBAL.USER.find({
-          $text: { $search: optionNames.join(" ") },
-        })
-          .count()
-          .then((ress) => ress);
-        if (users == 0) {
-          return await global.models.GLOBAL.USER.count();
+        if (optionNames.length > 0) {
+          const users = await global.models.GLOBAL.USER.find({
+            $text: { $search: optionNames?.join(" ") },
+          }).then((ress) => ress);
+          if (users == 0) {
+            return await global.models.GLOBAL.USER.count();
+          } else {
+            return users;
+          }
         } else {
-          return users;
+          return await global.models.GLOBAL.USER.count();
         }
       };
 
@@ -345,7 +346,6 @@ module.exports = exports = {
           questionDetais.push(questionObj);
         }
       }
-      // console.log("RES--->>", questionDetais);
       const data4createResponseObject = {
         req: req,
         result: 0,
