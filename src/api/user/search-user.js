@@ -167,6 +167,7 @@ module.exports = exports = {
               {
                 $match: {
                   DOB: { $ne: null },
+                  formFilled: { $ne: false },
                 },
               },
               {
@@ -395,6 +396,7 @@ module.exports = exports = {
               {
                 $match: {
                   DOB: { $ne: null },
+                  formFilled: { $ne: false },
                 },
               },
               {
