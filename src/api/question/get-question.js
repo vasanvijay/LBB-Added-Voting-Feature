@@ -264,11 +264,14 @@ module.exports = exports = {
             optionNames.push(item.optionName);
           });
         }
-
+        console.log("OPT-->>", optionNames.length);
         if (optionNames.length > 0) {
           const users = await global.models.GLOBAL.USER.find({
-            $text: { $search: optionNames?.join(" ") },
-          }).then((ress) => ress);
+            // $text: { $search: optionNames.join(" ") },
+          })
+            .count()
+            .then((ress) => ress);
+          console.log("USER-->>", users);
           if (users == 0) {
             return await global.models.GLOBAL.USER.count();
           } else {
