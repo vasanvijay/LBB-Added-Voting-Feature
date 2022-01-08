@@ -267,7 +267,7 @@ module.exports = exports = {
         console.log("OPT-->>", optionNames.length);
         if (optionNames.length > 0) {
           const users = await global.models.GLOBAL.USER.find({
-            // $text: { $search: optionNames.join(" ") },
+            $text: { $search: optionNames.join(" ") },
           })
             .count()
             .then((ress) => ress);
