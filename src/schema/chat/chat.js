@@ -11,7 +11,8 @@ module.exports = (connection) => {
     isActive: { type: Boolean, default: true },
     isStar: { type: Boolean, default: false },
     createdAt: { type: Date },
-    updatedAt: { type: Date, default: Date.now() },
+    updatedAt: { type: Date },
+    isUpdated: { type: Boolean, default: false },
     status: { type: Boolean, default: false },
     parentMessageId: { type: mongoose.Schema.Types.ObjectId, default: null },
   });

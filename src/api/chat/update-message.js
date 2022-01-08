@@ -40,6 +40,8 @@ module.exports = exports = {
                 {
                   $set: {
                     message: message,
+                    isUpdated: true,
+                    updatedAt: Date.now(),
                   },
                 },
                 {

@@ -7,7 +7,7 @@ module.exports = (connection) => {
     answerAt: { type: Date },
     updatedAt: { type: Date },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },
-    updated: { type: Boolean, default: false },
+    isUpdated: { type: Boolean, default: false },
     isAbuse: { type: Boolean, default: false },
   });
   return connection.model("answer", answerSchema, "answer");

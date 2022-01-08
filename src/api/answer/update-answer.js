@@ -39,7 +39,7 @@ module.exports = exports = {
             answer: answer,
             updatedAt: Date.now(),
             updatedBy: user._id,
-            updated: true,
+            isUpdated: true,
           },
         },
         {

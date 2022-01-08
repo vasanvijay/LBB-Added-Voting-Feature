@@ -23,7 +23,7 @@ module.exports = exports = {
               return {
                 // answerAt: Date.now(),
                 updatedAt: Date.now(),
-                updated: true,
+                isUpdated: true,
                 _id: ansId._id,
                 answer: answer ? answer : ansId?.answer,
                 // messageStar:
@@ -34,8 +34,8 @@ module.exports = exports = {
             } else {
               return {
                 // answerAt: ansId.answerAt,
-                updatedAt: Date.now(),
-                updated: true,
+                updatedAt: ansId.updatedAt,
+                isUpdated: ansId.isUpdated,
                 _id: ansId._id,
                 answer: ansId.answer,
                 messageStar: ansId.messageStar,

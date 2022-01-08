@@ -8,7 +8,7 @@ module.exports = (connection) => {
     updatedAt: { type: Date },
     messageStar: { type: Boolean, default: false },
     isAbuse: { type: Boolean, default: false },
-    updated: { type: Boolean, default: false },
+    isUpdated: { type: Boolean, default: false },
   });
 
   const answerRoomSchema = new mongoose.Schema({

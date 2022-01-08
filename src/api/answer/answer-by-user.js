@@ -101,6 +101,7 @@ module.exports = exports = {
                   answer: "$answer",
                   user: "$user",
                   question: "$question",
+                  idUpdated: "idUpdated",
                 },
               },
             },
