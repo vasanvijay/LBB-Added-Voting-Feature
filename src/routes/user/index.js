@@ -31,6 +31,11 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4User.getCount.handler
 );
+router.get(
+  "/agora",
+  // passport.authenticate(["jwt"], { session: false }),
+  api4User.agoraToken.handler
+);
 
 // Post Methods
 router.post(

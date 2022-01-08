@@ -18,6 +18,7 @@ const updatePassword = require("./update-password");
 const forgetPassword = require("./forget-password");
 const getCount = require("./get-count");
 const verifyWorkEmail = require("./verify-company-email");
+const agoraToken = require("./agora-token");
 
 module.exports = exports = {
   userRegistration,
@@ -40,4 +41,5 @@ module.exports = exports = {
   forgetPassword,
   getCount,
   verifyWorkEmail,
+  agoraToken,
 };
