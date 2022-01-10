@@ -1,6 +1,7 @@
 "use strict";
 const activeUsers = new Set();
 const chatCtrl = require("../api/chat");
+const answerCtrl = require("../api/new_answer");
 
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
@@ -81,6 +82,53 @@ module.exports = (server, logger) => {
         }
       }
     );
+
+    socket.on("answer-room", async function (user, question) {
+      console.log("answer-room------------->>>>>>", user);
+      try {
+        let answerRoom = await answerCtrl.getAnswerRoom.handler(user, question);
+        // console.log("ROOM--->>>", answerRoom.payload);
+        io.in(socket.id).emit("answer-room", {
+          // room: answerRoom.
+          room: answerRoom.payload.room,
+        });
+        console.log("room data sent");
+      } catch (error) {
+        console.log("Error in finding Chats ", error);
+      }
+    });
+
+    socket.on("answer", async function (roomId) {
+      console.log("answer------------->>>>>>", user);
+      try {
+        let answer = await answerCtrl.getAnswerByRoom.handler({
+          roomId: roomId,
+        });
+        io.in(socket.id).emit("answer", {
+          // answer: answer.
+          answer: answer.payload.answer,
+        });
+        console.log("answer data sent");
+      } catch (error) {
+        console.log("Error in finding Chats ", error);
+      }
+    });
+
+    socket.on("add-answer", async function ({ user, question, answer }) {
+      console.log("add-answer------------->>>>>>", user);
+      try {
+        let addAnswer = await answerCtrl.newAnswer.handler({
+          user: user,
+          question: question,
+          answer: answer,
+        });
+        console.log("addAnswer Socket---->>", addAnswer.payload.answer);
+        io.in(socket.id).emit("add-answer", addAnswer.payload.answer);
+        console.log("answer add success.");
+      } catch (error) {
+        console.log("Error in finding Chats ", error);
+      }
+    });
 
     // Socket "Join-Profile"
     socket.on("join-profile", async function ({ profileId }) {

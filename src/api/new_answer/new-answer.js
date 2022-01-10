@@ -1,6 +1,3 @@
-const { ObjectID } = require("bson");
-const Joi = require("joi");
-
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -9,16 +6,11 @@ const utils = require("../../utils");
 
 // Add Answer
 module.exports = exports = {
-  // route validation
-  validation: Joi.object({
-    answer: Joi.string().required(),
-  }),
-
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
-    const { question } = req.params;
-    const { answer } = req.body;
+    const { question, answer } = req;
+    let user = await utils.getHeaderFromToken(req.user);
+    // console.log("USER--->>", user);
     if (!question || !answer) {
       const data4createResponseObject = {
         req: req,
@@ -27,9 +19,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
 
     try {
@@ -40,8 +30,12 @@ module.exports = exports = {
       });
       if (findQuestion) {
         const id = findQuestion._id;
-        const answerBy = user._id;
+        const answerBy = user.id;
         const questionBy = findQuestion.createdBy;
+
+        console.log("id -->>", id);
+        console.log("answerBy -->>", answerBy);
+        console.log("questionBy -->>", questionBy);
 
         let participateIds = [];
         participateIds.push(answerBy);
@@ -57,52 +51,33 @@ module.exports = exports = {
 
         if (answerRoom != null) {
           let addAnswer = {
+            roomId: answerRoom._id,
             answer: answer,
-            answerBy: user._id,
+            createdBy: user.id,
             question: question,
-            answerAt: Date.now(),
+            createdAt: Date.now(),
           };
           newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
-          let roomAnswer = {
-            answerId: newAnswer._id,
-            answer: answer,
-            answerBy: user._id,
-            answerAt: Date.now(),
-          };
-          let updateAnswer =
-            await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
-              { _id: ObjectID(answerRoom._id) },
-              {
-                $push: {
-                  answer: roomAnswer,
-                },
-              },
-              { new: true }
-            );
-          if (updateAnswer) {
-            // console.log("UPDATED----->>>>", updateAnswer);
-          }
+          // console.log("here in if--->", newAnswer);
         } else {
-          let addAnswer = {
-            answer: answer,
-            answerBy: user._id,
-            question: question,
-            answerAt: Date.now(),
-          };
-          newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
-          let roomAnswer = {
-            answerId: newAnswer._id,
-            answer: answer,
-            answerBy: user._id,
-            answerAt: Date.now(),
-          };
           let roomObj = {
             participateIds: participateIds,
             questionId: question,
-            answer: roomAnswer,
             createdAt: Date.now(),
+            createdBy: user.id,
           };
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM.create(roomObj);
+          // console.log("here in else answerRoom--->", answerRoom);
+
+          let addAnswer = {
+            roomId: answerRoom._id,
+            answer: answer,
+            createdBy: user.id,
+            question: question,
+            createdAt: Date.now(),
+          };
+          newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
+          // console.log("here in else newAnswer--->", newAnswer);
         }
 
         await global.models.GLOBAL.QUESTION.updateOne(
@@ -111,7 +86,7 @@ module.exports = exports = {
           { new: true }
         );
         await global.models.GLOBAL.USER.findOneAndUpdate(
-          { _id: user._id },
+          { _id: user.id },
           {
             $pull: {
               answerLater: question,
@@ -119,12 +94,12 @@ module.exports = exports = {
           }
         );
         let ntfObj = {
-          userId: user._id,
+          userId: user.id,
           receiverId: questionBy,
-          title: `Notification By ${user._id} to ${questionBy}`,
+          title: `Notification By ${user.id} to ${questionBy}`,
           description: ` Give Answer to Your Question's ${findQuestion.question}`,
-          createdBy: user._id,
-          updatedBy: user._id,
+          createdBy: user.id,
+          updatedBy: user.id,
           question: question,
           createdAt: Date.now(),
         };
@@ -137,12 +112,10 @@ module.exports = exports = {
           req: req,
           result: 0,
           message: messages.ITEM_INSERTED,
-          payload: { newAnswer },
+          payload: { answer: newAnswer },
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
       } else {
         const data4createResponseObject = {
           req: req,
@@ -151,9 +124,7 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
       }
     } catch (error) {
       logger.error(
@@ -166,9 +137,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
   },
 };

@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 module.exports = (connection) => {
   const answerSchema = new mongoose.Schema({
+    roomId: { type: mongoose.Schema.Types.ObjectId },
     answer: String,
-    answerBy: { type: mongoose.Schema.Types.ObjectId },
+    createdBy: { type: mongoose.Schema.Types.ObjectId },
     question: { type: mongoose.Schema.Types.ObjectId },
-    answerAt: { type: Date },
+    createdAt: { type: Date },
     updatedAt: { type: Date },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },
     isUpdated: { type: Boolean, default: false },

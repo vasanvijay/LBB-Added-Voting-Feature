@@ -1,6 +1,3 @@
-const Joi = require("joi");
-const { ObjectId } = require("mongodb");
-const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
@@ -10,10 +7,10 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     try {
-      let { user } = req;
-      let { room } = req.params;
+      // let user = await utils.getHeaderFromToken(req.token);
+      let { roomId } = req;
       let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-        _id: room,
+        _id: roomId,
       });
       if (findRoom) {
         let findAnswer = await global.models.GLOBAL.ANSWER.find({
@@ -28,22 +25,18 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          return res
-            .status(enums.HTTP_CODES.BAD_REQUEST)
-            .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         } else {
           const data4createResponseObject = {
             req: req,
             result: 0,
             message: messages.ITEM_FETCHED,
             payload: {
-              findAnswer,
+              answer: findAnswer,
             },
             logPayload: false,
           };
-          return res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         }
       } else {
         const data4createResponseObject = {
@@ -53,9 +46,7 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        return res
-          .status(enums.HTTP_CODES.NOT_FOUND)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
       }
     } catch (error) {
       logger.error(
@@ -68,9 +59,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
   },
 };
