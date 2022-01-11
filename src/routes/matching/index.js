@@ -11,4 +11,17 @@ router.get(
   api4Matching.getSameUser.handler
 );
 
+// POST Methods
+router.post(
+  "/id=:id",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Matching.sendMatchReq.handler
+);
+
+router.post(
+  "/reject/id=:id",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Matching.rejectMatching.handler
+);
+
 module.exports = exports = router;

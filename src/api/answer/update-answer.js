@@ -30,10 +30,10 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-
+    console.log("USER--->>>", user);
     try {
       const updateAnswer = await global.models.GLOBAL.ANSWER.findOneAndUpdate(
-        { _id: answerId, answerBy: user._id },
+        { _id: answerId, createdBy: user._id },
         {
           $set: {
             answer: answer,
@@ -46,6 +46,7 @@ module.exports = exports = {
           new: true,
         }
       );
+      console.log("UPDATE---->>", updateAnswer);
       if (updateAnswer) {
         const data4createResponseObject = {
           req: req,

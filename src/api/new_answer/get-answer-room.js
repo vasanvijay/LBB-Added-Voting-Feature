@@ -15,7 +15,7 @@ module.exports = exports = {
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: ObjectId(question),
       });
-      console.log("QUE-->>", findQuestion);
+      // console.log("QUE-->>", findQuestion);
       if (findQuestion) {
         const id = question;
         const answerBy = user.id;
@@ -32,11 +32,8 @@ module.exports = exports = {
             $all: [...participateIds],
           },
         }).populate({
-          path: "participateIds",
+          path: "createdBy",
           model: "user",
-          match: {
-            _id: { $ne: user.id },
-          },
           select: "_id name subject profileImage currentRole email blockUser",
         });
 

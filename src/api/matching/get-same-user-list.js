@@ -12,6 +12,9 @@ module.exports = exports = {
     const { user } = req;
 
     try {
+      let findMatching = await global.models.GLOBAL.MATCHING.find({
+        matchingBy: user._id,
+      });
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
@@ -120,6 +123,7 @@ module.exports = exports = {
           $match: {
             _id: {
               $ne: ObjectId(user._id),
+              $ne: findMatching,
             },
           },
         },

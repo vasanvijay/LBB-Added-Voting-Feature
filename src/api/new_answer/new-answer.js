@@ -8,10 +8,10 @@ const utils = require("../../utils");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { question, answer } = req;
+    const { question, answer, roomId } = req;
     let user = await utils.getHeaderFromToken(req.user);
-    // console.log("USER--->>", user);
-    if (!question || !answer) {
+    console.log("USER--->>", user);
+    if (!question || !answer || !roomId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -29,29 +29,12 @@ module.exports = exports = {
         _id: question,
       });
       if (findQuestion) {
-        const id = findQuestion._id;
-        const answerBy = user.id;
-        const questionBy = findQuestion.createdBy;
-
-        console.log("id -->>", id);
-        console.log("answerBy -->>", answerBy);
-        console.log("questionBy -->>", questionBy);
-
-        let participateIds = [];
-        participateIds.push(answerBy);
-        participateIds.push(id);
-        participateIds.push(questionBy);
-
-        answerRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-          participateIds: {
-            $size: participateIds.length,
-            $all: [...participateIds],
-          },
+        let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+          _id: roomId,
         });
-
-        if (answerRoom != null) {
+        if (findRoom) {
           let addAnswer = {
-            roomId: answerRoom._id,
+            roomId: roomId,
             answer: answer,
             createdBy: user.id,
             question: question,
@@ -59,72 +42,24 @@ module.exports = exports = {
           };
           newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
           // console.log("here in if--->", newAnswer);
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_INSERTED,
+            payload: { answer: newAnswer },
+            logPayload: false,
+          };
+          return data4createResponseObject;
         } else {
-          let roomObj = {
-            participateIds: participateIds,
-            questionId: question,
-            createdAt: Date.now(),
-            createdBy: user.id,
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.ITEM_NOT_FOUND,
+            payload: {},
+            logPayload: false,
           };
-          answerRoom = await global.models.GLOBAL.ANSWER_ROOM.create(roomObj);
-          // console.log("here in else answerRoom--->", answerRoom);
-
-          let addAnswer = {
-            roomId: answerRoom._id,
-            answer: answer,
-            createdBy: user.id,
-            question: question,
-            createdAt: Date.now(),
-          };
-          newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
-          // console.log("here in else newAnswer--->", newAnswer);
+          return data4createResponseObject;
         }
-
-        await global.models.GLOBAL.QUESTION.updateOne(
-          { _id: question },
-          { $inc: { response: 1 } },
-          { new: true }
-        );
-        await global.models.GLOBAL.USER.findOneAndUpdate(
-          { _id: user.id },
-          {
-            $pull: {
-              answerLater: question,
-            },
-          }
-        );
-        let ntfObj = {
-          userId: user.id,
-          receiverId: questionBy,
-          title: `Notification By ${user.id} to ${questionBy}`,
-          description: ` Give Answer to Your Question's ${findQuestion.question}`,
-          createdBy: user.id,
-          updatedBy: user.id,
-          question: question,
-          createdAt: Date.now(),
-        };
-
-        let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          ntfObj
-        );
-
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.ITEM_INSERTED,
-          payload: { answer: newAnswer },
-          logPayload: false,
-        };
-        return data4createResponseObject;
-      } else {
-        const data4createResponseObject = {
-          req: req,
-          result: -1,
-          message: messages.GENERAL,
-          payload: {},
-          logPayload: false,
-        };
-        return data4createResponseObject;
       }
     } catch (error) {
       logger.error(

@@ -31,7 +31,7 @@ module.exports = exports = {
       const data4createResponseObject = {
         req: req,
         result: 0,
-        message: "Matching sent successfully.",
+        message: "Matching reject successfully.",
         payload: { matchingExist },
         logPayload: false,
       };
@@ -43,24 +43,10 @@ module.exports = exports = {
         const matchingObj = {
           matchingBy: user._id,
           matchingTo: id,
-          status: "Pending",
+          status: "Reject",
         };
         const newMatching = await global.models.GLOBAL.MATCHING.create(
           matchingObj
-        );
-        let ntfObj = {
-          userId: user._id,
-          receiverId: id,
-          title: `Notification By ${user._id} to ${id}`,
-          description: `${user.subject} sent you the matching request.`,
-          createdBy: user._id,
-          updatedBy: user._id,
-          question: question,
-          createdAt: Date.now(),
-        };
-
-        let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          ntfObj
         );
 
         const data4createResponseObject = {

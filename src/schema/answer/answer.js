@@ -10,6 +10,7 @@ module.exports = (connection) => {
     updatedBy: { type: mongoose.Schema.Types.ObjectId },
     isUpdated: { type: Boolean, default: false },
     isAbuse: { type: Boolean, default: false },
+    isStar: { type: Boolean, default: false },
   });
   return connection.model("answer", answerSchema, "answer");
 };

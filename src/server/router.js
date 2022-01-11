@@ -15,6 +15,7 @@ module.exports = (app, logger) => {
   const legendsRoute = require("../routes/legends/index");
   const notificationRoute = require("../routes/notification/index");
   const matchingRoute = require("../routes/matching/index");
+  const newAnswerRoute = require("../routes/new_answer/index");
 
   // define all routes here
   const { createResponseObject } = require("../utils");
@@ -30,6 +31,7 @@ module.exports = (app, logger) => {
   app.use(["/api/v1/legend"], legendsRoute);
   app.use(["/api/v1/notification"], notificationRoute);
   app.use(["/api/v1/matching"], matchingRoute);
+  app.use(["/api/v1/new-answer"], newAnswerRoute);
 
   /* Catch all */
   app.all("*", function (req, res) {

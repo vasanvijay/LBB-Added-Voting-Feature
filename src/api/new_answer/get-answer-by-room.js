@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
@@ -10,11 +11,16 @@ module.exports = exports = {
       // let user = await utils.getHeaderFromToken(req.token);
       let { roomId } = req;
       let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-        _id: roomId,
+        _id: ObjectId(roomId),
       });
       if (findRoom) {
         let findAnswer = await global.models.GLOBAL.ANSWER.find({
-          roomId: findRoom._id,
+          roomId: ObjectId(roomId),
+        }).populate({
+          path: "createdBy",
+          model: "user",
+          select:
+            "_id name subject profileImage currentRole countryOfResidence",
         });
 
         if (!findAnswer.length < 0) {
