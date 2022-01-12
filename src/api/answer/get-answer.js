@@ -20,7 +20,7 @@ module.exports = exports = {
       let skip = (parseInt(req.query.page) - 1) * limit;
       let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
         "question",
-        { $and: [{ answerBy: user._id }] }
+        { $and: [{ createdBy: user._id }] }
       );
       let optionNames = [];
       let reachCount = async (question) => {

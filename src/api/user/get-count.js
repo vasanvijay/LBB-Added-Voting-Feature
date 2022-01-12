@@ -23,7 +23,7 @@ module.exports = exports = {
       let answer = 0;
       let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
         "question",
-        { $and: [{ answerBy: user._id }] }
+        { $and: [{ createdBy: user._id }] }
       );
 
       let abuseQuestion = [];

@@ -135,7 +135,7 @@ module.exports = exports = {
 
         let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
           "question",
-          { $and: [{ answerBy: user._id }] }
+          { $and: [{ createdBy: user._id }] }
         );
 
         user.subject.push(user.currentRole);
