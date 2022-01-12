@@ -41,6 +41,18 @@ module.exports = exports = {
             createdAt: Date.now(),
           };
           newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
+          let lastMessageObj = {
+            answerId: newAnswer._id,
+            answer: newAnswer.answer,
+          };
+          let addLastMessage =
+            await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
+              {
+                _id: roomId,
+              },
+              { $set: { lastMessage: lastMessageObj } },
+              { new: true }
+            );
           // console.log("here in if--->", newAnswer);
           const data4createResponseObject = {
             req: req,

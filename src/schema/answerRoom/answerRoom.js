@@ -5,6 +5,10 @@ module.exports = (connection) => {
     questionId: { type: mongoose.Schema.Types.ObjectId },
     createdAt: { type: Date },
     createdBy: { type: mongoose.Schema.Types.ObjectId },
+    lastMessage: {
+      answerId: { type: mongoose.Schema.Types.ObjectId },
+      answer: String,
+    },
     isActive: { type: Boolean, default: true },
   });
 

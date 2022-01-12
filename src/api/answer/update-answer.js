@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { ObjectId } = require("mongodb");
 
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
@@ -47,6 +48,18 @@ module.exports = exports = {
         }
       );
       console.log("UPDATE---->>", updateAnswer);
+      let updateLastMessage =
+        await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
+          {
+            "lastMessage.answerId": ObjectId(answerId),
+          },
+          {
+            $set: {
+              "lastMessage.answer": answer,
+            },
+          }
+        );
+      console.log("ROOM-UPDATE--->>", updateLastMessage);
       if (updateAnswer) {
         const data4createResponseObject = {
           req: req,
