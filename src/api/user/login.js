@@ -17,7 +17,7 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, deviceToken } = req.body;
     if (!email || !password) {
       const data4createResponseObject = {
         req: req,
@@ -115,13 +115,21 @@ module.exports = exports = {
                   abuseAnswer: findUser.abuseAnswer,
                   scope: "login",
                 };
-
-                await global.models.GLOBAL.USER.findByIdAndUpdate(
-                  findUser._id,
-                  {
-                    $set: { lastLogin: Date.now() },
-                  }
-                );
+                if (deviceToken) {
+                  await global.models.GLOBAL.USER.findByIdAndUpdate(
+                    findUser._id,
+                    {
+                      $set: { lastLogin: Date.now(), deviceToken: deviceToken },
+                    }
+                  );
+                } else {
+                  await global.models.GLOBAL.USER.findByIdAndUpdate(
+                    findUser._id,
+                    {
+                      $set: { lastLogin: Date.now() },
+                    }
+                  );
+                }
                 delete findUser.password;
                 const data4createResponseObject = {
                   req: req,
