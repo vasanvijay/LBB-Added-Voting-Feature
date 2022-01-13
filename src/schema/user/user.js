@@ -65,6 +65,7 @@ module.exports = (connection) => {
     sexualOrientationShow: { type: Boolean, default: true },
     notificationSound: { type: Boolean, default: true },
     messageSound: { type: Boolean, default: true },
+    deviceToken: { type: String, default: null },
   });
   return connection.model("user", userSchema, "user");
 };

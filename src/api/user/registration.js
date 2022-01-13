@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const logger = require("../../logger");
 const utils = require("../../utils");
 const jwtOptions = require("../../auth/jwt-options");
-const nodemailer = require("nodemailer");
 // User Registration
 module.exports = exports = {
   // route validation
@@ -16,7 +15,7 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    const { email, name, password } = req.body;
+    const { email, name, password, deviceToken } = req.body;
     if (!email || !name || !password) {
       const data4createResponseObject = {
         req: req,
@@ -62,6 +61,7 @@ module.exports = exports = {
           email: email,
           name: name,
           password: password,
+          deviceToken: deviceToken,
           token: jwt.sign(data4token, jwtOptions.secretOrKey),
           createdAt: Date.now(),
         };
@@ -99,6 +99,7 @@ module.exports = exports = {
           updatedAt: newUser.updatedAt,
           lastLogin: newUser.lastLogin,
           userType: newUser.userType,
+          deviceToken: newUser.deviceToken,
         };
 
         const data4createResponseObject = {
