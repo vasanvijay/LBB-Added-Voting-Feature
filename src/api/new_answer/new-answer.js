@@ -39,11 +39,22 @@ module.exports = exports = {
             question: question,
             createdAt: Date.now(),
           };
-          newAnswer = await global.models.GLOBAL.ANSWER.create(addAnswer);
+          let addNewAnswer = await global.models.GLOBAL.ANSWER.create(
+            addAnswer
+          );
           let lastMessageObj = {
-            answerId: newAnswer._id,
-            answer: newAnswer.answer,
+            answerId: addNewAnswer._id,
+            answer: addNewAnswer.answer,
           };
+
+          newAnswer = await global.models.GLOBAL.ANSWER.findOne({
+            _id: addNewAnswer._id,
+          }).populate({
+            path: "createdBy",
+            model: "user",
+            select:
+              "_id name subject profileImage currentRole countryOfResidence",
+          });
           let addLastMessage =
             await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
               {
@@ -68,7 +79,7 @@ module.exports = exports = {
           );
           let ntfObj = {
             userId: user._id,
-            receiverId: questionBy,
+            receiverId: findQuestion.createdBy,
             title: `Notification By ${user._id} to ${findQuestion.createdBy}`,
             description: ` Give Answer to Your Question's ${findQuestion.question}`,
             createdBy: user._id,

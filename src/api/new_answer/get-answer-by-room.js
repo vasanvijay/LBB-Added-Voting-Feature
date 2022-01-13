@@ -8,7 +8,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     try {
-      // let user = await utils.getHeaderFromToken(req.token);
+      let user = await utils.getHeaderFromToken(req.user);
       let { roomId } = req;
       let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
         _id: ObjectId(roomId),
@@ -33,16 +33,74 @@ module.exports = exports = {
           };
           return data4createResponseObject;
         } else {
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_FETCHED,
-            payload: {
-              answer: findAnswer,
-            },
-            logPayload: false,
-          };
-          return data4createResponseObject;
+          let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+            _id: findRoom.questionId,
+          });
+          let findRequest =
+            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+              { requestBy: user.id },
+              { requestTo: findQuestion.createdBy }
+            ).populate({
+              path: "requestBy",
+              model: "user",
+              select:
+                "_id name email region currentRole subject profileImage countryOfResidence",
+            });
+          let receivedRequest =
+            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
+              { requestBy: findQuestion.createdBy },
+              { requestTo: user.id }
+            ).populate({
+              path: "requestTo",
+              model: "user",
+              select:
+                "_id name email region currentRole subject profileImage countryOfResidence",
+            });
+          console.log("FINDREQU-->", findRequest);
+          console.log("receivedRequest-->", receivedRequest);
+          if (findRequest) {
+            let text = "You have requested access to view profile.";
+
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_FETCHED,
+              payload: {
+                answer: findAnswer,
+                text: text,
+                request: findRequest,
+              },
+              logPayload: false,
+            };
+            return data4createResponseObject;
+          } else if (receivedRequest) {
+            let text =
+              "You have received request to access to view your profile.";
+
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_FETCHED,
+              payload: {
+                answer: findAnswer,
+                text: text,
+                request: findRequest,
+              },
+              logPayload: false,
+            };
+            return data4createResponseObject;
+          } else {
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_FETCHED,
+              payload: {
+                answer: findAnswer,
+              },
+              logPayload: false,
+            };
+            return data4createResponseObject;
+          }
         }
       } else {
         const data4createResponseObject = {

@@ -98,10 +98,10 @@ module.exports = (server, logger) => {
     );
 
     socket.on("answer-room", async function (user, question) {
-      console.log("answer-room------------->>>>>>", user);
+      // console.log("answer-room------------->>>>>>", user);
       try {
         let answerRoom = await answerCtrl.getAnswerRoom.handler(user, question);
-        console.log("ROOM--->>>", answerRoom.payload.room);
+        // console.log("ROOM--->>>", answerRoom.payload.room);
         io.in(socket.id).emit("answer-room", answerRoom.payload.room);
         console.log("room data sent");
       } catch (error) {
@@ -109,12 +109,15 @@ module.exports = (server, logger) => {
       }
     });
 
-    socket.on("answer", async function (roomId) {
-      console.log("answer------------->>>>>>", roomId);
+    socket.on("answer", async function ({ user, roomId }) {
+      // console.log("answer------------->>>>>>", user, roomId);
       try {
-        let answer = await answerCtrl.getAnswerByRoom.handler(roomId);
-        console.log("get----->>>", answer.payload.answer);
-        io.in(socket.id).emit("answer", answer.payload.answer);
+        let answer = await answerCtrl.getAnswerByRoom.handler({
+          user: user,
+          roomId: roomId,
+        });
+        console.log("get----->>>", answer.payload);
+        io.in(socket.id).emit("answer", answer.payload);
         console.log("answer data sent");
       } catch (error) {
         console.log("Error in finding Chats ", error);
@@ -124,7 +127,7 @@ module.exports = (server, logger) => {
     socket.on(
       "add-answer",
       async function ({ user, question, answer, roomId }) {
-        console.log("add-answer------------->>>>>>", user);
+        // console.log("add-answer------------->>>>>>", user);
         try {
           let addAnswer = await answerCtrl.newAnswer.handler({
             user: user,
@@ -132,7 +135,7 @@ module.exports = (server, logger) => {
             answer: answer,
             roomId: roomId,
           });
-          console.log("addAnswer Socket---->>", addAnswer.payload.answer);
+          // console.log("addAnswer Socket---->>", addAnswer.payload.answer);
           io.in(socket.id).emit("add-answer", addAnswer.payload.answer);
           console.log("answer add success.");
         } catch (error) {
