@@ -35,12 +35,15 @@ module.exports = exports = {
         }
 
         const users = await global.models.GLOBAL.USER.find({
+          _id: { $ne: user._id },
           $text: { $search: optionNames.join(" ") },
         })
           .count()
           .then((ress) => ress);
         if (users == 0) {
-          return await global.models.GLOBAL.USER.count();
+          return await global.models.GLOBAL.USER.count({
+            _id: { $ne: user._id },
+          });
         } else {
           return users;
         }

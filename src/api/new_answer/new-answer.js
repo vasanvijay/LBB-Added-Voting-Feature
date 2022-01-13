@@ -24,7 +24,6 @@ module.exports = exports = {
 
     try {
       let newAnswer;
-      let answerRoom;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
@@ -54,6 +53,33 @@ module.exports = exports = {
               { new: true }
             );
           // console.log("here in if--->", newAnswer);
+          await global.models.GLOBAL.QUESTION.updateOne(
+            { _id: question },
+            { $inc: { response: 1 } },
+            { new: true }
+          );
+          await global.models.GLOBAL.USER.findOneAndUpdate(
+            { _id: user.id },
+            {
+              $pull: {
+                answerLater: question,
+              },
+            }
+          );
+          let ntfObj = {
+            userId: user._id,
+            receiverId: questionBy,
+            title: `Notification By ${user._id} to ${findQuestion.createdBy}`,
+            description: ` Give Answer to Your Question's ${findQuestion.question}`,
+            createdBy: user._id,
+            updatedBy: user._id,
+            question: question,
+            createdAt: Date.now(),
+          };
+
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
           const data4createResponseObject = {
             req: req,
             result: 0,

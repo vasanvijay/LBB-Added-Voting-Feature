@@ -166,8 +166,11 @@ module.exports = exports = {
             let usersdata = await global.models.GLOBAL.USER.aggregate([
               {
                 $match: {
-                  DOB: { $ne: null },
-                  formFilled: { $ne: false },
+                  $and: [
+                    { _id: { $nin: user._id } },
+                    { formFilled: { $eq: true } },
+                    { userType: { $ne: "admin" } },
+                  ],
                 },
               },
               {
@@ -395,8 +398,11 @@ module.exports = exports = {
             let usersdata = await global.models.GLOBAL.USER.aggregate([
               {
                 $match: {
-                  DOB: { $ne: null },
-                  formFilled: { $ne: false },
+                  $and: [
+                    { _id: { $nin: user._id } },
+                    { formFilled: { $eq: true } },
+                    { userType: { $ne: "admin" } },
+                  ],
                 },
               },
               {
@@ -480,7 +486,11 @@ module.exports = exports = {
         let skip = (parseInt(req.query.page) - 1) * limit;
         distinctUser = await global.models.GLOBAL.USER.find(
           {
-            _id: { $nin: user._id },
+            $and: [
+              { _id: { $nin: user._id } },
+              { formFilled: { $eq: true } },
+              { userType: { $ne: "admin" } },
+            ],
           },
           { password: 0 }
         )
