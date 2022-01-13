@@ -7,6 +7,10 @@ module.exports = (connection) => {
     createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now() },
     mutedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    lastMessage: {
+      messageId: { type: mongoose.Schema.Types.ObjectId },
+      message: String,
+    },
   });
 
   // return chat Schema;

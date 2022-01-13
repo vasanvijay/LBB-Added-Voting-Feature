@@ -11,6 +11,7 @@ const muteRoom = require("./mute-chat-room");
 const unMuteRoom = require("./unmute-chat-room");
 const requestProfile = require("./request-profile");
 const unreadCount = require("./get-unread-message-count");
+const allChatRoom = require("./get-all-chat-room");
 
 module.exports = exports = {
   getAllChat,
@@ -26,4 +27,5 @@ module.exports = exports = {
   unMuteRoom,
   requestProfile,
   unreadCount,
+  allChatRoom,
 };

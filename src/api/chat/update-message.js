@@ -48,6 +48,18 @@ module.exports = exports = {
                   new: true,
                 }
               );
+            let updateLastMessage =
+              await global.models.GLOBAL.CHAT_ROOM.findOneAndUpdate(
+                {
+                  "lastMessage.messageId": ObjectId(messageId),
+                },
+                {
+                  $set: {
+                    "lastMessage.message": message,
+                  },
+                }
+              );
+            console.log("LAST--->>", updateLastMessage);
             if (updateMessage) {
               const data4createResponseObject = {
                 req: req,

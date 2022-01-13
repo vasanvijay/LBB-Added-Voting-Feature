@@ -60,6 +60,20 @@ module.exports = (server, logger) => {
       }
     });
 
+    socket.on("chat-room", async function (user) {
+      console.log("LAST MESSAGE------------->>>>>>", user);
+      try {
+        let allChatRoom = await chatCtrl.allChatRoom.handler(user);
+        console.log("history", allChatRoom.payload.room);
+        io.in(socket.id).emit("chat-room", {
+          room: allChatRoom.payload.room,
+        });
+        console.log("Room data sent");
+      } catch (error) {
+        console.log("Error in finding Room ", error);
+      }
+    });
+
     socket.on(
       "new-message",
       async function ({ roomId, sender, message, type, parentMessageId }) {

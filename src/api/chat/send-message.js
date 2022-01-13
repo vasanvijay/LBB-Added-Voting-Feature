@@ -37,6 +37,20 @@ module.exports = exports = {
         model: "chat",
         select: "roomId sender message messageType type createdAt updatedAt",
       });
+
+      let lastMessageObj = {
+        messageId: newMessage._id,
+        message: newMessage.message,
+      };
+
+      let addLastMessage =
+        await global.models.GLOBAL.CHAT_ROOM.findOneAndUpdate(
+          {
+            _id: roomId,
+          },
+          { $set: { lastMessage: lastMessageObj } },
+          { new: true }
+        );
       // console.log("NEW CHAT---->>", newChat);
       const data4createResponseObject = {
         req: req,
