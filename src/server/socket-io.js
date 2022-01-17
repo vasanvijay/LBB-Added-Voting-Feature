@@ -91,6 +91,13 @@ module.exports = (server, logger) => {
           // console.log("new-message", newMsg.payload.newChat);
           io.in(roomId).emit("new-message", newMsg.payload.newChat);
           io.emit("check-answer");
+
+          let chatHistory = await chatCtrl.getMessages.handler(roomId);
+          // console.log("history", chatHistory.payload.chats);
+          io.in(socket.id).emit("history", {
+            chats: chatHistory.payload.chats,
+          });
+          io.emit("check-answer");
           console.log("message-sent");
         } catch (error) {
           console.log("Error in sending message", error);
