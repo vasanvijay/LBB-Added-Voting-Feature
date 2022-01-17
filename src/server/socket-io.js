@@ -90,6 +90,7 @@ module.exports = (server, logger) => {
           // newMsg["network"] = "1"
           // console.log("new-message", newMsg.payload.newChat);
           io.in(roomId).emit("new-message", newMsg.payload.newChat);
+          io.emit("check-answer");
           console.log("message-sent");
         } catch (error) {
           console.log("Error in sending message", error);
@@ -110,7 +111,7 @@ module.exports = (server, logger) => {
     });
 
     socket.on("answer", async function ({ user, roomId }) {
-      // console.log("answer------------->>>>>>", user, roomId);
+      console.log("answer------------->>>>>>", user, roomId);
       try {
         let answer = await answerCtrl.getAnswerByRoom.handler({
           user: user,
@@ -137,6 +138,7 @@ module.exports = (server, logger) => {
           });
           // console.log("addAnswer Socket---->>", addAnswer.payload.answer);
           io.in(socket.id).emit("add-answer", addAnswer.payload.answer);
+          io.emit("check-answer");
           console.log("answer add success.");
         } catch (error) {
           console.log("Error in adding Answer ", error);
