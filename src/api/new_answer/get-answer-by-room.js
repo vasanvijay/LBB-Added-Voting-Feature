@@ -37,20 +37,24 @@ module.exports = exports = {
             _id: findRoom.questionId,
           });
           let findRequest =
-            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
-              { requestBy: user.id },
-              { requestTo: findQuestion.createdBy }
-            ).populate({
+            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+              $and: [
+                { requestBy: user.id },
+                { requestTo: findQuestion.createdBy },
+              ],
+            }).populate({
               path: "requestBy",
               model: "user",
               select:
                 "_id name email region currentRole subject profileImage countryOfResidence",
             });
           let receivedRequest =
-            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne(
-              { requestBy: findQuestion.createdBy },
-              { requestTo: user.id }
-            ).populate({
+            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+              $and: [
+                { requestBy: findQuestion.createdBy },
+                { requestTo: user.id },
+              ],
+            }).populate({
               path: "requestTo",
               model: "user",
               select:

@@ -117,6 +117,9 @@ module.exports = exports = {
             profileImage: "$user.profileImage",
             currentRole: "$user.currentRole",
             subject: "$user.subject",
+            createdAt: "$user.createdAt",
+            lastLogin: "$user.lastLogin",
+            accepted: "$user.accepted".length,
           },
         },
         {
