@@ -3,6 +3,7 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
+const { sendPushNotification } = require("../../middlewares/pushNotification");
 
 // Add Answer
 module.exports = exports = {
@@ -87,7 +88,24 @@ module.exports = exports = {
             question: question,
             createdAt: Date.now(),
           };
+          let findToken = await global.models.GLOBAL.USER.findOne({
+            _id: findQuestion.createdBy,
+          });
+          try {
+            let data = {
+              payload: ntfObj.description,
+              firebaseToken: findToken.deviceToken,
+            };
 
+            sendPushNotification(data);
+            res.status(200).send({
+              msg: "Notification sent successfully!",
+            });
+          } catch (e) {
+            res.status(500).send({
+              msg: "Unable to send notification!",
+            });
+          }
           let notification = await global.models.GLOBAL.NOTIFICATION.create(
             ntfObj
           );
