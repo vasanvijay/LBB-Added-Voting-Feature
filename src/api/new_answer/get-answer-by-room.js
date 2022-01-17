@@ -36,6 +36,77 @@ module.exports = exports = {
           let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
             _id: findRoom.questionId,
           });
+          if (findQuestion.createdBy == user.id) {
+            let findRequest =
+              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+                $and: [
+                  { requestBy: user.id },
+                  { requestTo: findRoom.createdBy },
+                ],
+              }).populate({
+                path: "requestBy",
+                model: "user",
+                select:
+                  "_id name email region currentRole subject profileImage countryOfResidence",
+              });
+            let receivedRequest =
+              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+                $and: [
+                  { requestBy: findRoom.createdBy },
+                  { requestTo: user.id },
+                ],
+              }).populate({
+                path: "requestTo",
+                model: "user",
+                select:
+                  "_id name email region currentRole subject profileImage countryOfResidence",
+              });
+            console.log("FINDREQU-->", findRequest);
+            console.log("receivedRequest-->", receivedRequest);
+            if (findRequest) {
+              let text = "You have requested access to view profile.";
+
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                  text: text,
+                  request: findRequest,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            } else if (receivedRequest) {
+              let text =
+                "You have received request to access to view your profile.";
+
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                  text: text,
+                  request: findRequest,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            } else {
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            }
+          }
           let findRequest =
             await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
               $and: [
