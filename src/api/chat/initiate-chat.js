@@ -82,6 +82,7 @@ module.exports = exports = {
         chatRoom = await global.models.GLOBAL.CHAT_ROOM.create({
           participateIds: participateIds,
           createdAt: Date.now(),
+          createdBy: user._id,
         });
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
