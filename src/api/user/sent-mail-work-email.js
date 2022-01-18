@@ -111,7 +111,7 @@ module.exports = exports = {
                                           <h2 align="center" style="color: #585d6a; font-size: 30px; ">Verify Your Email Address</h2>
                                           <p align="center" style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Please find below your verification link.</p>
                                           
-                                          <a href="" align="center" style="font-size: 40px; color: #585d6a; margin: 0;  margin-top: 0; cursor:pointer;">Verify</a>
+                                          <a href="https://app.leaderbridge.rejoicehub.com/VerifyWorkEmail/id=${findUser._id}" align="center" style="font-size: 40px; color: #585d6a; margin: 0;  margin-top: 0; cursor:pointer;">Verify</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -131,36 +131,16 @@ module.exports = exports = {
                 </html>`,
         });
         console.log("Message sent: %s", info.messageId);
-        if (isVerified == true) {
-          let verifiedNow = await global.models.GLOBAL.USER.findByIdAndUpdate(
-            { _id: user._id },
-            { $set: { organizationEmailVerified: true } },
-            { new: true }
-          );
-          if (!verifiedNow) {
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.FAILED_VERIFICATION,
-              payload: {},
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.BAD_REQUEST)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.VERIFICATION_SUCCESS,
-              payload: {},
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
-          }
-        }
+        const data4createResponseObject = {
+          req: req,
+          result: 0,
+          message: messages.MAIL_SENT,
+          payload: {},
+          logPayload: false,
+        };
+        return res
+          .status(enums.HTTP_CODES.OK)
+          .json(utils.createResponseObject(data4createResponseObject));
       } catch (error) {
         logger.error(
           `${req.originalUrl} - Error while sending Mail : ${error.message}\n${error.stack}`

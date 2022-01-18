@@ -114,7 +114,12 @@ router.put(
 );
 router.put(
   "/work-email",
-  validate("body", api4User.verifyWorkEmail.validation),
+  validate("body", api4User.sendMailForWrokEmail.validation),
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.sendMailForWrokEmail.handler
+);
+router.put(
+  "/work-email/verify/id=:id",
   passport.authenticate(["jwt"], { session: false }),
   api4User.verifyWorkEmail.handler
 );

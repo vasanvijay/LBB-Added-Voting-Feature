@@ -17,8 +17,9 @@ const topUser = require("./top-user");
 const updatePassword = require("./update-password");
 const forgetPassword = require("./forget-password");
 const getCount = require("./get-count");
-const verifyWorkEmail = require("./verify-company-email");
+const sendMailForWrokEmail = require("./sent-mail-work-email");
 const agoraToken = require("./agora-token");
+const verifyWorkEmail = require("./verify-work-email");
 
 module.exports = exports = {
   userRegistration,
@@ -42,4 +43,5 @@ module.exports = exports = {
   getCount,
   verifyWorkEmail,
   agoraToken,
+  sendMailForWrokEmail,
 };

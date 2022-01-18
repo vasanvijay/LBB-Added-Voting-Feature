@@ -29,7 +29,7 @@ module.exports = (server, logger) => {
     );
 
     // Routes
-    socket.on("join", async function ({ roomId }) {
+    socket.on("join", async function ({ roomId, user }) {
       logger.info(`user join room : ${roomId}`);
       socket.userId = roomId;
       activeUsers.add(roomId);
@@ -37,9 +37,9 @@ module.exports = (server, logger) => {
       socket.join(roomId);
 
       try {
-        let chatHistory = await chatCtrl.getMessages.handler(roomId);
+        let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
         // console.log("history", chatHistory.payload.chats);
-        io.in(socket.id).emit("history", { chats: chatHistory.payload.chats });
+        io.in(socket.id).emit("history", { chats: chatHistory.payload });
         console.log("history sent");
       } catch (error) {
         console.log("Error in finding Chats ", error);
