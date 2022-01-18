@@ -117,17 +117,19 @@ module.exports = exports = {
                 };
                 if (deviceToken) {
                   await global.models.GLOBAL.USER.findByIdAndUpdate(
-                    findUser._id,
+                    { _id: findUser._id },
                     {
                       $set: { lastLogin: Date.now(), deviceToken: deviceToken },
-                    }
+                    },
+                    { new: true }
                   );
                 } else {
                   await global.models.GLOBAL.USER.findByIdAndUpdate(
-                    findUser._id,
+                    { _id: findUser._id },
                     {
                       $set: { lastLogin: Date.now() },
-                    }
+                    },
+                    { new: true }
                   );
                 }
                 delete findUser.password;

@@ -26,11 +26,22 @@ module.exports = exports = {
       if (chats) {
         let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
           _id: req,
+        }).populate({
+          path: "participateIds",
+          model: "user",
+          match: {
+            _id: { $ne: user.id },
+          },
+          select: "_id name subject profileImage currentRole email blockUser",
         });
-        // console.log("ROOM--->>", findRoom);
+        // console.log("ROOM--->>", findRoom.participateIds[0]._id);
+
         let findRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
-            $and: [{ requestBy: user.id }, { requestTo: findRoom.createdBy }],
+            $and: [
+              { requestBy: user.id },
+              { requestTo: findRoom.participateIds[0]._id },
+            ],
           }).populate({
             path: "requestBy",
             model: "user",
@@ -39,15 +50,18 @@ module.exports = exports = {
           });
         let receivedRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
-            $and: [{ requestBy: findRoom.createdBy }, { requestTo: user.id }],
+            $and: [
+              { requestBy: findRoom.participateIds[0]._id },
+              { requestTo: user.id },
+            ],
           }).populate({
             path: "requestTo",
             model: "user",
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
-        // console.log("FINDREQU-->", findRequest);
-        // console.log("receivedRequest-->", receivedRequest);
+        console.log("FINDREQU-->", findRequest);
+        console.log("receivedRequest-->", receivedRequest);
         if (findRequest) {
           let text = "You have requested access to view profile.";
           const data4createResponseObject = {
