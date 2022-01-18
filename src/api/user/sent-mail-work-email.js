@@ -111,7 +111,7 @@ module.exports = exports = {
                                           <h2 align="center" style="color: #585d6a; font-size: 30px; ">Verify Your Email Address</h2>
                                           <p align="center" style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Please find below your verification link.</p>
                                           
-                                          <a href="https://app.leaderbridge.rejoicehub.com/VerifyWorkEmail/id=${findUser._id}" align="center" style="font-size: 40px; color: #585d6a; margin: 0;  margin-top: 0; cursor:pointer;">Verify</a>
+                                          <a href="https://app.leaderbridge.rejoicehub.com/VerifyWorkEmail/${findUser._id}" align="center" style="font-size: 40px; color: #585d6a; margin: 0;  margin-top: 0; cursor:pointer;">Verify</a>
                                         </td>
                                     </tr>
                                     <tr>

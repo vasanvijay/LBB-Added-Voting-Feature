@@ -118,10 +118,6 @@ router.put(
   passport.authenticate(["jwt"], { session: false }),
   api4User.sendMailForWrokEmail.handler
 );
-router.put(
-  "/work-email/verify/id=:id",
-  passport.authenticate(["jwt"], { session: false }),
-  api4User.verifyWorkEmail.handler
-);
+router.put("/work-email/verify/id=:id", api4User.verifyWorkEmail.handler);
 
 module.exports = exports = router;

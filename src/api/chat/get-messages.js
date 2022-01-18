@@ -12,7 +12,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     //    const { roomId } = req;
 
-    let user = await utils.getHeaderFromToken(req.user);
+    let user = await utils.getHeaderFromToken(res);
 
     try {
       let chats = await global.models.GLOBAL.CHAT.find({
