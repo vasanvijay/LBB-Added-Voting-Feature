@@ -38,7 +38,7 @@ module.exports = (server, logger) => {
 
       try {
         let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
-        // console.log("history", chatHistory.payload.chats);
+        // console.log("history", chatHistory.payload);
         io.in(socket.id).emit("history", { chats: chatHistory.payload });
         console.log("history sent");
       } catch (error) {

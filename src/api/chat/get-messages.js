@@ -13,7 +13,7 @@ module.exports = exports = {
     //    const { roomId } = req;
 
     let user = await utils.getHeaderFromToken(res);
-
+    // console.log("USER--->>", user);
     try {
       let chats = await global.models.GLOBAL.CHAT.find({
         roomId: req,
@@ -22,10 +22,12 @@ module.exports = exports = {
         model: "chat",
         select: "roomId sender message messageType type createdAt updatedAt",
       });
+      // console.log("CHAT-->", chats);
       if (chats) {
         let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
-          _id: roomId,
+          _id: req,
         });
+        // console.log("ROOM--->>", findRoom);
         let findRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
             $and: [{ requestBy: user.id }, { requestTo: findRoom.createdBy }],
@@ -44,8 +46,8 @@ module.exports = exports = {
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
-        console.log("FINDREQU-->", findRequest);
-        console.log("receivedRequest-->", receivedRequest);
+        // console.log("FINDREQU-->", findRequest);
+        // console.log("receivedRequest-->", receivedRequest);
         if (findRequest) {
           let text = "You have requested access to view profile.";
           const data4createResponseObject = {
@@ -55,7 +57,6 @@ module.exports = exports = {
             payload: { chats: chats, request: findRequest, text: text },
             logPayload: false,
           };
-          //   res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
           return data4createResponseObject;
         } else if (receivedRequest) {
           let text =
@@ -67,7 +68,6 @@ module.exports = exports = {
             payload: { chats: chats, request: receivedRequest, text: text },
             logPayload: false,
           };
-          //   res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
           return data4createResponseObject;
         } else {
           const data4createResponseObject = {
@@ -77,7 +77,6 @@ module.exports = exports = {
             payload: { chats: chats },
             logPayload: false,
           };
-          //   res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
           return data4createResponseObject;
         }
       }
