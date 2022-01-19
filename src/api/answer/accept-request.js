@@ -32,7 +32,7 @@ module.exports = exports = {
           _id: requestId,
         });
       if (findRequest) {
-        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndUpdate({
+        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndRemove({
           _id: requestId,
         });
         const updateQuestion =
