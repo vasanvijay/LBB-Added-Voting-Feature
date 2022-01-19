@@ -24,6 +24,7 @@ module.exports = (connection) => {
     removeQuestion: [{ type: mongoose.Schema.Types.ObjectId }],
     blockUser: [{ type: mongoose.Schema.Types.ObjectId }],
     accepted: [{ type: mongoose.Schema.Types.ObjectId }],
+    matched: [{ type: mongoose.Schema.Types.ObjectId }],
     lastLogin: { type: Date, default: Date.now },
     token: { type: String, default: null },
     status: { type: Boolean, default: true },
