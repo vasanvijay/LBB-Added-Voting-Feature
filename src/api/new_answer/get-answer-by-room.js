@@ -121,7 +121,7 @@ module.exports = exports = {
                   payload: {
                     answer: findAnswer,
                     text: text,
-                    request: findRequest,
+                    request: receivedRequest,
                   },
                   logPayload: false,
                 };
@@ -136,7 +136,7 @@ module.exports = exports = {
                   payload: {
                     answer: findAnswer,
                     text: text,
-                    request: findRequest,
+                    request: receivedRequest,
                   },
                   logPayload: false,
                 };
@@ -151,7 +151,7 @@ module.exports = exports = {
                   payload: {
                     answer: findAnswer,
                     text: text,
-                    request: findRequest,
+                    request: receivedRequest,
                   },
                   logPayload: false,
                 };
