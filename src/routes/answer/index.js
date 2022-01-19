@@ -63,12 +63,12 @@ router.put(
   api4Answer.acceptAbuse.handler
 );
 router.put(
-  "/accept/id=:questionId",
+  "/accept/id=:requestId",
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.requestAccept.handler
 );
 router.put(
-  "/decline/id=:questionId",
+  "/decline/id=:requestId",
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.requestDecline.handler
 );

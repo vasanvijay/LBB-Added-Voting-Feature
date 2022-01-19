@@ -11,8 +11,8 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    const { requestId } = req.query;
-    const { questionId } = req.params;
+    const { requestId } = req.params;
+    const { questionId } = req.query;
     if (!questionId) {
       const data4createResponseObject = {
         req: req,
@@ -32,20 +32,21 @@ module.exports = exports = {
           _id: requestId,
         });
       if (findRequest) {
-        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndUpdate(
-          {
-            _id: requestId,
-          },
-          {
-            $set: {
-              status: "accepted",
+        let updateRequest =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndUpdate(
+            {
+              _id: requestId,
             },
-          },
-          {
-            new: true,
-          }
-        );
-        const updateQuestion =
+            {
+              $set: {
+                status: "accepted",
+              },
+            },
+            {
+              new: true,
+            }
+          );
+        if (questionId) {
           await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
             { _id: questionId },
             {
@@ -55,11 +56,12 @@ module.exports = exports = {
             },
             { new: true }
           );
+        }
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.ITEM_UPDATED,
-          payload: { updateQuestion },
+          payload: { updateRequest },
           logPayload: false,
         };
         res
