@@ -13,7 +13,7 @@ module.exports = exports = {
     const { user } = req;
     const { requestId } = req.params;
     const { questionId } = req.query;
-    if (!questionId) {
+    if (!requestId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
