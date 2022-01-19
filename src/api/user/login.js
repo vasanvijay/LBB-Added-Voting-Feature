@@ -14,6 +14,7 @@ module.exports = exports = {
   validation: Joi.object({
     email: Joi.string().required(),
     password: Joi.string().required(),
+    deviceToken: Joi.string().allow(),
   }),
 
   handler: async (req, res) => {

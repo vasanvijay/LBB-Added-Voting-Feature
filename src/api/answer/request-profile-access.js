@@ -43,7 +43,13 @@ module.exports = exports = {
           userId: user._id,
           receiverId: questionBy,
           title: `Notification By ${user._id} to ${questionBy}`,
-          description: `You have received request to access to view your profile in ${findQuestion.question}`,
+          description: {
+            data: { title: "Leaderbridge" },
+            notification: {
+              title: "New Request profile Access!!!",
+              body: `You have received request to access to view your profile in ${findQuestion.question}`,
+            },
+          },
           createdBy: user._id,
           updatedBy: user._id,
           question: question,
@@ -53,12 +59,16 @@ module.exports = exports = {
           _id: questionBy,
         });
         try {
-          let data = {
-            payload: ntfObj.description,
-            firebaseToken: findToken.deviceToken,
-          };
-
-          sendPushNotification(data);
+          if (findToken.deviceToken !== "1234") {
+            let data = {
+              payload: ntfObj.description,
+              firebaseToken: findToken.deviceToken,
+            };
+            sendPushNotification(data);
+            res.status(200).send({
+              msg: "Notification sent successfully!",
+            });
+          }
           res.status(200).send({
             msg: "Notification sent successfully!",
           });

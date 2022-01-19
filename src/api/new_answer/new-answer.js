@@ -82,7 +82,13 @@ module.exports = exports = {
             userId: user._id,
             receiverId: findQuestion.createdBy,
             title: `Notification By ${user._id} to ${findQuestion.createdBy}`,
-            description: ` Give Answer to Your Question's ${findQuestion.question}`,
+            description: {
+              data: { title: "Leaderbridge" },
+              notification: {
+                title: "Give Answer to your question!!!",
+                body: ` Give Answer to Your Question's ${findQuestion.question}`,
+              },
+            },
             createdBy: user._id,
             updatedBy: user._id,
             question: question,
@@ -92,12 +98,16 @@ module.exports = exports = {
             _id: findQuestion.createdBy,
           });
           try {
-            let data = {
-              payload: ntfObj.description,
-              firebaseToken: findToken.deviceToken,
-            };
-
-            sendPushNotification(data);
+            if (findToken.deviceToken !== "1234") {
+              let data = {
+                payload: ntfObj.description,
+                firebaseToken: findToken.deviceToken,
+              };
+              sendPushNotification(data);
+              res.status(200).send({
+                msg: "Notification sent successfully!",
+              });
+            }
             res.status(200).send({
               msg: "Notification sent successfully!",
             });

@@ -55,7 +55,13 @@ module.exports = exports = {
             userId: user._id,
             receiverId: receiverId,
             title: `Notification By ${user._id} to ${receiverId}`,
-            description: `${user.subject} sent you a connection request.`,
+            description: {
+              data: { title: "Leaderbridge" },
+              notification: {
+                title: "New Connection Request!!!",
+                body: `${user.subject} sent you a connection request.`,
+              },
+            },
             createdBy: user._id,
             updatedBy: user._id,
             createdAt: Date.now(),
@@ -64,23 +70,24 @@ module.exports = exports = {
             _id: receiverId,
           });
           try {
-            let data = {
-              payload: ntfObj.description,
-              firebaseToken: findToken.deviceToken,
-            };
-
-            sendPushNotification(data);
-            res.status(200).send({
-              msg: "Notification sent successfully!",
-            });
+            if (findToken.deviceToken !== "1234") {
+              let data = {
+                payload: ntfObj.description,
+                firebaseToken: findToken.deviceToken,
+              };
+              sendPushNotification(data);
+              res.status(200).send({
+                msg: "Notification sent successfully!",
+              });
+            }
           } catch (e) {
             res.status(500).send({
               msg: "Unable to send notification!",
             });
           }
-          let notification = await global.models.GLOBAL.NOTIFICATION.create(
-            ntfObj
-          );
+          // let notification = await global.models.GLOBAL.NOTIFICATION.create(
+          //   ntfObj
+          // );
 
           const data4createResponseObject = {
             req: req,

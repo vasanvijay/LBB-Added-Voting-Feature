@@ -60,7 +60,13 @@ module.exports = exports = {
             userId: user._id,
             receiverId: receiverId,
             title: `Notification By ${user._id} to ${receiverId}`,
-            description: " Accept Your Connection request.",
+            description: {
+              data: { title: "Leaderbridge" },
+              notification: {
+                title: "New Connection Request!!!",
+                body: " Accept Your Connection request.",
+              },
+            },
             createdBy: user._id,
             updatedBy: user._id,
             createdAt: Date.now(),
@@ -69,12 +75,16 @@ module.exports = exports = {
             _id: receiverId,
           });
           try {
-            let data = {
-              payload: ntfObj.description,
-              firebaseToken: findToken.deviceToken,
-            };
-
-            sendPushNotification(data);
+            if (findToken.deviceToken !== "1234") {
+              let data = {
+                payload: ntfObj.description,
+                firebaseToken: findToken.deviceToken,
+              };
+              sendPushNotification(data);
+              res.status(200).send({
+                msg: "Notification sent successfully!",
+              });
+            }
             res.status(200).send({
               msg: "Notification sent successfully!",
             });
