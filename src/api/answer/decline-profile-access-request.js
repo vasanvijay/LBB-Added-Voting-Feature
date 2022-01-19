@@ -12,8 +12,8 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { requestId } = req.params;
-    const { requestId } = req.query;
-    if (!questionId) {
+    const { questionId } = req.query;
+    if (!requestId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
