@@ -32,13 +32,13 @@ module.exports = exports = {
           _id: requestId,
         });
       if (findRequest) {
-        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndUpdate(
+        await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndRemove(
           {
             _id: requestId,
           },
           {
             $set: {
-              status: "accepted",
+              status: "declined",
             },
           },
           {
@@ -50,7 +50,7 @@ module.exports = exports = {
             { _id: questionId },
             {
               $set: {
-                displayProfile: true,
+                displayProfile: false,
               },
             },
             { new: true }

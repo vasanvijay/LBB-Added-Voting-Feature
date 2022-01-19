@@ -68,6 +68,11 @@ router.put(
   api4Answer.requestAccept.handler
 );
 router.put(
+  "/decline/id=:questionId",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.requestDecline.handler
+);
+router.put(
   "/decline/id=:answerId",
   passport.authenticate(["jwt"], { session: false }),
   validate("body", api4Answer.declineAbuse.validation),

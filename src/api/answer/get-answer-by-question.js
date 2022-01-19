@@ -38,7 +38,7 @@ module.exports = exports = {
           select: "_id question response filter view displayProfile createdAt",
         })
         .populate({
-          path: "answerBy",
+          path: "createdBy",
           model: "user",
           select:
             "_id name email region currentRole subject profileImage countryOfResidence",
