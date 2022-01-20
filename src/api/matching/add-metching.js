@@ -25,10 +25,22 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     }
     let findCrossMatch = await global.models.GLOBAL.MATCHING.find({
-      $and: [{ matchingBy: id }, { matchingTo: user._id }],
+      $and: [
+        { matchingBy: id },
+        { matchingTo: user._id },
+        { status: "Pending" },
+      ],
     });
     if (findCrossMatch) {
       try {
+        const matchingObj = {
+          matchingBy: user._id,
+          matchingTo: id,
+          status: "Accepted",
+        };
+        const newMatching = await global.models.GLOBAL.MATCHING.create(
+          matchingObj
+        );
         await global.models.GLOBAL.MATCHING.findByIdAndUpdate(
           {
             _id: findCrossMatch._id,
@@ -37,6 +49,7 @@ module.exports = exports = {
             $set: {
               acceptedAt: Date.now(),
               acceptedBy: user._id,
+              status: "Accepted",
             },
           },
           { new: true }
@@ -112,7 +125,7 @@ module.exports = exports = {
               req: req,
               result: 0,
               message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom },
+              payload: { chatRoom, newMatching },
               logPayload: false,
             };
             return res
@@ -206,7 +219,7 @@ module.exports = exports = {
               req: req,
               result: 0,
               message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom },
+              payload: { chatRoom, newMatching },
               logPayload: false,
             };
             return res
