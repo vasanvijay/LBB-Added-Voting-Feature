@@ -13,7 +13,7 @@ module.exports = exports = {
       let user = await utils.getHeaderFromToken(req.user);
 
       let chatRoom = await global.models.GLOBAL.CHAT_ROOM.find({
-        participateIds: { $in: user.id },
+        participateIds: { $in: [user.id] },
       }).populate({
         path: "participateIds",
         model: "user",
