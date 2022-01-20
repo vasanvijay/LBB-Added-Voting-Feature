@@ -118,7 +118,7 @@ module.exports = exports = {
             matches: 1,
             name: "$user.name",
             email: "$user.email",
-            region: "user.countryOfResidence",
+            region: "$user.region",
             profileImage: "$user.profileImage",
             currentRole: "$user.currentRole",
             subject: "$user.subject",
