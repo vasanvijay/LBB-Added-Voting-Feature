@@ -24,7 +24,7 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     }
 
-    const matchingExist = await global.models.GLOBAL.MATCHING.find({
+    const matchingExist = await global.models.GLOBAL.MATCHING.findOne({
       $and: [{ matchingBy: user._id }, { matchingTo: id }],
     });
     if (matchingExist) {

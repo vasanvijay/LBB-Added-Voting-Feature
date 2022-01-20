@@ -24,13 +24,14 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    let findCrossMatch = await global.models.GLOBAL.MATCHING.find({
+    let findCrossMatch = await global.models.GLOBAL.MATCHING.findOne({
       $and: [
         { matchingBy: id },
         { matchingTo: user._id },
         { status: "Pending" },
       ],
     });
+    console.log("MATCH---->>>", findCrossMatch);
     if (findCrossMatch) {
       try {
         const matchingObj = {
@@ -243,9 +244,10 @@ module.exports = exports = {
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } else {
-      const matchingExist = await global.models.GLOBAL.MATCHING.find({
+      const matchingExist = await global.models.GLOBAL.MATCHING.findOne({
         $and: [{ matchingBy: user._id }, { matchingTo: id }],
       });
+      console.log("-----------------------------", matchingExist);
       if (matchingExist) {
         const data4createResponseObject = {
           req: req,
@@ -264,49 +266,53 @@ module.exports = exports = {
             matchingTo: id,
             status: "Pending",
           };
+          // console.log("OBJ--->>", matchingObj);
+          // console.log("OBJ--->>", user._id);
+          // console.log("OBJ--->>", id);
           const newMatching = await global.models.GLOBAL.MATCHING.create(
             matchingObj
           );
-          let ntfObj = {
-            userId: user._id,
-            receiverId: id,
-            title: `Notification By ${user._id} to ${id}`,
-            description: {
-              data: { title: "Leaderbridge" },
-              notification: {
-                title: "New Matching Request!!!",
-                body: `${user.subject} sent you the matching request.`,
-              },
-            },
-            createdBy: user._id,
-            updatedBy: user._id,
-            createdAt: Date.now(),
-          };
-          let findToken = await global.models.GLOBAL.USER.findOne({
-            _id: id,
-          });
-          try {
-            if (findToken.deviceToken !== "1234") {
-              let data = {
-                payload: ntfObj.description,
-                firebaseToken: findToken.deviceToken,
-              };
-              sendPushNotification(data);
-              res.status(200).send({
-                msg: "Notification sent successfully!",
-              });
-            }
-            res.status(200).send({
-              msg: "Notification sent successfully!",
-            });
-          } catch (e) {
-            res.status(500).send({
-              msg: "Unable to send notification!",
-            });
-          }
-          let notification = await global.models.GLOBAL.NOTIFICATION.create(
-            ntfObj
-          );
+          console.log("MATCH---->>>", newMatching);
+          // let ntfObj = {
+          //   userId: user._id,
+          //   receiverId: id,
+          //   title: `Notification By ${user._id} to ${id}`,
+          //   description: {
+          //     data: { title: "Leaderbridge" },
+          //     notification: {
+          //       title: "New Matching Request!!!",
+          //       body: `${user.subject} sent you the matching request.`,
+          //     },
+          //   },
+          //   createdBy: user._id,
+          //   updatedBy: user._id,
+          //   createdAt: Date.now(),
+          // };
+          // let findToken = await global.models.GLOBAL.USER.findOne({
+          //   _id: id,
+          // });
+          // try {
+          //   if (findToken.deviceToken !== "1234") {
+          //     let data = {
+          //       payload: ntfObj.description,
+          //       firebaseToken: findToken.deviceToken,
+          //     };
+          //     sendPushNotification(data);
+          //     res.status(200).send({
+          //       msg: "Notification sent successfully!",
+          //     });
+          //   }
+          //   res.status(200).send({
+          //     msg: "Notification sent successfully!",
+          //   });
+          // } catch (e) {
+          //   res.status(500).send({
+          //     msg: "Unable to send notification!",
+          //   });
+          // }
+          // let notification = await global.models.GLOBAL.NOTIFICATION.create(
+          //   ntfObj
+          // );
 
           const data4createResponseObject = {
             req: req,

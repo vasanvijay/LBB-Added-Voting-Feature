@@ -13,7 +13,7 @@ router.get(
 
 // POST Methods
 router.post(
-  "/id=:id",
+  "/accept/id=:id",
   passport.authenticate(["jwt"], { session: false }),
   api4Matching.sendMatchReq.handler
 );

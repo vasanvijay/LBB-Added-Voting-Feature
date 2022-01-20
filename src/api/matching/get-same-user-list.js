@@ -16,6 +16,7 @@ module.exports = exports = {
       let findMatching = await global.models.GLOBAL.MATCHING.find({
         matchingBy: user._id,
       });
+      // console.log("findMatching--->>", findMatching);
       for (let i = 0; i < findMatching.length; i++) {
         userId.push(findMatching[i].matchingTo);
       }
@@ -128,10 +129,10 @@ module.exports = exports = {
         },
         {
           $match: {
-            _id: {
-              $ne: ObjectId(user._id),
-              $ne: userId,
-            },
+            $and: [
+              { _id: { $ne: ObjectId(user._id) } },
+              { _id: { $nin: userId } },
+            ],
           },
         },
         {
