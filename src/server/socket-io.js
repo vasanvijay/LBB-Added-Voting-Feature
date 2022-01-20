@@ -2,6 +2,7 @@
 const activeUsers = new Set();
 const chatCtrl = require("../api/chat");
 const answerCtrl = require("../api/new_answer");
+const { sendPushNotification } = require("../middlewares/pushNotification");
 
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
@@ -169,6 +170,25 @@ module.exports = (server, logger) => {
         console.log("channelname on connectcall...", channelName);
         console.log("otherid on connectcall...", otherId);
         console.log("token on connectcall...", token);
+        let findToken = await global.models.GLOBAL.USER.findOne({
+          _id: otherId,
+        });
+        console.log("findToken", findToken);
+        const desc = {
+          data: { title: "Leaderbridge" },
+          notification: {
+            title: "New Call notification",
+            body: `Someone is calling`,
+          },
+        };
+
+        if (findToken.deviceToken !== "1234") {
+          let data = {
+            payload: desc,
+            firebaseToken: findToken.deviceToken,
+          };
+          sendPushNotification(data);
+        }
         if (token) {
           let data = {
             msg: "call Requested",
