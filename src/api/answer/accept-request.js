@@ -70,13 +70,13 @@ module.exports = exports = {
       } else {
         const data4createResponseObject = {
           req: req,
-          result: 0,
-          message: "Sorry, Something went wrong to accept request.",
+          result: -1,
+          message: messages.NOT_FOUND,
           payload: {},
           logPayload: false,
         };
         res
-          .status(enums.HTTP_CODES.OK)
+          .status(enums.HTTP_CODES.NOT_FOUND)
           .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
