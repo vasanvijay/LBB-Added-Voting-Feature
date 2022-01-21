@@ -61,10 +61,10 @@ module.exports = exports = {
                 select:
                   "_id name email region currentRole subject profileImage countryOfResidence",
               });
-            // console.log("FINDREQU-->", findRequest);
-            // console.log("receivedRequest-->", receivedRequest);
+            console.log("FINDREQU-->", findRequest);
+            console.log("receivedRequest-->", receivedRequest);
             if (findRequest) {
-              if (findRequest.status == "accepted") {
+              if (findRequest.status === "accepted") {
                 let text = "Your request has been accepted by this user.";
 
                 const data4createResponseObject = {
@@ -79,7 +79,7 @@ module.exports = exports = {
                   logPayload: false,
                 };
                 return data4createResponseObject;
-              } else if (findRequest.status == "decline") {
+              } else if (findRequest.status === "decline") {
                 let text = "Your request has been declined by this user.";
 
                 const data4createResponseObject = {
@@ -111,7 +111,7 @@ module.exports = exports = {
                 return data4createResponseObject;
               }
             } else if (receivedRequest) {
-              if (receivedRequest.status == "accepted") {
+              if (receivedRequest.status === "accepted") {
                 let text =
                   "You have accepted the request to access to view your profile.";
                 const data4createResponseObject = {
@@ -126,9 +126,9 @@ module.exports = exports = {
                   logPayload: false,
                 };
                 return data4createResponseObject;
-              } else if (receivedRequest.status == "decline") {
+              } else if (receivedRequest.status === "decline") {
                 let text =
-                  "You have declined the request to access to view your profile.";
+                  "You has declined the request to access to view your profile.";
                 const data4createResponseObject = {
                   req: req,
                   result: 0,
@@ -169,75 +169,139 @@ module.exports = exports = {
               };
               return data4createResponseObject;
             }
-          }
-          let findRequest =
-            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
-              $and: [
-                { requestBy: user.id },
-                { requestTo: findQuestion.createdBy },
-              ],
-            }).populate({
-              path: "requestBy",
-              model: "user",
-              select:
-                "_id name email region currentRole subject profileImage countryOfResidence",
-            });
-          let receivedRequest =
-            await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
-              $and: [
-                { requestBy: findQuestion.createdBy },
-                { requestTo: user.id },
-              ],
-            }).populate({
-              path: "requestTo",
-              model: "user",
-              select:
-                "_id name email region currentRole subject profileImage countryOfResidence",
-            });
-          // console.log("FINDREQU-->", findRequest);
-          // console.log("receivedRequest-->", receivedRequest);
-          if (findRequest) {
-            let text = "You have requested access to view profile.";
-
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: {
-                answer: findAnswer,
-                text: text,
-                request: findRequest,
-              },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          } else if (receivedRequest) {
-            let text =
-              "You have received request to access to view your profile.";
-
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: {
-                answer: findAnswer,
-                text: text,
-                request: findRequest,
-              },
-              logPayload: false,
-            };
-            return data4createResponseObject;
           } else {
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: {
-                answer: findAnswer,
-              },
-              logPayload: false,
-            };
-            return data4createResponseObject;
+            let findRequest =
+              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+                $and: [
+                  { requestBy: user.id },
+                  { requestTo: findQuestion.createdBy },
+                ],
+              }).populate({
+                path: "requestBy",
+                model: "user",
+                select:
+                  "_id name email region currentRole subject profileImage countryOfResidence",
+              });
+            let receivedRequest =
+              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+                $and: [
+                  { requestBy: findQuestion.createdBy },
+                  { requestTo: user.id },
+                ],
+              }).populate({
+                path: "requestTo",
+                model: "user",
+                select:
+                  "_id name email region currentRole subject profileImage countryOfResidence",
+              });
+            console.log("FINDREQU-->", findRequest);
+            console.log("receivedRequest-->", receivedRequest);
+            if (findRequest) {
+              if (findRequest.status === "accepted") {
+                let text = "Your request has been accepted by this user.";
+
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.ITEM_FETCHED,
+                  payload: {
+                    answer: findAnswer,
+                    text: text,
+                    request: findRequest,
+                  },
+                  logPayload: false,
+                };
+                return data4createResponseObject;
+              } else if (findRequest.status === "decline") {
+                let text = "Your request has been declined by this user.";
+
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.ITEM_FETCHED,
+                  payload: {
+                    answer: findAnswer,
+                    text: text,
+                    request: findRequest,
+                  },
+                  logPayload: false,
+                };
+                return data4createResponseObject;
+              } else {
+                let text = "You have requested access to view profile.";
+
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.ITEM_FETCHED,
+                  payload: {
+                    answer: findAnswer,
+                    text: text,
+                    request: findRequest,
+                  },
+                  logPayload: false,
+                };
+                return data4createResponseObject;
+              }
+            } else if (receivedRequest) {
+              if (receivedRequest.status === "accepted") {
+                let text =
+                  "You have accepted the request to access to view your profile.";
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.ITEM_FETCHED,
+                  payload: {
+                    answer: findAnswer,
+                    text: text,
+                    request: receivedRequest,
+                  },
+                  logPayload: false,
+                };
+                return data4createResponseObject;
+              } else if (receivedRequest.status === "decline") {
+                let text =
+                  "You has declined the request to access to view your profile.";
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.ITEM_FETCHED,
+                  payload: {
+                    answer: findAnswer,
+                    text: text,
+                    request: receivedRequest,
+                  },
+                  logPayload: false,
+                };
+                return data4createResponseObject;
+              } else {
+                let text =
+                  "You have received request to access to view your profile.";
+                const data4createResponseObject = {
+                  req: req,
+                  result: 0,
+                  message: messages.ITEM_FETCHED,
+                  payload: {
+                    answer: findAnswer,
+                    text: text,
+                    request: receivedRequest,
+                  },
+                  logPayload: false,
+                };
+                return data4createResponseObject;
+              }
+            } else {
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            }
           }
         }
       } else {
