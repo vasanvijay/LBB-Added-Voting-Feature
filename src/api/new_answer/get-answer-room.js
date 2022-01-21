@@ -37,7 +37,7 @@ module.exports = exports = {
           select: "_id name subject profileImage currentRole email blockUser",
         });
 
-        console.log("findAnswerRoom---->", findAnswerRoom);
+        // console.log("findAnswerRoom---->", findAnswerRoom);
 
         for (let i = 0; i < findAnswerRoom.length; i++) {
           let answerById = await global.models.GLOBAL.ANSWER.find({

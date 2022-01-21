@@ -48,7 +48,7 @@ module.exports = (server, logger) => {
     });
 
     socket.on("last-message", async function (user) {
-      console.log("LAST MESSAGE------------->>>>>>", user);
+      // console.log("LAST MESSAGE------------->>>>>>", user);
       try {
         let lastMessage = await chatCtrl.lastMessage.handler(user);
         // console.log("history", chatHistory.payload.chats);
