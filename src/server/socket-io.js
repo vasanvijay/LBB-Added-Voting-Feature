@@ -65,7 +65,7 @@ module.exports = (server, logger) => {
       console.log("LAST MESSAGE------------->>>>>>", user);
       try {
         let allChatRoom = await chatCtrl.allChatRoom.handler(user);
-        console.log("history", allChatRoom.payload.room);
+        // console.log("history", allChatRoom.payload.room);
         io.in(socket.id).emit("chat-room", {
           room: allChatRoom.payload.room,
         });
@@ -119,13 +119,13 @@ module.exports = (server, logger) => {
     });
 
     socket.on("answer", async function ({ user, roomId }) {
-      console.log("answer------------->>>>>>", user, roomId);
+      // console.log("answer------------->>>>>>", user, roomId);
       try {
         let answer = await answerCtrl.getAnswerByRoom.handler({
           user: user,
           roomId: roomId,
         });
-        console.log("get----->>>", answer.payload);
+        // console.log("get----->>>", answer.payload);
         io.in(socket.id).emit("answer", answer.payload);
         console.log("answer data sent");
       } catch (error) {
