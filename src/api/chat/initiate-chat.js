@@ -24,10 +24,15 @@ module.exports = exports = {
       participateIds.push(user._id);
       participateIds.push(id);
       let chatRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
-        participateIds: {
-          $size: participateIds.length,
-          $all: [...participateIds],
-        },
+        $and: [
+          {
+            participateIds: {
+              $size: participateIds.length,
+              $all: [...participateIds],
+            },
+          },
+          { matchingRoom: false },
+        ],
       });
       if (chatRoom) {
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({

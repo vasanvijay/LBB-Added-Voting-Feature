@@ -75,161 +75,104 @@ module.exports = exports = {
           { new: true }
         );
         let participateIds = [];
-        let chatRoom;
-        // check user type
         participateIds.push(user._id);
         participateIds.push(id);
-        chatRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
-          participateIds: {
-            $size: participateIds.length,
-            $all: [...participateIds],
-          },
+
+        let chatObj = {
+          participateIds: participateIds,
+          createdAt: Date.now(),
+          createdBy: user._id,
+          matchingRoom: true,
+        };
+        let chatRoom = await global.models.GLOBAL.CHAT_ROOM.create(chatObj);
+        let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            {
+              _id: user._id,
+            },
+            { blockUser: { $in: [id] } },
+          ],
         });
-        if (chatRoom) {
-          let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
-            $and: [
-              {
-                _id: user._id,
-              },
-              { blockUser: { $in: [id] } },
-            ],
-          });
-          let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
-            $and: [{ _id: id }, { blockUser: { $in: [user._id] } }],
-          });
-          if (checkBlockByMe) {
-            let text =
-              "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.";
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom, text },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else if (checkBlockByOther) {
-            let text = "You are blocked by this user.";
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom, text },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom, newMatching },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
-          }
-        } else {
-          let chatObj = {
-            participateIds: participateIds,
-            createdAt: Date.now(),
-            createdBy: user._id,
+        let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
+          $and: [{ _id: id }, { blockUser: { $in: [user._id] } }],
+        });
+        if (checkBlockByMe) {
+          let text =
+            "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.";
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, text },
+            logPayload: false,
           };
-          chatRoom = await global.models.GLOBAL.CHAT_ROOM.create(chatObj);
-          let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
-            $and: [
-              {
-                _id: user._id,
+          return res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else if (checkBlockByOther) {
+          let text = "You are blocked by this user.";
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, text },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          let ntfObj = {
+            userId: user._id,
+            receiverId: id,
+            title: `Notification By ${user._id} to ${id}`,
+            description: {
+              data: { title: "Leaderbridge" },
+              notification: {
+                title: "Matching Request Accepted!!!",
+                body: `${user.subject} accept your matching request.`,
               },
-              { blockUser: { $in: [id] } },
-            ],
+            },
+            createdBy: user._id,
+            updatedBy: user._id,
+            createdAt: Date.now(),
+          };
+          let findToken = await global.models.GLOBAL.USER.findOne({
+            _id: id,
           });
-          let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
-            $and: [{ _id: id }, { blockUser: { $in: [user._id] } }],
-          });
-          if (checkBlockByMe) {
-            let text =
-              "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.";
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom, text },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else if (checkBlockByOther) {
-            let text = "You are blocked by this user.";
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom, text },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            let ntfObj = {
-              userId: user._id,
-              receiverId: id,
-              title: `Notification By ${user._id} to ${id}`,
-              description: {
-                data: { title: "Leaderbridge" },
-                notification: {
-                  title: "Matching Request Accepted!!!",
-                  body: `${user.subject} accept your matching request.`,
-                },
-              },
-              createdBy: user._id,
-              updatedBy: user._id,
-              createdAt: Date.now(),
-            };
-            let findToken = await global.models.GLOBAL.USER.findOne({
-              _id: id,
-            });
-            try {
-              if (findToken.deviceToken !== "1234") {
-                let data = {
-                  payload: ntfObj.description,
-                  firebaseToken: findToken.deviceToken,
-                };
-                sendPushNotification(data);
-                res.status(200).send({
-                  msg: "Notification sent successfully!",
-                });
-              }
+          try {
+            if (findToken.deviceToken !== "1234") {
+              let data = {
+                payload: ntfObj.description,
+                firebaseToken: findToken.deviceToken,
+              };
+              sendPushNotification(data);
               res.status(200).send({
                 msg: "Notification sent successfully!",
               });
-            } catch (e) {
-              res.status(500).send({
-                msg: "Unable to send notification!",
-              });
             }
-            let notification = await global.models.GLOBAL.NOTIFICATION.create(
-              ntfObj
-            );
-            // console.log("CHAT-->>", chatRoom);
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.INITIATION_SUCCESS,
-              payload: { chatRoom, newMatching },
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
+            res.status(200).send({
+              msg: "Notification sent successfully!",
+            });
+          } catch (e) {
+            res.status(500).send({
+              msg: "Unable to send notification!",
+            });
           }
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
+          // console.log("CHAT-->>", chatRoom);
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, newMatching },
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
         }
       } catch (error) {
         logger.error(

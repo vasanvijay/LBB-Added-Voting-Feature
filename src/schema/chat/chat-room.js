@@ -12,6 +12,7 @@ module.exports = (connection) => {
       messageId: { type: mongoose.Schema.Types.ObjectId },
       message: String,
     },
+    matchingRoom: { type: Boolean, default: false },
   });
 
   // return chat Schema;
