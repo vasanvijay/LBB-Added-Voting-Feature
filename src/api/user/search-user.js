@@ -10,7 +10,7 @@ module.exports = exports = {
     const { user } = req;
     const { search } = req.query;
     const { filter } = req.body;
-    console.log("BODY--->>", filter);
+    // console.log("BODY--->>", filter);
     try {
       let criteria = [];
       let searchUser = [];

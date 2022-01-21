@@ -17,7 +17,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { email } = req.body;
     let code = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
-    console.log("Code---------->>>", code);
+    // console.log("Code---------->>>", code);
     // const locale = utils.getLocale(req);
     let entry;
     // If codes already exists for this email in the database delete them

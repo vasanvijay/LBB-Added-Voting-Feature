@@ -11,7 +11,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { question, answer, roomId } = req;
     let user = await utils.getHeaderFromToken(req.user);
-    console.log("USER--->>", user);
+    // console.log("USER--->>", user);
     if (!question || !answer || !roomId) {
       const data4createResponseObject = {
         req: req,

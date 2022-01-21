@@ -60,8 +60,8 @@ module.exports = exports = {
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
-        console.log("FINDREQU-->", findRequest);
-        console.log("receivedRequest-->", receivedRequest);
+        // console.log("FINDREQU-->", findRequest);
+        // console.log("receivedRequest-->", receivedRequest);
         if (findRequest) {
           if (findRequest.status == "accepted") {
             let text = "Your request has been accepted by this user.";

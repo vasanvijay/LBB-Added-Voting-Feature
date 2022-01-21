@@ -10,11 +10,8 @@ const ObjectId = require("mongodb").ObjectId;
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    // console.log("USER--->>", req);
     let user = await utils.getHeaderFromToken(req.token);
-    // console.log("USER--->>", user);
 
-    // const { user } = req;
     try {
       let rooms = [];
       let chats = await global.models.GLOBAL.CHAT_ROOM.find({
@@ -27,11 +24,9 @@ module.exports = exports = {
         },
         select: "_id name subject profileImage currentRole email blockUser",
       });
-      //   return res.send(chats);
       chats.map((id) => {
         return rooms.push(id._id);
       });
-      // console.log("rooms ", rooms);
 
       let lastChats = await global.models.GLOBAL.CHAT.aggregate([
         {
@@ -123,8 +118,6 @@ module.exports = exports = {
           },
         },
       ]);
-      // console.log("chats-------", chats);
-      // console.log("lastchat ------------", lastChats);
       let chatss = [];
       for (i = 0; i < lastChats.length; i++) {
         for (j = 0; j < chats.length; j++) {
@@ -135,8 +128,6 @@ module.exports = exports = {
         }
       }
       chats = chatss;
-      // console.log("chatss----------------------------->>", chats);
-      //   return res.send({ lastChats, chats.participateIds });
       let chatsData = [];
       for (let i = 0; i < chats.length; i++) {
         let f = 0;
@@ -182,11 +173,8 @@ module.exports = exports = {
               `${chats[i].participateIds[0]._id}`)
           ) {
             f = 1;
-            // console.log("F === 1---->>", requestByMe, requestByOther);
             if (requestByMe !== null) {
               if (checkBlockByMe !== null) {
-                // console.log("elsetest-------");
-                // chats[i] = { chat: chats[i] };
                 chatsData.push({
                   chat: chats[i],
                   lastChat: lastChats[j],
@@ -195,8 +183,6 @@ module.exports = exports = {
                   request: requestByMe,
                 });
               } else if (checkBlockByOther !== null) {
-                // console.log("elsetest-------");
-                // chats[i] = { chat: chats[i] };
                 chatsData.push({
                   chat: chats[i],
                   lastChat: lastChats[j],
@@ -214,8 +200,6 @@ module.exports = exports = {
               }
             } else if (requestByOther !== null) {
               if (checkBlockByMe !== null) {
-                // console.log("elsetest-------");
-                // chats[i] = { chat: chats[i] };
                 chatsData.push({
                   chat: chats[i],
                   lastChat: lastChats[j],
@@ -224,8 +208,6 @@ module.exports = exports = {
                   request: requestByOther,
                 });
               } else if (checkBlockByOther !== null) {
-                // console.log("elsetest-------");
-                // chats[i] = { chat: chats[i] };
                 chatsData.push({
                   chat: chats[i],
                   lastChat: lastChats[j],
@@ -243,16 +225,12 @@ module.exports = exports = {
               }
             } else {
               if (checkBlockByMe !== null) {
-                // console.log("elsetest-------");
-                // chats[i] = { chat: chats[i] };
                 chatsData.push({
                   chat: chats[i],
                   lastChat: lastChats[j],
                   text: "Go To Settings & unblock users",
                 });
               } else if (checkBlockByOther !== null) {
-                // console.log("elsetest-------");
-                // chats[i] = { chat: chats[i] };
                 chatsData.push({
                   chat: chats[i],
                   lastChat: lastChats[j],
@@ -271,10 +249,7 @@ module.exports = exports = {
         }
 
         if (requestByMe !== null) {
-          // console.log("F === 0---->>", requestByMe, requestByOther);
           if (f == 0 && checkBlockByMe !== null) {
-            // console.log("elsetest-------");
-            // chats[i] = { chat: chats[i] };
             chatsData.push({
               chat: chats[i],
               text: "Go To Settings & unblock users",
@@ -282,8 +257,6 @@ module.exports = exports = {
               request: requestByMe,
             });
           } else if (f == 0 && checkBlockByOther !== null) {
-            // console.log("elsetest-------");
-            // chats[i] = { chat: chats[i] };
             chatsData.push({
               chat: chats[i],
               text: "You are blocked by this user.",
@@ -298,11 +271,7 @@ module.exports = exports = {
             });
           }
         } else if (requestByOther !== null) {
-          // console.log("F === 0  ELSE IF---->>", requestByMe, requestByOther);
-
           if (f == 0 && checkBlockByMe !== null) {
-            // console.log("elsetest-------");
-            // chats[i] = { chat: chats[i] };
             chatsData.push({
               chat: chats[i],
               text: "Go To Settings & unblock users",
@@ -310,8 +279,6 @@ module.exports = exports = {
               request: requestByOther,
             });
           } else if (f == 0 && checkBlockByOther !== null) {
-            // console.log("elsetest-------");
-            // chats[i] = { chat: chats[i] };
             chatsData.push({
               chat: chats[i],
               text: "You are blocked by this user.",
@@ -327,17 +294,12 @@ module.exports = exports = {
             });
           }
         } else {
-          // console.log("F === 0  ELSE---->>", requestByMe, requestByOther);
           if (f == 0 && checkBlockByMe !== null) {
-            // console.log("elsetest-------");
-            // chats[i] = { chat: chats[i] };
             chatsData.push({
               chat: chats[i],
               text: "Go To Settings & unblock users",
             });
           } else if (f == 0 && checkBlockByOther !== null) {
-            // console.log("elsetest-------");
-            // chats[i] = { chat: chats[i] };
             chatsData.push({
               chat: chats[i],
               text: "You are blocked by this user.",
@@ -349,7 +311,6 @@ module.exports = exports = {
           }
         }
       }
-      // console.log("chatData", chatsData);
       if (lastChats) {
         const data4createResponseObject = {
           req: req,
@@ -361,9 +322,6 @@ module.exports = exports = {
           logPayload: false,
         };
         return data4createResponseObject;
-        // return res
-        //   .status(enums.HTTP_CODES.OK)
-        //   .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
       logger.error(

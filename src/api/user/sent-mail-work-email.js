@@ -16,7 +16,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    console.log("USER-->>", user);
+    // console.log("USER-->>", user);
     const { organizationEmail } = req.body;
 
     let findUser = await global.models.GLOBAL.USER.findOne({

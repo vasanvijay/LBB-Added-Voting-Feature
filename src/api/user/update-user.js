@@ -113,7 +113,7 @@ module.exports = exports = {
             ) {
               // console.log("profileImage", findUser.profileImage);
               const url = findUser?.profileImage?.split(".com/").slice(-1)[0];
-              console.log(url);
+              // console.log(url);
               if (url) {
                 utils.mediaDeleteS3(url, function (err) {
                   if (err) {

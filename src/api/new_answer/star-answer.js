@@ -30,7 +30,7 @@ module.exports = exports = {
     }
     try {
       const { isStar } = req.body;
-      console.log("isStar-->", isStar);
+      // console.log("isStar-->", isStar);
       if (isStar) {
         const starAnswer = await global.models.GLOBAL.ANSWER.findOneAndUpdate(
           { _id: answerId },

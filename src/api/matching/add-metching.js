@@ -31,7 +31,7 @@ module.exports = exports = {
         { status: "Pending" },
       ],
     });
-    console.log("MATCH---->>>", findCrossMatch);
+    // console.log("MATCH---->>>", findCrossMatch);
     if (findCrossMatch) {
       try {
         const matchingObj = {
@@ -218,7 +218,7 @@ module.exports = exports = {
             let notification = await global.models.GLOBAL.NOTIFICATION.create(
               ntfObj
             );
-            console.log("CHAT-->>", chatRoom);
+            // console.log("CHAT-->>", chatRoom);
             const data4createResponseObject = {
               req: req,
               result: 0,

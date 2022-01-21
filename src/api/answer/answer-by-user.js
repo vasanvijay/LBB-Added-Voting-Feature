@@ -110,7 +110,7 @@ module.exports = exports = {
             $sort: { "data.createdAt": -1 },
           },
         ]);
-        console.log("ANSWER-->>", answerRoom[0]?.data[0]?.answer?.answerBy);
+        // console.log("ANSWER-->>", answerRoom[0]?.data[0]?.answer?.answerBy);
         // for (let i = 0; i < answerRoom.length; i++) {
         //   console.log("I-->>", i);
         // }
