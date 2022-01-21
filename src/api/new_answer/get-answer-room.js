@@ -43,7 +43,7 @@ module.exports = exports = {
           let answerById = await global.models.GLOBAL.ANSWER.find({
             roomId: findAnswerRoom[i]._id,
           }).sort({ createdAt: -1 });
-          console.log("answerById---->", answerById);
+          // console.log("answerById---->", answerById);
         }
 
         const data4createResponseObject = {
