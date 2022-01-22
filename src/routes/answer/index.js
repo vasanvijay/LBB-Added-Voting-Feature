@@ -63,16 +63,6 @@ router.put(
   api4Answer.acceptAbuse.handler
 );
 router.put(
-  "/accept/id=:requestId",
-  passport.authenticate(["jwt"], { session: false }),
-  api4Answer.requestAccept.handler
-);
-router.put(
-  "/decline/id=:requestId",
-  passport.authenticate(["jwt"], { session: false }),
-  api4Answer.requestDecline.handler
-);
-router.put(
   "/decline/id=:answerId",
   passport.authenticate(["jwt"], { session: false }),
   validate("body", api4Answer.declineAbuse.validation),
@@ -96,16 +86,7 @@ router.post(
   validate("body", api4Answer.addAnswerInAsked.validation),
   api4Answer.addAnswerInAsked.handler
 );
-router.post(
-  "/request/id=:question",
-  passport.authenticate(["jwt"], { session: false }),
-  api4Answer.requestProfile.handler
-);
-router.post(
-  "/new-request/id=:id",
-  passport.authenticate(["jwt"], { session: false }),
-  api4Answer.requestInSeeAnswer.handler
-);
+
 // DELETE Method
 router.delete(
   "/id=:answerId",

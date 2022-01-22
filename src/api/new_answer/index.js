@@ -4,6 +4,10 @@ const newAnswer = require("./new-answer");
 const initAnsweRoom = require("./init-answer-chat");
 const removeAnswer = require("./remove-answer");
 const starAnswer = require("./star-answer");
+const requestProfile = require("./request-profile-access");
+const requestProfileInSeeAns = require("./request-profile-in-see-answer");
+const acceptRequest = require("./accept-request");
+const declineRequest = require("./decline-profile-access-request");
 
 module.exports = exports = {
   getAnswerByRoom,
@@ -12,4 +16,8 @@ module.exports = exports = {
   initAnsweRoom,
   removeAnswer,
   starAnswer,
+  requestProfile,
+  requestProfileInSeeAns,
+  acceptRequest,
+  declineRequest,
 };

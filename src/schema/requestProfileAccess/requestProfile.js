@@ -6,6 +6,8 @@ module.exports = (connection) => {
     createdAt: { type: Date },
     updatedAt: { type: Date, default: Date.now() },
     status: { type: String, default: "pending" },
+    acceptedAT: { type: Date },
+    acceptedBy: { type: mongoose.Schema.Types.ObjectId, refPath: "user" },
   });
   // return chat Schema;
   return connection.model(

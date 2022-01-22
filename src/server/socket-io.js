@@ -154,6 +154,166 @@ module.exports = (server, logger) => {
       }
     );
 
+    // New Request in Answer
+    socket.on("request", async function ({ user, question }) {
+      // console.log("add-answer------------->>>>>>", user);
+      try {
+        let addRequest = await answerCtrl.requestProfile.handler({
+          user: user,
+          question: question,
+        });
+        console.log("Request Socket---->>", addRequest.payload.newRequest);
+        io.in(socket.id).emit("request", addRequest.payload.newRequest);
+        io.emit("check-answer");
+        console.log("request add success.");
+      } catch (error) {
+        console.log("Error in adding request ", error);
+      }
+    });
+
+    // New Request in See-Answer
+    socket.on("new-request", async function ({ user, id }) {
+      // console.log("add-answer------------->>>>>>", user);
+      try {
+        let addNewRequest = await answerCtrl.requestProfileInSeeAns.handler({
+          user: user,
+          id: id,
+        });
+        console.log(
+          "New Request Socket---->>",
+          addNewRequest.payload.newRequest
+        );
+        io.in(socket.id).emit("new-request", addNewRequest.payload.newRequest);
+        io.emit("check-answer");
+        console.log("request add success.");
+      } catch (error) {
+        console.log("Error in adding request ", error);
+      }
+    });
+
+    // New Request in Chat
+    socket.on("new-request-chat", async function ({ user, id }) {
+      // console.log("add-answer------------->>>>>>", user);
+      try {
+        let addNewRequestInChat = await chatCtrl.requestProfile.handler({
+          user: user,
+          id: id,
+        });
+        console.log(
+          "New Request in chat Socket---->>",
+          addNewRequestInChat.payload.newRequest
+        );
+        io.in(socket.id).emit(
+          "new-request-chat",
+          addNewRequestInChat.payload.newRequest
+        );
+        io.emit("check-chat");
+        console.log("request add success.");
+      } catch (error) {
+        console.log("Error in adding request ", error);
+      }
+    });
+
+    //Accept Request in Answer
+    socket.on(
+      "accept-request",
+      async function ({ user, requestId, questionId }) {
+        // console.log("add-answer------------->>>>>>", user);
+        try {
+          let aacceptRequest = await answerCtrl.acceptRequest.handler({
+            user: user,
+            requestId: requestId,
+            questionId: questionId,
+          });
+          console.log(
+            "Accept Request Socket---->>",
+            aacceptRequest.payload.updateRequest
+          );
+          io.in(socket.id).emit(
+            "accept-request",
+            aacceptRequest.payload.updateRequest
+          );
+          io.emit("check-answer");
+          console.log("request accepted successfully.");
+        } catch (error) {
+          console.log("Error in accepting request ", error);
+        }
+      }
+    );
+
+    //Accept Request in Chat
+    socket.on("accept-request-chat", async function ({ user, requestId }) {
+      // console.log("add-answer------------->>>>>>", user);
+      try {
+        let aacceptRequest = await chatCtrl.acceptRequest.handler({
+          user: user,
+          requestId: requestId,
+        });
+        console.log(
+          "Accept Request in Chat Socket---->>",
+          aacceptRequest.payload.updateRequest
+        );
+        io.in(socket.id).emit(
+          "accept-request-chat",
+          aacceptRequest.payload.updateRequest
+        );
+        io.emit("check-chat");
+        console.log("request accepted successfully.");
+      } catch (error) {
+        console.log("Error in accepting request ", error);
+      }
+    });
+
+    //Decline Request in Answer
+    socket.on(
+      "decline-request",
+      async function ({ user, requestId, questionId }) {
+        // console.log("add-answer------------->>>>>>", user);
+        try {
+          let declineRequest = await answerCtrl.declineRequest.handler({
+            user: user,
+            requestId: requestId,
+            questionId: questionId,
+          });
+          console.log(
+            "decline Request Socket---->>",
+            declineRequest.payload.updateRequest
+          );
+          io.in(socket.id).emit(
+            "decline-request",
+            declineRequest.payload.updateRequest
+          );
+          io.emit("check-answer");
+          console.log("request reject successfully.");
+        } catch (error) {
+          console.log("Error in declining request ", error);
+        }
+      }
+    );
+
+    //Decline Request in Chat
+    socket.on("decline-request-chat", async function ({ user, requestId }) {
+      // console.log("add-answer------------->>>>>>", user);
+      try {
+        let declineRequest = await chatCtrl.declineRequest.handler({
+          user: user,
+          requestId: requestId,
+        });
+        console.log(
+          "Decline Request in Chat Socket---->>",
+          declineRequest.payload.updateRequest
+        );
+        io.in(socket.id).emit(
+          "decline-request-chat",
+          declineRequest.payload.updateRequest
+        );
+        io.emit("check-chat");
+        console.log("request rejected successfully.");
+      } catch (error) {
+        console.log("Error in declining request ", error);
+      }
+    });
+
     // Socket "Join-Profile"
     socket.on("join-profile", async function ({ profileId }) {
       socket.profileId = String(profileId);

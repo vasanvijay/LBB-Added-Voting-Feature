@@ -1,6 +1,3 @@
-const { ObjectID } = require("bson");
-const Joi = require("joi");
-
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -31,9 +28,10 @@ module.exports = exports = {
       let findUser = await global.models.GLOBAL.USER.findOne({
         _id: id,
       });
+      //   console.log("USER--->>", findUser);
       if (findUser) {
         let newRequestObj = {
-          requestBy: user._id,
+          requestBy: user.id,
           requestTo: id,
           createdAt: Date.now(),
         };
@@ -41,7 +39,6 @@ module.exports = exports = {
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(
             newRequestObj
           );
-
         let ntfObj = {
           userId: user.id,
           receiverId: id,
@@ -84,16 +81,29 @@ module.exports = exports = {
           ntfObj
         );
 
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: "Requested Successfully.",
-          payload: { newRequest },
-          logPayload: false,
-        };
-        return data4createResponseObject;
-        // .status(enums.HTTP_CODES.OK)
-        // .json(utils.createResponseObject(data4createResponseObject));
+        if (newRequest) {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: "Requested Successfully.",
+            payload: { newRequest },
+            logPayload: false,
+          };
+          return data4createResponseObject;
+          // .status(enums.HTTP_CODES.OK)
+          // .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: "Sorry, Something went wrong to create new request.",
+            payload: {},
+            logPayload: false,
+          };
+          return data4createResponseObject;
+          // .status(enums.HTTP_CODES.BAD_REQUEST)
+          // .json(utils.createResponseObject(data4createResponseObject));
+        }
       } else {
         const data4createResponseObject = {
           req: req,

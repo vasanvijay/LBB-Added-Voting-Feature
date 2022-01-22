@@ -10,10 +10,10 @@ const utils = require("../../utils");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
-    const { requestId } = req.params;
-    const { questionId } = req.query;
-    if (!requestId) {
+    let user = await utils.getHeaderFromToken(req.user);
+
+    const { requestId, questionId } = req;
+    if (!requestId || !questionId) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -21,9 +21,9 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
+      // .status(enums.HTTP_CODES.BAD_REQUEST)
+      // .json(utils.createResponseObject(data4createResponseObject));
     }
 
     try {
@@ -40,13 +40,15 @@ module.exports = exports = {
             {
               $set: {
                 status: "accepted",
+                acceptedAT: Date.now(),
+                acceptedBy: user.id,
               },
             },
             {
               new: true,
             }
           );
-        if (questionId) {
+        if (updateRequest) {
           await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
             { _id: questionId },
             {
@@ -64,9 +66,9 @@ module.exports = exports = {
           payload: { updateRequest },
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
+        // .status(enums.HTTP_CODES.OK)
+        // .json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4createResponseObject = {
           req: req,
@@ -75,9 +77,9 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.NOT_FOUND)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
+        //     .status(enums.HTTP_CODES.NOT_FOUND)
+        //     .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
       logger.error(
@@ -90,9 +92,9 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
+      // .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+      // .json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

@@ -40,11 +40,6 @@ router.post(
   validate("body", chatApi.initiateChat.validation),
   chatApi.initiateChat.handler
 );
-router.post(
-  "/request/id=:id",
-  passport.authenticate(["jwt"], { session: false }),
-  chatApi.requestProfile.handler
-);
 
 // Put Methods
 router.put(

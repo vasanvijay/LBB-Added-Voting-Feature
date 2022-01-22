@@ -9,8 +9,9 @@ const utils = require("../../utils");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
-    const { question } = req.params;
+    let user = await utils.getHeaderFromToken(req.user);
+
+    const { question } = req;
     if (!question) {
       const data4createResponseObject = {
         req: req,
@@ -19,9 +20,9 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
+      // .status(enums.HTTP_CODES.BAD_REQUEST)
+      // .json(utils.createResponseObject(data4createResponseObject));
     }
 
     try {
@@ -32,7 +33,7 @@ module.exports = exports = {
         const questionBy = findQuestion.createdBy;
 
         let newRequestObj = {
-          requestBy: user._id,
+          requestBy: user.id,
           requestTo: questionBy,
         };
         let newRequest =
@@ -40,9 +41,9 @@ module.exports = exports = {
             newRequestObj
           );
         let ntfObj = {
-          userId: user._id,
+          userId: user.id,
           receiverId: questionBy,
-          title: `Notification By ${user._id} to ${questionBy}`,
+          title: `Notification By ${user.id} to ${questionBy}`,
           description: {
             data: { title: "Leaderbridge" },
             notification: {
@@ -50,8 +51,8 @@ module.exports = exports = {
               body: `You have received request to access to view your profile in ${findQuestion.question}`,
             },
           },
-          createdBy: user._id,
-          updatedBy: user._id,
+          createdBy: user.id,
+          updatedBy: user.id,
           question: question,
           createdAt: Date.now(),
         };
@@ -88,9 +89,9 @@ module.exports = exports = {
           payload: { newRequest },
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
+        // .status(enums.HTTP_CODES.OK)
+        // .json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4createResponseObject = {
           req: req,
@@ -99,9 +100,9 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
+        // .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+        // .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
       logger.error(
@@ -114,9 +115,9 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
+      // .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+      // .json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };
