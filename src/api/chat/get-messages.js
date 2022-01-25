@@ -34,7 +34,8 @@ module.exports = exports = {
           },
           select: "_id name subject profileImage currentRole email blockUser",
         });
-        // console.log("ROOM--->>", findRoom.participateIds[0]._id);
+        console.log("ROOM--->>", findRoom.participateIds[0]._id);
+        console.log("USER--->>", user.id);
 
         let findRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
@@ -60,8 +61,8 @@ module.exports = exports = {
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
-        // console.log("FINDREQU-->", findRequest);
-        // console.log("receivedRequest-->", receivedRequest);
+        console.log("FINDREQU-->", findRequest);
+        console.log("receivedRequest-->", receivedRequest);
         if (findRequest) {
           if (findRequest.status == "accepted") {
             let text = "Your request has been accepted by this user.";

@@ -207,7 +207,7 @@ module.exports = (server, logger) => {
           "new-request-chat",
           addNewRequestInChat.payload.newRequest
         );
-        io.emit("check-chat");
+        io.emit("check-answer");
         console.log("request add success.");
       } catch (error) {
         console.log("Error in adding request ", error);
@@ -257,7 +257,7 @@ module.exports = (server, logger) => {
           "accept-request-chat",
           aacceptRequest.payload.updateRequest
         );
-        io.emit("check-chat");
+        io.emit("check-answer");
         console.log("request accepted successfully.");
       } catch (error) {
         console.log("Error in accepting request ", error);
@@ -307,7 +307,7 @@ module.exports = (server, logger) => {
           "decline-request-chat",
           declineRequest.payload.updateRequest
         );
-        io.emit("check-chat");
+        io.emit("check-answer");
         console.log("request rejected successfully.");
       } catch (error) {
         console.log("Error in declining request ", error);
