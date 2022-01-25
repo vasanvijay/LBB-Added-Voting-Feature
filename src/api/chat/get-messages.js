@@ -37,7 +37,7 @@ module.exports = exports = {
         // console.log("ROOM--->>", findRoom.participateIds[0]._id);
 
         let findRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
             $and: [
               { requestBy: user.id },
               { requestTo: findRoom.participateIds[0]._id },
@@ -49,7 +49,7 @@ module.exports = exports = {
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
         let receivedRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
             $and: [
               { requestBy: findRoom.participateIds[0]._id },
               { requestTo: user.id },
@@ -62,86 +62,19 @@ module.exports = exports = {
           });
         // console.log("FINDREQU-->", findRequest);
         // console.log("receivedRequest-->", receivedRequest);
-        if (findRequest) {
-          if (findRequest.status == "accepted") {
-            let text = "Your request has been accepted by this user.";
 
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: { chats: chats, request: findRequest, text: text },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          } else if (findRequest.status == "decline") {
-            let text = "Your request has been declined by this user.";
-
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: { chats: chats, request: findRequest, text: text },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          } else {
-            let text = "You have requested access to view profile.";
-
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: { chats: chats, request: findRequest, text: text },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          }
-        } else if (receivedRequest) {
-          if (receivedRequest.status == "accepted") {
-            let text =
-              "You have accepted the request to access to view your profile.";
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: { chats: chats, request: receivedRequest, text: text },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          } else if (receivedRequest.status == "decline") {
-            let text =
-              "You have declined the request to access to view your profile.";
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: { chats: chats, request: receivedRequest, text: text },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          } else {
-            let text =
-              "You have received request to access to view your profile.";
-            const data4createResponseObject = {
-              req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: { chats: chats, request: receivedRequest, text: text },
-              logPayload: false,
-            };
-            return data4createResponseObject;
-          }
-        } else {
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.MESSAGES_FETCH_SUCCESS,
-            payload: { chats: chats },
-            logPayload: false,
-          };
-          return data4createResponseObject;
-        }
+        const data4createResponseObject = {
+          req: req,
+          result: 0,
+          message: messages.ITEM_FETCHED,
+          payload: {
+            chats: chats,
+            sentRequest: findRequest,
+            receivedRequest: receivedRequest,
+          },
+          logPayload: false,
+        };
+        return data4createResponseObject;
       }
     } catch (error) {
       // logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
