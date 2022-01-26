@@ -77,7 +77,7 @@ module.exports = exports = {
             return data4createResponseObject;
           } else {
             let findRequest =
-              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
                 $and: [
                   { requestBy: user.id },
                   { requestTo: findQuestion.createdBy },
@@ -89,7 +89,7 @@ module.exports = exports = {
                   "_id name email region currentRole subject profileImage countryOfResidence",
               });
             let receivedRequest =
-              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
                 $and: [
                   { requestBy: findQuestion.createdBy },
                   { requestTo: user.id },
