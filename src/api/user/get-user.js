@@ -37,6 +37,8 @@ module.exports = exports = {
       }
     }
     try {
+      let questionCount;
+      let answerCount;
       let findUser = await global.models.GLOBAL.USER.find(criteria)
         .sort({
           createdAt: -1,
@@ -52,7 +54,21 @@ module.exports = exports = {
           select: "_id answer",
         });
       let count = await global.models.GLOBAL.USER.count(criteria);
-
+      if (userId) {
+        questionCount = await global.models.GLOBAL.QUESTION.count({
+          createdBy: userId,
+        });
+        answerCount = await global.models.GLOBAL.ANSWER.count({
+          createdBy: userId,
+        });
+      } else {
+        questionCount = await global.models.GLOBAL.QUESTION.count({
+          createdBy: user._id,
+        });
+        answerCount = await global.models.GLOBAL.ANSWER.count({
+          createdBy: user._id,
+        });
+      }
       let TodayUser = await global.models.GLOBAL.USER.find({
         createdAt: {
           $gte: moment(Date.now()).format("YYYY-MM-DD"),
@@ -87,6 +103,8 @@ module.exports = exports = {
           message: messages.USER_FETCH_SUCCESS,
           payload: {
             findUser,
+            questionCount,
+            answerCount,
             count,
             todaysCount: TodayUser.length,
             totalmonth: user,
