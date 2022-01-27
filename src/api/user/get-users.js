@@ -17,11 +17,15 @@ module.exports = exports = {
           userType: "user",
         });
 
+        let alllUsersCount = await global.models.GLOBAL.USER.countDocuments({
+          userType: "user",
+        });
+
         const data4createResponseObject = {
           req: req,
           result: 0,
           message: messages.SUCCESS,
-          payload: alllUsers,
+          payload: { users: alllUsers, count: alllUsersCount },
           logPayload: false,
         };
         res
