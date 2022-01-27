@@ -16,6 +16,12 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4User.getAllUser.handler
 );
+// get all users chose type is only user
+router.get(
+  "/all-users",
+  passport.authenticate(["jwt"], { session: false }),
+  api4User.getUsers.handler
+);
 router.get(
   "/blockList",
   passport.authenticate(["jwt"], { session: false }),

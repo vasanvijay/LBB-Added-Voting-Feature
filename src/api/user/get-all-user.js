@@ -17,6 +17,8 @@ module.exports = exports = {
         _id: userId,
       };
     }
+
+    console.log("criteria", criteria);
     try {
       let userArray = [];
       let findUser = await global.models.GLOBAL.USER.find(criteria).sort({

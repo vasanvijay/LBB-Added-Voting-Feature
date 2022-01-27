@@ -121,7 +121,7 @@ module.exports = exports = {
       let chatss = [];
       for (i = 0; i < lastChats.length; i++) {
         for (j = 0; j < chats.length; j++) {
-          if (lastChats[i]?._id.toString() == chats[j]?._id.toString()) {
+          if (lastChats[i]._id.toString() == chats[j]._id.toString()) {
             chatss.push(chats[j]);
             break;
           }

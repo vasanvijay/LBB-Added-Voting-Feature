@@ -6,6 +6,7 @@ const verifyEmail = require("./verify-email");
 const updateUSer = require("./update-user");
 const updateStatus = require("./update-status");
 const getAllUser = require("./get-all-user");
+const getUsers = require("./get-users");
 const searchUser = require("./search-user");
 const userData = require("./user-data");
 const resetPassword = require("./reset-password");
@@ -30,6 +31,7 @@ module.exports = exports = {
   updateUSer,
   updateStatus,
   getAllUser,
+  getUsers,
   searchUser,
   userData,
   resetPassword,

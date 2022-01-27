@@ -39,8 +39,12 @@ module.exports = (server, logger) => {
 
       try {
         let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
-        // console.log("history", chatHistory.payload);
-        io.in(socket.id).emit("history", { chats: chatHistory.payload });
+        console.log("history", chatHistory.payload);
+        if (chatHistory.payload && chatHistory.payload.chats) {
+          io.in(socket.id).emit("history", { chats: chatHistory.payload });
+        } else {
+          io.in(socket.id).emit("history", {});
+        }
         console.log("history sent");
       } catch (error) {
         console.log("Error in finding Chats ", error);
@@ -126,6 +130,7 @@ module.exports = (server, logger) => {
           roomId: roomId,
         });
         // console.log("get----->>>", answer.payload);
+
         io.in(socket.id).emit("answer", answer.payload);
         console.log("answer data sent");
       } catch (error) {
