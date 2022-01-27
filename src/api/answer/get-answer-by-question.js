@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
@@ -29,22 +30,77 @@ module.exports = exports = {
       let skip = (parseInt(req.query.page) - 1) * limit;
 
       // console.log("findQue-->>", findQuestion);
-      let answer = await global.models.GLOBAL.ANSWER.find({
-        $and: [{ isAbuse: false }, { question: question }],
-      })
-        .populate({
-          path: "question",
-          model: "question",
-          select: "_id question response filter view displayProfile createdAt",
-        })
-        .populate({
-          path: "createdBy",
-          model: "user",
-          select:
-            "_id name email region currentRole subject profileImage countryOfResidence",
-        })
+      // let answer = await global.models.GLOBAL.ANSWER.find({
+      //   $and: [{ isAbuse: false }, { question: question }],
+      // })
+      //   .populate({
+      //     path: "question",
+      //     model: "question",
+      //     select: "_id question response filter view displayProfile createdAt",
+      //   })
+      //   .populate({
+      //     path: "createdBy",
+      //     model: "user",
+      //     select:
+      //       "_id name email region currentRole subject profileImage countryOfResidence",
+      //   })
+      //   .skip(skip)
+      //   .limit(limit);
+
+      let answer = await global.models.GLOBAL.ANSWER.aggregate([
+        {
+          $match: {
+            // question: ObjectId(question),
+            $and: [{ isAbuse: false }, { question: ObjectId(question) }],
+          },
+        },
+        {
+          $group: {
+            _id: {
+              user: "$createdBy",
+              question: "$question",
+            },
+            answers: {
+              $push: "$$ROOT",
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "user",
+            localField: "_id.user",
+            foreignField: "_id",
+            as: "answerBy",
+          },
+        },
+        {
+          $lookup: {
+            from: "question",
+            localField: "_id.question",
+            foreignField: "_id",
+            as: "questions",
+          },
+        },
+        {
+          $project: {
+            answers: 1,
+            questions: 1,
+            answerBy: {
+              _id: 1,
+              name: 1,
+              email: 1,
+              region: 1,
+              currentRole: 1,
+              subject: 1,
+              profileImage: 1,
+              countryOfResidence: 1,
+            },
+          },
+        },
+      ])
         .skip(skip)
         .limit(limit);
+      // console.log("ANS--->>", answer);
       if (answer) {
         answer = JSON.parse(JSON.stringify(answer));
         const data4createResponseObject = {
