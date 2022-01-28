@@ -122,6 +122,17 @@ module.exports = exports = {
             .status(enums.HTTP_CODES.NOT_ACCEPTABLE)
             .json(utils.createResponseObject(data4createResponseObject));
         } else {
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.INITIATION_SUCCESS,
+            payload: { chatRoom, newMatching },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+
           let ntfObj = {
             userId: user._id,
             receiverId: id,
@@ -163,16 +174,6 @@ module.exports = exports = {
             ntfObj
           );
           // console.log("CHAT-->>", chatRoom);
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.INITIATION_SUCCESS,
-            payload: { chatRoom, newMatching },
-            logPayload: false,
-          };
-          return res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
         }
       } catch (error) {
         logger.error(
@@ -218,6 +219,16 @@ module.exports = exports = {
           const newMatching = await global.models.GLOBAL.MATCHING.create(
             matchingObj
           );
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_INSERTED,
+            payload: { newMatching },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
           // console.log("MATCH---->>>", newMatching);
           let ntfObj = {
             userId: user._id,
@@ -259,17 +270,6 @@ module.exports = exports = {
           let notification = await global.models.GLOBAL.NOTIFICATION.create(
             ntfObj
           );
-
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_INSERTED,
-            payload: { newMatching },
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
         } catch (error) {
           logger.error(
             `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`

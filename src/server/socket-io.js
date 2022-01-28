@@ -338,6 +338,11 @@ module.exports = (server, logger) => {
         let findToken = await global.models.GLOBAL.USER.findOne({
           _id: otherId,
         });
+        delete findToken.password;
+        let loginUser = await global.models.GLOBAL.USER.findOne({
+          _id: channelName,
+        });
+        delete loginUser.password;
         console.log("findToken", findToken);
         const desc = {
           data: { title: "Leaderbridge" },
@@ -361,6 +366,8 @@ module.exports = (server, logger) => {
             otherId: String(otherId),
             isForVideoCall: Boolean(isForVideoCall),
             token: token,
+            otherUser: findToken,
+            loginUser: loginUser,
           };
           io.in(String(channelName)).emit("onCallRequest", data);
           io.in(String(otherId)).emit("onCallRequest", data);

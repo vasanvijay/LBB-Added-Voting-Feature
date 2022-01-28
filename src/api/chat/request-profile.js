@@ -42,46 +42,46 @@ module.exports = exports = {
             newRequestObj
           );
 
-        // let ntfObj = {
-        //   userId: user.id,
-        //   receiverId: id,
-        //   title: `Notification By ${user.id} to ${id}`,
-        //   description: {
-        //     data: { title: "Leaderbridge" },
-        //     notification: {
-        //       title: "New Request profile Access!!!",
-        //       body: `You have received request to access to view your profile.`,
-        //     },
-        //   },
-        //   createdBy: user.id,
-        //   updatedBy: user.id,
-        //   createdAt: Date.now(),
-        // };
-        // let findToken = await global.models.GLOBAL.USER.findOne({
-        //   _id: id,
-        // });
-        // try {
-        //   if (findToken.deviceToken !== "1234") {
-        //     let data = {
-        //       payload: ntfObj.description,
-        //       firebaseToken: findToken.deviceToken,
-        //     };
-        //     sendPushNotification(data);
-        //     res.status(200).send({
-        //       msg: "Notification sent successfully!",
-        //     });
-        //   }
-        //   res.status(200).send({
-        //     msg: "Notification sent successfully!",
-        //   });
-        // } catch (e) {
-        //   res.status(500).send({
-        //     msg: "Unable to send notification!",
-        //   });
-        // }
-        // let notification = await global.models.GLOBAL.NOTIFICATION.create(
-        //   ntfObj
-        // );
+        let ntfObj = {
+          userId: user.id,
+          receiverId: id,
+          title: `Notification By ${user.id} to ${id}`,
+          description: {
+            data: { title: "Leaderbridge" },
+            notification: {
+              title: "New Request profile Access!!!",
+              body: `You have received request to access to view your profile.`,
+            },
+          },
+          createdBy: user.id,
+          updatedBy: user.id,
+          createdAt: Date.now(),
+        };
+        let findToken = await global.models.GLOBAL.USER.findOne({
+          _id: id,
+        });
+        try {
+          if (findToken.deviceToken !== "1234") {
+            let data = {
+              payload: ntfObj.description,
+              firebaseToken: findToken.deviceToken,
+            };
+            sendPushNotification(data);
+            res.status(200).send({
+              msg: "Notification sent successfully!",
+            });
+          }
+          res.status(200).send({
+            msg: "Notification sent successfully!",
+          });
+        } catch (e) {
+          res.status(500).send({
+            msg: "Unable to send notification!",
+          });
+        }
+        let notification = await global.models.GLOBAL.NOTIFICATION.create(
+          ntfObj
+        );
 
         const data4createResponseObject = {
           req: req,

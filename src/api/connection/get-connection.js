@@ -17,21 +17,29 @@ module.exports = exports = {
       if (sent) {
         findConnection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
-        }).populate({
-          path: "receiverId",
-          model: "user",
-          select: "_id name email profileImage region currentRole subject",
-        });
+        })
+          .populate({
+            path: "receiverId",
+            model: "user",
+            select: "_id name email profileImage region currentRole subject",
+          })
+          .sort({
+            requestedAt: -1,
+          });
       }
 
       if (received) {
         findConnection = await global.models.GLOBAL.CONNECTION.find({
           receiverId: user._id,
-        }).populate({
-          path: "senderId",
-          model: "user",
-          select: "_id name email profileImage region currentRole subject",
-        });
+        })
+          .populate({
+            path: "senderId",
+            model: "user",
+            select: "_id name email profileImage region currentRole subject",
+          })
+          .sort({
+            requestedAt: -1,
+          });
       }
       const data4createResponseObject = {
         req: req,

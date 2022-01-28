@@ -52,7 +52,7 @@ module.exports = exports = {
         const data4createResponseObject = {
           req: req,
           result: 0,
-          message: messages.ITEM_INSERTED,
+          message: "Matching rejected successfully.",
           payload: { newMatching },
           logPayload: false,
         };

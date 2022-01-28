@@ -34,8 +34,8 @@ module.exports = exports = {
           },
           select: "_id name subject profileImage currentRole email blockUser",
         });
-        console.log("ROOM--->>", findRoom.participateIds[0]._id);
-        console.log("USER--->>", user.id);
+        // console.log("ROOM--->>", findRoom.participateIds[0]._id);
+        // console.log("USER--->>", user.id);
 
         let findRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
@@ -64,18 +64,68 @@ module.exports = exports = {
         // console.log("FINDREQU-->", findRequest);
         // console.log("receivedRequest-->", receivedRequest);
 
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.ITEM_FETCHED,
-          payload: {
-            chats: chats,
-            sentRequest: findRequest,
-            receivedRequest: receivedRequest,
-          },
-          logPayload: false,
-        };
-        return data4createResponseObject;
+        let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            {
+              _id: user.id,
+            },
+            { blockUser: { $in: [findRoom.participateIds[0]._id] } },
+          ],
+        });
+        let checkBlockByOther = await global.models.GLOBAL.USER.findOne({
+          $and: [
+            { _id: findRoom.participateIds[0]._id },
+            { blockUser: { $in: [user.id] } },
+          ],
+        });
+        if (checkBlockByMe) {
+          console.log("By Me--->");
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_FETCHED,
+            payload: {
+              chats: chats,
+              sentRequest: findRequest,
+              receivedRequest: receivedRequest,
+              text: "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.",
+            },
+            logPayload: false,
+          };
+          return data4createResponseObject;
+        } else if (checkBlockByOther) {
+          console.log("By Other--->");
+
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_FETCHED,
+            payload: {
+              chats: chats,
+              sentRequest: findRequest,
+              receivedRequest: receivedRequest,
+              text: "You are blocked by this user.",
+            },
+            logPayload: false,
+          };
+          return data4createResponseObject;
+        } else {
+          console.log("<------------>");
+
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_FETCHED,
+            payload: {
+              chats: chats,
+              sentRequest: findRequest,
+              receivedRequest: receivedRequest,
+              text: null,
+            },
+            logPayload: false,
+          };
+          return data4createResponseObject;
+        }
       }
     } catch (error) {
       // logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
