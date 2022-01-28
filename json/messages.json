@@ -23,7 +23,7 @@
   "INVALID_PARAMETERS": "Sorry, the request could not be processed as because of invalid parameters.",
   "ITEM_DELETED": "Item deleted successfully",
   "ITEM_FETCHED": "Item fetched successfully",
-  "ITEM_INSERTED": "added successfully",
+  "ITEM_INSERTED": "Added successfully",
   "ITEM_NOT_FOUND": "Sorry! The requested resource could not be found!",
   "EMPTY": "Sorry, the Verification form is empty.So Please Fill the verification form first then try again",
   "ITEM_UPDATED": "updated successfully",

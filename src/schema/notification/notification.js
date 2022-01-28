@@ -4,7 +4,7 @@ module.exports = (connection) => {
     userId: { type: mongoose.Schema.Types.ObjectId },
     receiverId: { type: mongoose.Schema.Types.ObjectId },
     title: String,
-    description: String,
+    description: {},
     status: { type: Boolean, default: true },
     createdAt: { type: Date },
     createdBy: { type: mongoose.Schema.Types.ObjectId },

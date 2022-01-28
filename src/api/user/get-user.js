@@ -74,7 +74,7 @@ module.exports = exports = {
           $gte: moment(Date.now()).format("YYYY-MM-DD"),
         },
       });
-      const user = await global.models.GLOBAL.USER.aggregate([
+      const users = await global.models.GLOBAL.USER.aggregate([
         {
           $group: {
             _id: { $month: "$createdAt" },
@@ -107,7 +107,7 @@ module.exports = exports = {
             answerCount,
             count,
             todaysCount: TodayUser.length,
-            totalmonth: user,
+            totalmonth: users,
           },
           logPayload: false,
         };

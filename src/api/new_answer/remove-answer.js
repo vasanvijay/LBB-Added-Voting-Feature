@@ -28,6 +28,7 @@ module.exports = exports = {
 
     try {
       const answerExists = await global.models.GLOBAL.ANSWER.findById(answerId);
+      console.log("ANS-->", answerExists);
       if (!answerExists) {
         const data4createResponseObject = {
           req: req,
@@ -40,30 +41,41 @@ module.exports = exports = {
           .status(enums.HTTP_CODES.NOT_FOUND)
           .json(utils.createResponseObject(data4createResponseObject));
       } else {
-      }
-      if (answerId) {
-        const deleteAnswer =
-          await global.models.GLOBAL.ANSWER.findByIdAndRemove({
-            _id: answerId,
-            createdBy: user._id,
-          });
+        if (answerId) {
+          const deleteAnswer =
+            await global.models.GLOBAL.ANSWER.findByIdAndRemove({
+              _id: answerId,
+              createdBy: user._id,
+            });
 
-        if (deleteAnswer) {
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_DELETED,
-            payload: {},
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          if (deleteAnswer) {
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: messages.ITEM_DELETED,
+              payload: {},
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            const data4createResponseObject = {
+              req: req,
+              result: -1,
+              message: messages.NOT_ALLOWED,
+              payload: {},
+              logPayload: false,
+            };
+            res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          }
         } else {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: messages.NOT_ALLOWED,
+            message: "Sorry, Something went wrong to delete answer.",
             payload: {},
             logPayload: false,
           };
@@ -71,17 +83,6 @@ module.exports = exports = {
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
         }
-      } else {
-        const data4createResponseObject = {
-          req: req,
-          result: -1,
-          message: "Sorry, Something went wrong to delete answer.",
-          payload: {},
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
       logger.error(

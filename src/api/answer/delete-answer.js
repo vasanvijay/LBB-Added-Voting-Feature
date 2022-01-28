@@ -24,39 +24,18 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     }
     try {
-      const answerExists = await global.models.GLOBAL.ANSWER.findById(answerId);
+      const answerExists = await global.models.GLOBAL.ANSWER.findOne({
+        _id: answerId,
+      });
+      // console.log("USER---->>", user._id);
+      // console.log("ANS---->>>", answerExists);
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: answerExists.question,
       });
       if (findQuestion) {
-        const id = findQuestion._id;
-        const answerBy = user._id;
-        const questionBy = findQuestion.createdBy;
-
-        let participateIds = [];
-        participateIds.push(answerBy);
-        participateIds.push(id);
-        participateIds.push(questionBy);
-
-        let answerRoom =
-          await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
-            {
-              participateIds: {
-                $size: participateIds.length,
-                $all: [...participateIds],
-              },
-            },
-            {
-              $pull: {
-                answer: { answerId: ObjectId(answerId) },
-              },
-            },
-            { new: true }
-          );
         const deleteAnswer = await global.models.GLOBAL.ANSWER.findOneAndRemove(
           {
             _id: answerId,
-            answerBy: user._id,
           }
         );
 
