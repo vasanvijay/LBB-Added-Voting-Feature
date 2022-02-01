@@ -5,6 +5,8 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+const jwtOptions = require("../../auth/jwt-options");
 
 // User Registration
 module.exports = exports = {
@@ -127,6 +129,18 @@ module.exports = exports = {
               .status(enums.HTTP_CODES.BAD_REQUEST)
               .json(utils.createResponseObject(data4createResponseObject));
           } else {
+            const data4token = {
+              id: findUser._id,
+              date: Date.now(),
+              environment: process.env.APP_ENVIRONMENT,
+              email: email,
+              userType: findUser.userType,
+              subject: findUser.subject,
+              abuseQuestion: findUser.abuseQuestion,
+              abuseAnswer: findUser.abuseAnswer,
+              scope: "signup",
+            };
+
             let transporter = nodemailer.createTransport({
               service: "gmail",
               host: "smtp.gmail.com",
@@ -240,7 +254,10 @@ module.exports = exports = {
               req: req,
               result: 0,
               message: messages.ITEM_UPDATED,
-              payload: { fillForm },
+              payload: {
+                fillForm,
+                token: jwt.sign(data4token, jwtOptions.secretOrKey),
+              },
               logPayload: false,
             };
             return res
