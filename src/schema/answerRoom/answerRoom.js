@@ -8,6 +8,7 @@ module.exports = (connection) => {
     lastMessage: {
       answerId: { type: mongoose.Schema.Types.ObjectId },
       answer: String,
+      createdAt: { type: Date },
     },
     isActive: { type: Boolean, default: true },
   });
