@@ -89,8 +89,8 @@ module.exports = exports = {
                 body: ` Give Answer to Your Question's ${findQuestion.question}`,
               },
             },
-            createdBy: user._id,
-            updatedBy: user._id,
+            createdBy: user.id,
+            updatedBy: user.id,
             question: question,
             createdAt: Date.now(),
           };
