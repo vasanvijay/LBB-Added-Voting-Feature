@@ -48,7 +48,7 @@ module.exports = exports = {
             answer: addNewAnswer.answer,
             createdAt: Date.now(),
           };
-
+          console.log("lastMessageObj--->>", lastMessageObj);
           newAnswer = await global.models.GLOBAL.ANSWER.findOne({
             _id: addNewAnswer._id,
           }).populate({

@@ -11,6 +11,7 @@ module.exports = (connection) => {
     lastMessage: {
       messageId: { type: mongoose.Schema.Types.ObjectId },
       message: String,
+      createdAt: { type: Date },
     },
     matchingRoom: { type: Boolean, default: false },
   });

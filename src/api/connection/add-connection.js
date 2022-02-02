@@ -10,6 +10,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { receiverId } = req.params;
+    console.log("heeeeeeeeeeeeeeeeee============>>>>>>>");
     if (!receiverId) {
       const data4createResponseObject = {
         req: req,
@@ -26,6 +27,7 @@ module.exports = exports = {
       senderId: user._id,
       receiverId: receiverId,
     });
+    console.log("request--->>", findConnection);
     if (findConnection !== null) {
       const data4createResponseObject = {
         req: req,
@@ -49,6 +51,7 @@ module.exports = exports = {
             requestedAt: Date.now(),
             status: "Pending",
           };
+
           const updatedReceiverData =
             await global.models.GLOBAL.CONNECTION.create(request);
 
@@ -59,6 +62,10 @@ module.exports = exports = {
             payload: { updatedReceiverData },
             logPayload: false,
           };
+          console.log(
+            "updatedReceiverData------------------------------------>",
+            updatedReceiverData
+          );
           res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));

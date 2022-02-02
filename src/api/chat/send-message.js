@@ -41,6 +41,7 @@ module.exports = exports = {
       let lastMessageObj = {
         messageId: newMessage._id,
         message: newMessage.message,
+        createdAt: Date.now(),
       };
 
       let addLastMessage =

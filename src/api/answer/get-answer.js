@@ -10,7 +10,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { answerByMe } = req.query;
-
+    console.log("answerByM========================e", answerByMe);
     try {
       let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -79,6 +79,7 @@ module.exports = exports = {
           receiverId: user._id,
         });
         const conectIdExist = (id) => {
+          console.log("check", id);
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
@@ -100,7 +101,7 @@ module.exports = exports = {
           return panding.length;
         };
         for (let i = 0; i < answer.length; i++) {
-          if (conectIdExist(answer[i]?.createdBy)) {
+          if (conectIdExist(answer[i]?.createdBy._id)) {
             let answerObj = {
               _id: answer[i]._id,
               displayProfile: answer[i].displayProfile,
@@ -117,7 +118,7 @@ module.exports = exports = {
               reach: await reachCount(answer[i]),
             };
             Answers.push(answerObj);
-          } else if (sentIdExist(answer[i]?.createdBy)) {
+          } else if (sentIdExist(answer[i]?.createdBy._id)) {
             let answerObj = {
               _id: answer[i]._id,
               displayProfile: answer[i].displayProfile,
@@ -134,7 +135,7 @@ module.exports = exports = {
               reach: await reachCount(answer[i]),
             };
             Answers.push(answerObj);
-          } else if (pandingIdExist(answer[i]?.createdBy)) {
+          } else if (pandingIdExist(answer[i]?.createdBy._id)) {
             let answerObj = {
               _id: answer[i]._id,
               displayProfile: answer[i].displayProfile,
@@ -172,6 +173,7 @@ module.exports = exports = {
         }
 
         Answers = JSON.parse(JSON.stringify(Answers));
+        console.log("ANSWERRRRR---------------->", Answers);
         const data4createResponseObject = {
           req: req,
           result: 0,

@@ -6,9 +6,9 @@ module.exports = (connection) => {
     createdAt: { type: Date },
     createdBy: { type: mongoose.Schema.Types.ObjectId },
     lastMessage: {
+      createdAt: { type: Date },
       answerId: { type: mongoose.Schema.Types.ObjectId },
       answer: String,
-      createdAt: { type: Date },
     },
     isActive: { type: Boolean, default: true },
   });
