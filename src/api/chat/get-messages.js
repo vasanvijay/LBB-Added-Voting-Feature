@@ -34,6 +34,7 @@ module.exports = exports = {
           },
           select: "_id name subject profileImage currentRole email blockUser",
         });
+        console.log("findRoom--->", findRoom?.createdBy);
         // console.log("ROOM--->>", findRoom.participateIds[0]._id);
         // console.log("USER--->>", user.id);
 
@@ -78,6 +79,13 @@ module.exports = exports = {
             { blockUser: { $in: [user.id] } },
           ],
         });
+
+        const isFriend = await global.models.GLOBAL.USER.findOne({
+          _id: user.id,
+          accepted: findRoom?.createdBy,
+        });
+
+        console.log("isFriend", isFriend);
         if (checkBlockByMe) {
           console.log("By Me--->");
           const data4createResponseObject = {
@@ -88,6 +96,8 @@ module.exports = exports = {
               chats: chats,
               sentRequest: findRequest,
               receivedRequest: receivedRequest,
+              isFriend: isFriend == null ? false : true,
+
               text: "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.",
             },
             logPayload: false,
@@ -105,6 +115,7 @@ module.exports = exports = {
               sentRequest: findRequest,
               receivedRequest: receivedRequest,
               text: "You are blocked by this user.",
+              isFriend: isFriend == null ? false : true,
             },
             logPayload: false,
           };
@@ -121,6 +132,7 @@ module.exports = exports = {
               sentRequest: findRequest,
               receivedRequest: receivedRequest,
               text: null,
+              isFriend: isFriend == null ? false : true,
             },
             logPayload: false,
           };

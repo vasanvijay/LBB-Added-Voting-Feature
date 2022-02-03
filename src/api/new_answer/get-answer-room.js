@@ -46,6 +46,11 @@ module.exports = exports = {
           // console.log("answerById---->", answerById);
         }
 
+        // const isFriend = await global.models.GLOBAL.USER.findOne({
+        //   _id: user.id,
+        //   accepted: findRoom.createdBy,
+        // });
+
         const data4createResponseObject = {
           req: req,
           result: 0,
