@@ -61,6 +61,8 @@ module.exports = exports = {
                 select:
                   "_id name email region currentRole subject profileImage countryOfResidence",
               });
+            console.log("findRequest--->", user.id);
+            console.log("findRequest--->", findRoom);
 
             const isFriend = await global.models.GLOBAL.USER.findOne({
               _id: user.id,
@@ -107,8 +109,15 @@ module.exports = exports = {
                 select:
                   "_id name email region currentRole subject profileImage countryOfResidence",
               });
+            console.log("userid-->", user.id);
+            console.log("fid----------->", findRoom?.createdBy);
             console.log("FINDREQU-->", findRequest);
             console.log("receivedRequest-->", receivedRequest);
+
+            const isFriend = await global.models.GLOBAL.USER.findOne({
+              _id: user.id,
+              accepted: findRoom?.createdBy,
+            });
             const data4createResponseObject = {
               req: req,
               result: 0,
@@ -117,6 +126,7 @@ module.exports = exports = {
                 answer: findAnswer,
                 receivedRequest: receivedRequest,
                 sentRequest: findRequest,
+                isFriend: isFriend == null ? false : true,
               },
               logPayload: false,
             };

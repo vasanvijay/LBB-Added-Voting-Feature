@@ -80,12 +80,15 @@ module.exports = exports = {
           ],
         });
 
+        console.log("findRequest--->", user.id);
+        console.log("findRequest=========--->", findRoom.participateIds[0]._id);
+
         const isFriend = await global.models.GLOBAL.USER.findOne({
           _id: user.id,
-          accepted: findRoom?.createdBy,
+          accepted: findRoom.participateIds[0]._id,
         });
 
-        console.log("isFriend", isFriend);
+        console.log("isFriend------", isFriend);
         if (checkBlockByMe) {
           console.log("By Me--->");
           const data4createResponseObject = {
