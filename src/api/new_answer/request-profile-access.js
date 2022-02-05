@@ -10,7 +10,6 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     let user = await utils.getHeaderFromToken(req.user);
-
     const { question } = req;
     if (!question) {
       const data4createResponseObject = {
@@ -35,6 +34,7 @@ module.exports = exports = {
         let newRequestObj = {
           requestBy: user.id,
           requestTo: questionBy,
+          roomId: req.roomId,
         };
         let newRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(

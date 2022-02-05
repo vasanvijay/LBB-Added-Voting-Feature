@@ -13,7 +13,6 @@ module.exports = exports = {
     //    const { roomId } = req;
 
     let user = await utils.getHeaderFromToken(res);
-    // console.log("USER--->>", user);
     try {
       let chats = await global.models.GLOBAL.CHAT.find({
         roomId: req,
@@ -22,7 +21,7 @@ module.exports = exports = {
         model: "chat",
         select: "roomId sender message messageType type createdAt updatedAt",
       });
-      // console.log("CHAT-->", chats);
+      console.log("CHAT-->", chats);
       if (chats) {
         let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
           _id: req,
@@ -38,32 +37,46 @@ module.exports = exports = {
         // console.log("ROOM--->>", findRoom.participateIds[0]._id);
         // console.log("USER--->>", user.id);
 
-        let findRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-            $and: [
-              { requestBy: user.id },
-              { requestTo: findRoom.participateIds[0]._id },
-            ],
-          }).populate({
+        // let findRequest =
+        //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+        //     $and: [
+        //       { requestBy: user.id },
+        //       { requestTo: findRoom.participateIds[0]._id },
+        //     ],
+        //   }).populate({
+        //     path: "requestBy",
+        //     model: "user",
+        //     select:
+        //       "_id name email region currentRole subject profileImage countryOfResidence",
+        //   });
+        // let receivedRequest =
+        //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+        //     $and: [
+        //       { requestBy: findRoom.participateIds[0]._id },
+        //       { requestTo: user.id },
+        //     ],
+        //   }).populate({
+        //     path: "requestTo",
+        //     model: "user",
+        //     select:
+        //       "_id name email region currentRole subject profileImage countryOfResidence",
+        //   });
+
+        let request = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+          roomId: ObjectId(req),
+        })
+          .populate({
+            path: "requestTo",
+            model: "user",
+            select:
+              "_id name email region currentRole subject profileImage countryOfResidence",
+          })
+          .populate({
             path: "requestBy",
             model: "user",
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
-        let receivedRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-            $and: [
-              { requestBy: findRoom.participateIds[0]._id },
-              { requestTo: user.id },
-            ],
-          }).populate({
-            path: "requestTo",
-            model: "user",
-            select:
-              "_id name email region currentRole subject profileImage countryOfResidence",
-          });
-        // console.log("FINDREQU-->", findRequest);
-        // console.log("receivedRequest-->", receivedRequest);
 
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
@@ -97,8 +110,7 @@ module.exports = exports = {
             message: messages.ITEM_FETCHED,
             payload: {
               chats: chats,
-              sentRequest: findRequest,
-              receivedRequest: receivedRequest,
+              request: request,
               isFriend: isFriend == null ? false : true,
 
               text: "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.",
@@ -115,8 +127,7 @@ module.exports = exports = {
             message: messages.ITEM_FETCHED,
             payload: {
               chats: chats,
-              sentRequest: findRequest,
-              receivedRequest: receivedRequest,
+              request: request,
               text: "You are blocked by this user.",
               isFriend: isFriend == null ? false : true,
             },
@@ -132,8 +143,7 @@ module.exports = exports = {
             message: messages.ITEM_FETCHED,
             payload: {
               chats: chats,
-              sentRequest: findRequest,
-              receivedRequest: receivedRequest,
+              request: request,
               text: null,
               isFriend: isFriend == null ? false : true,
             },

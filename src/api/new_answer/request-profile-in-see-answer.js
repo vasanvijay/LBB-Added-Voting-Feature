@@ -34,6 +34,7 @@ module.exports = exports = {
           requestBy: user.id,
           requestTo: id,
           createdAt: Date.now(),
+          roomId: req.roomId,
         };
         let newRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(

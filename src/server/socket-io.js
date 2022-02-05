@@ -160,12 +160,13 @@ module.exports = (server, logger) => {
     );
 
     // New Request in Answer
-    socket.on("request", async function ({ user, question }) {
+    socket.on("request", async function ({ user, question, roomId }) {
       // console.log("add-answer------------->>>>>>", user);
       try {
         let addRequest = await answerCtrl.requestProfile.handler({
           user: user,
           question: question,
+          roomId: roomId,
         });
         console.log("Request Socket---->>", addRequest.payload.newRequest);
         io.in(socket.id).emit("request", addRequest.payload.newRequest);
@@ -177,12 +178,13 @@ module.exports = (server, logger) => {
     });
 
     // New Request in See-Answer
-    socket.on("new-request", async function ({ user, id }) {
+    socket.on("new-request", async function ({ user, id, roomId }) {
       // console.log("add-answer------------->>>>>>", user);
       try {
         let addNewRequest = await answerCtrl.requestProfileInSeeAns.handler({
           user: user,
           id: id,
+          roomId: roomId,
         });
         console.log(
           "New Request Socket---->>",
@@ -197,12 +199,13 @@ module.exports = (server, logger) => {
     });
 
     // New Request in Chat
-    socket.on("new-request-chat", async function ({ user, id }) {
+    socket.on("new-request-chat", async function ({ user, id, roomId }) {
       // console.log("add-answer------------->>>>>>", user);
       try {
         let addNewRequestInChat = await chatCtrl.requestProfile.handler({
           user: user,
           id: id,
+          roomId: roomId,
         });
         console.log(
           "New Request in chat Socket---->>",
