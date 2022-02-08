@@ -20,6 +20,8 @@ module.exports = exports = {
           model: "user",
           select: "_id subject profileImage currentRole",
         });
+
+      console.log("getNotification", user._id);
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {
           if (getNotification[i].question) {

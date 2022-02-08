@@ -3,7 +3,7 @@ module.exports = (connection) => {
   const answerSchema = new mongoose.Schema({
     roomId: { type: mongoose.Schema.Types.ObjectId },
     answer: String,
-    createdBy: { type: mongoose.Schema.Types.ObjectId },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     question: { type: mongoose.Schema.Types.ObjectId },
     createdAt: { type: Date },
     updatedAt: { type: Date },

@@ -6,6 +6,7 @@ module.exports = (connection) => {
     receiverId: { type: mongoose.Schema.Types.ObjectId },
     requestedAt: { type: Date },
     status: { type: String },
+    createdAt: { type: Date, default: Date.now },
   });
   return connection.model("connection", connectionSchema, "connection");
 };

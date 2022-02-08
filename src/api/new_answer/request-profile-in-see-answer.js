@@ -40,6 +40,7 @@ module.exports = exports = {
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(
             newRequestObj
           );
+
         let ntfObj = {
           userId: user.id,
           receiverId: id,
@@ -53,34 +54,39 @@ module.exports = exports = {
           },
           createdBy: user.id,
           updatedBy: user.id,
-          question: question,
+          // question: question,
           createdAt: Date.now(),
         };
         let findToken = await global.models.GLOBAL.USER.findOne({
           _id: id,
         });
+        let notification = await global.models.GLOBAL.NOTIFICATION.create(
+          ntfObj
+        );
         try {
           if (findToken.deviceToken !== "1234") {
             let data = {
               payload: ntfObj.description,
               firebaseToken: findToken.deviceToken,
             };
-            sendPushNotification(data);
-            res.status(200).send({
-              msg: "Notification sent successfully!",
+            // sendPushNotification(data);
+            return (data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: "Notification sent successfully!",
+              payload: {},
+              logPayload: false,
             });
           }
-          res.status(200).send({
-            msg: "Notification sent successfully!",
-          });
         } catch (e) {
-          res.status(500).send({
-            msg: "Unable to send notification!",
+          return (data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: "Unable to send notification!",
+            payload: {},
+            logPayload: false,
           });
         }
-        let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          ntfObj
-        );
 
         if (newRequest) {
           const data4createResponseObject = {
