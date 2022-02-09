@@ -88,6 +88,9 @@ module.exports = exports = {
           let findToken = await global.models.GLOBAL.USER.findOne({
             _id: receiverId,
           });
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
           try {
             if (findToken.deviceToken !== "1234") {
               let data = {

@@ -83,6 +83,9 @@ module.exports = exports = {
           let findToken = await global.models.GLOBAL.USER.findOne({
             _id: receiverId,
           });
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
           try {
             if (findToken.deviceToken !== "1234") {
               let data = {
@@ -102,9 +105,6 @@ module.exports = exports = {
               msg: "Unable to send notification!",
             });
           }
-          let notification = await global.models.GLOBAL.NOTIFICATION.create(
-            ntfObj
-          );
         } catch (error) {
           logger.error(
             `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
