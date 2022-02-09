@@ -547,6 +547,7 @@ module.exports = (server, logger) => {
             {
               $set: {
                 answer: answer,
+                isUpdated: true,
               },
             }
           );

@@ -11,7 +11,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { star } = req.body;
-    const { messageId } = req.params;
+    const { messageId, userId } = req.params;
     try {
       if (messageId) {
         let starMessage;
@@ -24,6 +24,7 @@ module.exports = exports = {
               $set: {
                 isStar: true,
               },
+              $push: { starredBy: userId },
             },
             {
               new: true,
@@ -38,6 +39,7 @@ module.exports = exports = {
               $set: {
                 isStar: false,
               },
+              $pull: { starredBy: userId },
             },
             {
               new: true,

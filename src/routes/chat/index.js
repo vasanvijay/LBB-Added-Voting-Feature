@@ -43,7 +43,7 @@ router.post(
 
 // Put Methods
 router.put(
-  "/star/id=:messageId",
+  "/star/id=:messageId/userId=:userId",
   passport.authenticate(["jwt"], { session: false }),
   chatApi.starMesssage.handler
 );

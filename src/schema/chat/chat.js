@@ -10,6 +10,7 @@ module.exports = (connection) => {
     readBy: { type: Array },
     isActive: { type: Boolean, default: true },
     isStar: { type: Boolean, default: false },
+    starredBy: { type: Array },
     createdAt: { type: Date },
     updatedAt: { type: Date },
     isUpdated: { type: Boolean, default: false },

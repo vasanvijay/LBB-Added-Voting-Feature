@@ -5,6 +5,7 @@ module.exports = (connection) => {
     answer: String,
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     question: { type: mongoose.Schema.Types.ObjectId },
+    isUpdated: { type: Boolean, default: false },
     createdAt: { type: Date },
     updatedAt: { type: Date },
     updatedBy: { type: mongoose.Schema.Types.ObjectId },
