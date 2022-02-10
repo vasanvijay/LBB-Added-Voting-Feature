@@ -13,21 +13,21 @@ module.exports = (server, logger) => {
   });
 
   io.use((socket, next) => {
-    logger.info(
-      `REQ [${socket.id}] [WS] ${socket.handshake.url} ${JSON.stringify(
-        socket.handshake
-      )}`
-    );
+    // logger.info(
+    //   `REQ [${socket.id}] [WS] ${socket.handshake.url} ${JSON.stringify(
+    //     socket.handshake
+    //   )}`
+    // );
     next();
   });
 
   io.on("connection", (socket) => {
     console.log("User connected", socket.id);
-    logger.info(
-      `CONN [${socket.id}] [WS] ${socket.handshake.url} ${JSON.stringify(
-        socket.handshake
-      )}`
-    );
+    // logger.info(
+    //   `CONN [${socket.id}] [WS] ${socket.handshake.url} ${JSON.stringify(
+    //     socket.handshake
+    //   )}`
+    // );
 
     // Routes
     socket.on("join", async function ({ roomId, user }) {
@@ -592,6 +592,8 @@ module.exports = (server, logger) => {
           .json(utils.createResponseObject(data4createResponseObject));
       }
     });
+
+    socket.on("check-answer", async function () {});
 
     socket.on("error", function (err) {
       console.log("received error from socket:", socket.id);

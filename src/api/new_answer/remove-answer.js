@@ -12,7 +12,7 @@ module.exports = exports = {
     const { user } = req;
     const { answerId } = req.params;
 
-    // console.log("ANS-->", answerExists);
+    console.log("ANS-->1234567890", answerId);
     if (!answerId) {
       const data4createResponseObject = {
         req: req,
@@ -56,6 +56,7 @@ module.exports = exports = {
               payload: {},
               logPayload: false,
             };
+
             res
               .status(enums.HTTP_CODES.OK)
               .json(utils.createResponseObject(data4createResponseObject));

@@ -66,11 +66,13 @@ module.exports = exports = {
               { new: true }
             );
           // console.log("here in if--->", newAnswer);
-          await global.models.GLOBAL.QUESTION.updateOne(
-            { _id: question },
+          const updatedQue = await global.models.GLOBAL.QUESTION.updateOne(
+            { _id: question, createdBy: { $nin: user._id } },
             { $inc: { response: 1 } },
             { new: true }
           );
+          console.log("updatedQue--->>", updatedQue);
+          console.log("USERRRRRRRR---->", user);
           await global.models.GLOBAL.USER.findOneAndUpdate(
             { _id: user.id },
             {
