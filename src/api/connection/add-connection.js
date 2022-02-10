@@ -55,21 +55,6 @@ module.exports = exports = {
           const updatedReceiverData =
             await global.models.GLOBAL.CONNECTION.create(request);
 
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_UPDATED,
-            payload: { updatedReceiverData },
-            logPayload: false,
-          };
-          console.log(
-            "updatedReceiverData------------------------------------>",
-            updatedReceiverData
-          );
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
-
           let ntfObj = {
             userId: user._id,
             receiverId: receiverId,
@@ -91,6 +76,21 @@ module.exports = exports = {
           let notification = await global.models.GLOBAL.NOTIFICATION.create(
             ntfObj
           );
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_UPDATED,
+            payload: { updatedReceiverData },
+            logPayload: false,
+          };
+          console.log(
+            "updatedReceiverData------------------------------------>",
+            updatedReceiverData
+          );
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
+
           try {
             if (findToken.deviceToken !== "1234") {
               let data = {
@@ -107,9 +107,6 @@ module.exports = exports = {
               msg: "Unable to send notification!",
             });
           }
-          // let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          //   ntfObj
-          // );
         } catch (error) {
           logger.error(
             `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`

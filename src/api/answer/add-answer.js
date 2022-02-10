@@ -118,16 +118,6 @@ module.exports = exports = {
             },
           }
         );
-        const data4createResponseObject = {
-          req: req,
-          result: 0,
-          message: messages.ITEM_INSERTED,
-          payload: { newAnswer },
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
         let ntfObj = {
           userId: user._id,
           receiverId: questionBy,
@@ -142,6 +132,16 @@ module.exports = exports = {
         let notification = await global.models.GLOBAL.NOTIFICATION.create(
           ntfObj
         );
+        const data4createResponseObject = {
+          req: req,
+          result: 0,
+          message: messages.ITEM_INSERTED,
+          payload: { newAnswer },
+          logPayload: false,
+        };
+        res
+          .status(enums.HTTP_CODES.OK)
+          .json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4createResponseObject = {
           req: req,

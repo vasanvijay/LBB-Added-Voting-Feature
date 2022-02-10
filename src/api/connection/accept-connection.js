@@ -55,16 +55,6 @@ module.exports = exports = {
           updatedConnectedData = JSON.parse(
             JSON.stringify(updatedConnectedData)
           );
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.ITEM_UPDATED,
-            payload: { myConnection: updatedConnectedData[0]?.conected },
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
           let ntfObj = {
             userId: user._id,
             receiverId: receiverId,
@@ -86,6 +76,16 @@ module.exports = exports = {
           let notification = await global.models.GLOBAL.NOTIFICATION.create(
             ntfObj
           );
+          const data4createResponseObject = {
+            req: req,
+            result: 0,
+            message: messages.ITEM_UPDATED,
+            payload: { myConnection: updatedConnectedData[0]?.conected },
+            logPayload: false,
+          };
+          res
+            .status(enums.HTTP_CODES.OK)
+            .json(utils.createResponseObject(data4createResponseObject));
           try {
             if (findToken.deviceToken !== "1234") {
               let data = {

@@ -10,9 +10,10 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { answerByMe } = req.query;
-    console.log("answerByM========================e", answerByMe);
+    console.log("answerByM========================e", user);
     try {
       let Answers = [];
+      let UserAnswer = [];
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
       req.query.limit = req.query.limit ? req.query.limit : 10;
@@ -53,7 +54,26 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
-            { createdBy: { $nin: user.blockUser } },
+            { createdBy: { $nin: user.blockUser, $nin: user._id } },
+          ],
+        })
+          .populate({
+            path: "createdBy",
+            model: "user",
+            select:
+              "_id name subject profileImage currentRole countryOfResidence",
+          })
+          .sort({
+            createdAt: -1,
+          });
+
+        let ansUser = await global.models.GLOBAL.QUESTION.findOne({
+          $and: [
+            { _id: questionArray[i] },
+            { _id: { $nin: user.answerLater } },
+            { _id: { $nin: user.removeQuestion } },
+            { _id: { $nin: abuseQuestion } },
+            { createdBy: { $nin: user.blockUser, $in: user._id } },
           ],
         })
           .populate({
@@ -66,7 +86,13 @@ module.exports = exports = {
             createdAt: -1,
           });
         if (ans) {
-          answer.push(ans);
+          Answers.push(ans);
+        }
+
+        if (ansUser) {
+          UserAnswer.push(ansUser);
+          console.log("ansUser", UserAnswer);
+          console.log("ansUser-UserAnswer", UserAnswer.length);
         }
       }
 
@@ -180,12 +206,14 @@ module.exports = exports = {
           message: messages.SUCCESS,
           payload: {
             questions: Answers,
-            count: Answers.length,
+            count: Answers.length - UserAnswer.length,
             page,
             limit,
           },
           logPayload: false,
         };
+
+        console.log("data4createResponseObject", data4createResponseObject);
         res
           .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));

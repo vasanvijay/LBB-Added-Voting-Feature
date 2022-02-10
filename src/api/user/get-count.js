@@ -38,7 +38,7 @@ module.exports = exports = {
           { _id: { $nin: user.answerLater } },
           { _id: { $nin: user.removeQuestion } },
           { _id: { $nin: abuseQuestion } },
-          { createdBy: { $nin: user.blockUser } },
+          { createdBy: { $nin: user.blockUser, $nin: user._id } },
         ],
       });
       // console.log("ANS-->>", ans);
