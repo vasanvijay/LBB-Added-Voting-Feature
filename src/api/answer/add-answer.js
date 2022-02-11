@@ -105,8 +105,9 @@ module.exports = exports = {
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM.create(roomObj);
         }
 
+        console.log("UserIDDDD--->>", user._id);
         await global.models.GLOBAL.QUESTION.updateOne(
-          { _id: question },
+          { _id: question, createdBy: { $nin: user._id } },
           { $inc: { response: 1 } },
           { new: true }
         );

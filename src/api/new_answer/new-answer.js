@@ -65,9 +65,8 @@ module.exports = exports = {
               { $set: { lastMessage: lastMessageObj } },
               { new: true }
             );
-          // console.log("here in if--->", newAnswer);
           const updatedQue = await global.models.GLOBAL.QUESTION.updateOne(
-            { _id: question, createdBy: { $nin: user._id } },
+            { _id: question, createdBy: { $nin: user.id } },
             { $inc: { response: 1 } },
             { new: true }
           );
