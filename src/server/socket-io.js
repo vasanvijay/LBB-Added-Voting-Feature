@@ -595,6 +595,85 @@ module.exports = (server, logger) => {
 
     socket.on("check-answer", async function () {});
 
+    socket.on("star-messages", async function ({ messageId, userId, star }) {
+      console.log("star-messages---------1", star);
+      try {
+        if (messageId) {
+          let starMessage;
+          if (star == true) {
+            starMessage = await global.models.GLOBAL.CHAT.findByIdAndUpdate(
+              {
+                _id: messageId,
+              },
+              {
+                isStar: true,
+
+                $push: {
+                  starredBy: userId,
+                },
+              },
+              {
+                new: true,
+              }
+            );
+          } else {
+            console.log("star-messages", star);
+            starMessage = await global.models.GLOBAL.CHAT.findByIdAndUpdate(
+              {
+                _id: messageId,
+              },
+              {
+                $set: {
+                  isStar: false,
+                },
+                $pull: {
+                  starredBy: userId,
+                },
+              },
+              {
+                new: true,
+              }
+            );
+          }
+          if (!starMessage) {
+            const data4createResponseObject = {
+              req: req,
+              result: -1,
+              message: messages.GENERAL,
+              payload: {},
+              logPayload: false,
+            };
+            return res
+              .status(enums.HTTP_CODES.BAD_REQUEST)
+              .json(utils.createResponseObject(data4createResponseObject));
+          } else {
+            const data4createResponseObject = {
+              req: req,
+              result: 0,
+              message: "MESSAGE STAR SUCCESSFULLY.",
+              payload: { starMessage },
+              logPayload: false,
+            };
+            return res
+              .status(enums.HTTP_CODES.OK)
+              .json(utils.createResponseObject(data4createResponseObject));
+          }
+        }
+      } catch (error) {
+        logger.error(
+          `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
+        );
+        const data4createResponseObject = {
+          req: req,
+          result: -1,
+          message: messages.GENERAL,
+          payload: {},
+          logPayload: false,
+        };
+        return data4createResponseObject;
+      }
+    });
+
     socket.on("error", function (err) {
       console.log("received error from socket:", socket.id);
       console.log(err);
