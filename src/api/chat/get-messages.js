@@ -64,6 +64,7 @@ module.exports = exports = {
 
         let request = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
           roomId: ObjectId(req),
+          // requestBy: ObjectId(user.id),
         })
           .populate({
             path: "requestTo",
@@ -77,7 +78,7 @@ module.exports = exports = {
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
-
+        console.log("request------------------------>", request);
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
             {
