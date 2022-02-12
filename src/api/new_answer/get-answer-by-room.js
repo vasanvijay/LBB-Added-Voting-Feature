@@ -78,10 +78,23 @@ module.exports = exports = {
                     "_id name email region currentRole subject profileImage countryOfResidence",
                 });
 
-            const isFriend = await global.models.GLOBAL.USER.findOne({
-              _id: user.id,
-              accepted: findRoom.createdBy,
+            let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
+              senderId: user.id,
+              receiverId: findRoom.createdBy,
             });
+
+            let isFriend;
+            if (checkRequest) {
+              isFriend = "pending";
+            } else {
+              const checkRequestProfile =
+                await global.models.GLOBAL.USER.findOne({
+                  _id: user.id,
+                  accepted: findRoom.createdBy,
+                });
+
+              isFriend = checkRequestProfile == null ? "false" : "true";
+            }
 
             const data4createResponseObject = {
               req: req,
@@ -90,7 +103,7 @@ module.exports = exports = {
               payload: {
                 answer: findAnswer,
                 request: findRequest,
-                isFriend: isFriend == null ? false : true,
+                isFriend: isFriend,
               },
               logPayload: false,
             };
@@ -137,10 +150,22 @@ module.exports = exports = {
                     "_id name email region currentRole subject profileImage countryOfResidence",
                 });
 
-            const isFriend = await global.models.GLOBAL.USER.findOne({
-              _id: user.id,
-              accepted: findRoom?.createdBy,
+            let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
+              senderId: user.id,
+              receiverId: findRoom.createdBy,
             });
+            let isFriend;
+            if (checkRequest) {
+              isFriend = "pending";
+            } else {
+              const checkRequestProfile =
+                await global.models.GLOBAL.USER.findOne({
+                  _id: user.id,
+                  accepted: findRoom.createdBy,
+                });
+
+              isFriend = checkRequestProfile == null ? "false" : "true";
+            }
             const data4createResponseObject = {
               req: req,
               result: 0,
@@ -148,7 +173,7 @@ module.exports = exports = {
               payload: {
                 answer: findAnswer,
                 request: findRequest,
-                isFriend: isFriend == null ? false : true,
+                isFriend: isFriend,
               },
               logPayload: false,
             };
