@@ -463,6 +463,13 @@ module.exports = (server, logger) => {
               _id: answerId,
             });
 
+          const decreaseResponse =
+            await global.models.GLOBAL.QUESTION.updateOne(
+              { _id: findQuestion._id, createdBy: findQuestion.createdBy },
+              { $inc: { response: -1 } },
+              { new: true }
+            );
+
           if (deleteAnswer) {
             const data4createResponseObject = {
               // req: req,
