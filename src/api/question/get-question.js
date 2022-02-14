@@ -14,12 +14,15 @@ module.exports = exports = {
     const { question } = req.query;
     const { byUser } = req.query;
     const { search } = req.query;
+
+    console.log("users-------", user);
     let criteria;
     if (byUser) {
       criteria = {
         createdBy: user._id,
       };
       if (question) {
+        console.log("-----------------");
         criteria = {
           _id: ObjectId(question),
           createdBy: ObjectId(user._id),
@@ -79,6 +82,7 @@ module.exports = exports = {
         for (var i = 0; i < user.abuseQuestion.length; i++) {
           abuseQuestion.push(user.abuseQuestion[i].questionId);
         }
+        console.log("abuseQuestion--->>", user.subject);
         quResult = await global.models.GLOBAL.QUESTION.find({
           question: { $regex: search, $options: "i" },
           $and: [
@@ -150,7 +154,7 @@ module.exports = exports = {
         user.subject.push(user.sexualOrientation);
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
-
+        console.log("user.------------", user);
         quResult = await global.models.GLOBAL.QUESTION.find({
           $and: [
             { _id: { $nin: user.answerLater } },
@@ -178,6 +182,8 @@ module.exports = exports = {
             createdAt: -1,
           })
           .exec();
+
+        console.log("quResult", quResult);
         if (criteria) {
           quResult = await global.models.GLOBAL.QUESTION.find(criteria)
             .populate({
@@ -191,6 +197,8 @@ module.exports = exports = {
               createdAt: -1,
             })
             .exec();
+
+          console.log("quResult", quResult);
         }
         count = await global.models.GLOBAL.QUESTION.count({
           $and: [

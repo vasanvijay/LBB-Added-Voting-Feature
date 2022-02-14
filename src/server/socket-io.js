@@ -39,6 +39,8 @@ module.exports = (server, logger) => {
 
       try {
         let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
+
+        console.log("chatHistory--->>", roomId);
         console.log("history", chatHistory.payload);
         if (chatHistory.payload && chatHistory.payload.chats) {
           io.in(socket.id).emit("history", { chats: chatHistory.payload });
@@ -462,6 +464,26 @@ module.exports = (server, logger) => {
             await global.models.GLOBAL.ANSWER.findOneAndRemove({
               _id: answerId,
             });
+
+          const getLastAnswer = await global.models.GLOBAL.ANSWER.findOne({
+            question: findQuestion._id,
+          }).sort({ createdAt: -1 });
+
+          let lastMessageObj = {
+            answerId: getLastAnswer._id,
+            answer: getLastAnswer.answer,
+            createdAt: Date.now(),
+          };
+
+          console;
+          await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
+            {
+              // _id:roomId,
+              _id: getLastAnswer.roomId,
+            },
+            { $set: { lastMessage: lastMessageObj } },
+            { new: true }
+          );
 
           const decreaseResponse =
             await global.models.GLOBAL.QUESTION.updateOne(
