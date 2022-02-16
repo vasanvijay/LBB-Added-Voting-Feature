@@ -49,9 +49,6 @@ module.exports = exports = {
             },
             { new: true }
           );
-          await global.models.GLOBAL.CONNECTION.findByIdAndRemove({
-            _id: connectionId,
-          });
           updatedConnectedData = JSON.parse(
             JSON.stringify(updatedConnectedData)
           );
@@ -76,6 +73,36 @@ module.exports = exports = {
           let notification = await global.models.GLOBAL.NOTIFICATION.create(
             ntfObj
           );
+
+          const msg = await global.models.GLOBAL.CONNECTION.findOne({
+            _id: connectionId,
+          });
+
+          let participateIds = [];
+          // check user type
+          participateIds.push(user._id);
+          participateIds.push(receiverId);
+          let chatRoom = await global.models.GLOBAL.CHAT_ROOM.create({
+            participateIds: participateIds,
+            createdAt: Date.now(),
+            createdBy: user._id,
+          });
+
+          console.log("chatRoom", chatRoom);
+          let chat = {
+            roomId: chatRoom._id,
+            sender: msg.senderId,
+            message: msg.message,
+            type: "string",
+            parentMessageId: null,
+            createdAt: Date.now(),
+          };
+
+          let newMessage = await global.models.GLOBAL.CHAT.create(chat);
+
+          await global.models.GLOBAL.CONNECTION.findByIdAndRemove({
+            _id: connectionId,
+          });
           const data4createResponseObject = {
             req: req,
             result: 0,
@@ -83,6 +110,7 @@ module.exports = exports = {
             payload: { myConnection: updatedConnectedData[0]?.conected },
             logPayload: false,
           };
+
           res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
