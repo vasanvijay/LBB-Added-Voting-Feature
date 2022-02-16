@@ -19,4 +19,4 @@ deploy:
   script:
     - ssh-add <(echo "$PRIVATE_KEY")
     - rm -rf .git
-    - ssh admin@"$REJOICEDEV" "cd ${WORK_DIR}; git pull; npm install; pm2 delete leaderbridge-backend; pm2 start app.yml"
+    - ssh -o StrictHostKeyChecking=no admin@"$REJOICEDEV" "cd ${WORK_DIR}; git pull; npm install; pm2 delete leaderbridge-backend; pm2 start app.yml"
