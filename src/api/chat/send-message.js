@@ -18,6 +18,17 @@ module.exports = exports = {
     const { roomId, sender, message, type, parentMessageId } = req;
     // console.log("ID-->>", parentMessageId);
     // const { user } = req;
+
+    console.log("ID-->>", sender);
+    const chat_user = await global.models.GLOBAL.CHAT_ROOM.findById(roomId);
+    console.log("chat_user-->>", chat_user.participateIds);
+    for (let i = 0; i < chat_user.participateIds.length; i++) {
+      if (chat_user.participateIds[i] == sender) {
+        chat_user.participateIds.splice(i, 1);
+      }
+    }
+    console.log("new participentIds-->>", chat_user.participateIds);
+    let receiverId = chat_user.participateIds[0];
     try {
       let chat = {
         roomId: roomId,
@@ -53,6 +64,26 @@ module.exports = exports = {
           { new: true }
         );
       // console.log("NEW CHAT---->>", newChat);
+
+      let ntfObj = {
+        userId: sender,
+        receiverId: receiverId,
+        title: `Notification By ${sender} to ${receiverId}`,
+        description: {
+          data: { title: "Leaderbridge" },
+          notification: {
+            title: "New Message Request!!!",
+            body: ` Give you a chat message`,
+          },
+        },
+        createdBy: sender,
+        updatedBy: sender,
+        createdAt: Date.now(),
+      };
+      console.log("currentNotification-->>", ntfObj);
+
+      let notification = await global.models.GLOBAL.NOTIFICATION.create(ntfObj);
+      console.log("NEW CHAT---->>", notification);
       const data4createResponseObject = {
         req: req,
         result: 0,

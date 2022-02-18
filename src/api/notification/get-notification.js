@@ -2,17 +2,24 @@ const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
+const { getHeaderFromToken } = require("../../utils");
 const utils = require("../../utils");
 
 // Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
   // route handler
-  handler: async (req, res) => {
-    const { user } = req;
+  handler: async (req) => {
+    const { user, status } = req;
+    console.log(
+      "user----------------------------------------------------------------->>vishv",
+      status
+    );
     let notification = [];
+    const userData = await getHeaderFromToken(user);
+
     try {
       let getNotification = await global.models.GLOBAL.NOTIFICATION.find({
-        receiverId: user._id,
+        receiverId: userData.id,
       })
         .sort({ createdAt: -1 })
         .populate({
@@ -21,7 +28,7 @@ module.exports = exports = {
           select: "_id subject profileImage currentRole",
         });
 
-      console.log("getNotification", user._id);
+      console.log("getNotification", getNotification.length);
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {
           if (getNotification[i].question) {
@@ -71,41 +78,48 @@ module.exports = exports = {
             notification.push(ntfObj);
           }
         }
-        let updateNotification =
-          await global.models.GLOBAL.NOTIFICATION.updateMany(
-            { receiverId: user._id },
-            {
-              $set: {
-                status: false,
+        console.log("I-----------------Am", status);
+
+        if (status) {
+          console.log("I-----------------Am", status);
+          let updateNotification =
+            await global.models.GLOBAL.NOTIFICATION.updateMany(
+              { receiverId: userData.id },
+              {
+                $set: {
+                  status: false,
+                },
               },
-            },
-            { new: true }
-          );
+              { new: true }
+            );
+        }
         const data4createResponseObject = {
-          req: req,
+          // req: req,
           result: 0,
           message: messages.ITEM_FETCHED,
           payload: { notification },
           logPayload: false,
         };
-        return res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        // return res
+        //   .status(enums.HTTP_CODES.OK)
+        //   .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
       }
     } catch (error) {
       logger.error(
         `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
       );
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.GENERAL,
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      // return res
+      //   .status(enums.HTTP_CODES.BAD_REQUEST)
+      //   .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
   },
 };

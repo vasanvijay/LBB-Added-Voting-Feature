@@ -4,7 +4,7 @@ const chatCtrl = require("../api/chat");
 const answerCtrl = require("../api/new_answer");
 const { sendPushNotification } = require("../middlewares/pushNotification");
 const api4Connection = require("../../../leaderbridge-backend/src/api/connection/index");
-
+const api4Notification = require("../../../leaderbridge-backend/src/api/notification/index");
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
   const io = require("socket.io")(server, {
@@ -155,6 +155,11 @@ module.exports = (server, logger) => {
           // console.log("addAnswer Socket---->>", addAnswer.payload.answer);
           io.in(socket.id).emit("add-answer", addAnswer.payload.answer);
           io.emit("check-answer");
+          const notification =
+            await api4Notification.getNotificationCount.handler({
+              user,
+            });
+          io.emit("get-notification-count", { notification: "get" });
           console.log("answer add success.");
         } catch (error) {
           console.log("Error in adding Answer ", error);
@@ -730,6 +735,30 @@ module.exports = (server, logger) => {
       console.log("connection-received", conection);
       io.in(socket.id).emit("connection-received", {
         conection: conection,
+      });
+    });
+    socket.on("get-notification", async function ({ user, status }) {
+      console.log("hgjgjhghjhgjhgjghjhgjhgjhgjgh", status);
+      const notification = await api4Notification.getAllNotification.handler({
+        user,
+        status,
+      });
+
+      console.log("get-notification", notification);
+      io.in(socket.id).emit("get-notification", {
+        notification: notification,
+      });
+    });
+
+    socket.on("get-notification-count", async function ({ user }) {
+      const notification = await api4Notification.getNotificationCount.handler({
+        user,
+      });
+
+      console.log("get-notification-count", notification);
+      console.log("get-notification-count", notification);
+      io.in(socket.id).emit("get-notification-count", {
+        notification: notification,
       });
     });
   });

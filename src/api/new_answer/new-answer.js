@@ -32,6 +32,7 @@ module.exports = exports = {
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
           _id: roomId,
         });
+        console.log("answerrROROOMMM", findRoom);
         if (findRoom) {
           let addAnswer = {
             roomId: roomId,
@@ -81,14 +82,14 @@ module.exports = exports = {
             }
           );
           let ntfObj = {
-            userId: user._id,
+            userId: user.id,
             receiverId: findQuestion.createdBy,
-            title: `Notification By ${user._id} to ${findQuestion.createdBy}`,
+            title: `Notification By ${user.id} to ${findQuestion.createdBy}`,
             description: {
               data: { title: "Leaderbridge" },
               notification: {
                 title: "Give Answer to your question!!!",
-                body: ` Give Answer to Your Question's ${findQuestion.question}`,
+                body: `Replied To Your Answer ${findQuestion.question}`,
               },
             },
             createdBy: user.id,
@@ -96,34 +97,40 @@ module.exports = exports = {
             question: question,
             createdAt: Date.now(),
           };
+
+          console.log("ntfObj--->>", ntfObj);
           let findToken = await global.models.GLOBAL.USER.findOne({
             _id: findQuestion.createdBy,
           });
           let notification = await global.models.GLOBAL.NOTIFICATION.create(
             ntfObj
           );
-          try {
-            if (findToken.deviceToken !== "1234") {
-              let data = {
-                payload: ntfObj.description,
-                firebaseToken: findToken.deviceToken,
-              };
-              sendPushNotification(data);
-              res.status(200).send({
-                msg: "Notification sent successfully!",
-              });
-            }
-            res.status(200).send({
-              msg: "Notification sent successfully!",
-            });
-          } catch (e) {
-            res.status(500).send({
-              msg: "Unable to send notification!",
-            });
-          }
+
+          console.log("notification--->>", notification);
+          // try {
+          //   if (findToken.deviceToken !== "1234") {
+          //     let data = {
+          //       payload: ntfObj.description,
+          //       firebaseToken: findToken.deviceToken,
+          //     };
+          //     sendPushNotification(data);
+          //     res.status(200).send({
+          //       msg: "Notification sent successfully!",
+          //     });
+          //     return;
+          //   }
+          //   res.status(200).send({
+          //     msg: "Notification sent successfully!",
+          //   });
+          // } catch (e) {
+          //   res.status(500).send({
+          //     msg: "Unable to send notification!",
+          //   });
+          //   console.log("e--->>", e);
+          // }
 
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: 0,
             message: messages.ITEM_INSERTED,
             payload: { answer: newAnswer },
@@ -132,7 +139,7 @@ module.exports = exports = {
           return data4createResponseObject;
         } else {
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: -1,
             message: messages.ITEM_NOT_FOUND,
             payload: {},
@@ -142,11 +149,8 @@ module.exports = exports = {
         }
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.GENERAL,
         payload: {},

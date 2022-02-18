@@ -10,12 +10,12 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    console.log(user, "useerData");
-    const userData = await getHeaderFromToken(user);
-    console.log("userData", userData);
+    // console.log(user, "useerData");
+    // const userData = await getHeaderFromToken(user);
+    // console.log("userData", userData);
     try {
       let findConnection = await global.models.GLOBAL.USER.find({
-        _id: userData.id,
+        _id: user._id,
       }).populate({
         path: "accepted",
         model: "user",
