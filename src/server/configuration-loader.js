@@ -1,4 +1,3 @@
-const argv = require("yargs").argv;
 // const { assign, isEmpty } = require("lodash");
 
 const { NODE_ENV = "local", PORT = "8088" } = process.env;
@@ -17,7 +16,7 @@ const loadConfigurationFromFile = async (
     */
   const paths = {
     config: pathToConfig,
-    secrets: argv._[1] || argv.secret || pathToSecretDir,
+    secrets: pathToSecretDir,
   };
 
   // global.config = require(paths.config);
