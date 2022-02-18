@@ -3,6 +3,7 @@ const activeUsers = new Set();
 const chatCtrl = require("../api/chat");
 const answerCtrl = require("../api/new_answer");
 const { sendPushNotification } = require("../middlewares/pushNotification");
+const api4Connection = require("../../../leaderbridge-backend/src/api/connection/index");
 
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
@@ -706,6 +707,30 @@ module.exports = (server, logger) => {
     socket.on("error", function (err) {
       console.log("received error from socket:", socket.id);
       console.log(err);
+    });
+
+    // conection connected
+
+    socket.on("connection-connected", async function ({ user }) {
+      console.log("connection-connected======", user);
+      const conection = await api4Connection.getConnected.handler({ user });
+      console.log("connection-connected", conection);
+      io.in(socket.id).emit("connection-connected", {
+        conection: conection,
+      });
+    });
+
+    socket.on("connection-received", async function ({ user, received, sent }) {
+      console.log("00000000000000000000000000000", user, received, sent);
+      const conection = await api4Connection.getConnection.handler({
+        user,
+        received,
+        sent,
+      });
+      console.log("connection-received", conection);
+      io.in(socket.id).emit("connection-received", {
+        conection: conection,
+      });
     });
   });
 };
