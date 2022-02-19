@@ -10,12 +10,21 @@ module.exports = exports = {
   // route handler
   handler: async (req) => {
     const { user, status } = req;
-    console.log(
-      "user----------------------------------------------------------------->>vishv",
-      status
-    );
+
     let notification = [];
     const userData = await getHeaderFromToken(user);
+    console.log("userDa------------------", userData);
+
+    let updateNotification = await global.models.GLOBAL.NOTIFICATION.updateMany(
+      { receiverId: userData.id },
+      {
+        $set: {
+          status: false,
+        },
+      },
+      { new: true }
+    );
+    console.log("updateNotificationnnn----------", updateNotification);
 
     try {
       let getNotification = await global.models.GLOBAL.NOTIFICATION.find({
@@ -80,19 +89,6 @@ module.exports = exports = {
         }
         console.log("I-----------------Am", status);
 
-        if (status) {
-          console.log("I-----------------Am", status);
-          let updateNotification =
-            await global.models.GLOBAL.NOTIFICATION.updateMany(
-              { receiverId: userData.id },
-              {
-                $set: {
-                  status: false,
-                },
-              },
-              { new: true }
-            );
-        }
         const data4createResponseObject = {
           // req: req,
           result: 0,

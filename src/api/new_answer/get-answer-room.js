@@ -34,7 +34,8 @@ module.exports = exports = {
         }).populate({
           path: "createdBy",
           model: "user",
-          select: "_id name subject profileImage currentRole email blockUser",
+          select:
+            "_id name subject profileImage currentRole email blockUser region",
         });
 
         // console.log("findAnswerRoom---->", findAnswerRoom);

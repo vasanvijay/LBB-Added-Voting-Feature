@@ -13,25 +13,25 @@ module.exports = exports = {
     const userData = await getHeaderFromToken(user);
     console.log("userDatauserDatauserData", userData);
     try {
-      let count = await global.models.GLOBAL.NOTIFICATION.count({
-        $and: [{ receiverId: userData.id }, { status: true }],
+      let count = await global.models.GLOBAL.NOTIFICATION.find({
+        receiverId: userData.id,
+        status: true,
       });
-      console.log("countcount", count);
-      if (count >= 0) {
-        const data4createResponseObject = {
-          // req: req,
-          result: 0,
-          message: messages.ITEM_FETCHED,
-          payload: {
-            count: count,
-          },
-          logPayload: false,
-        };
-        // return res
-        //   .status(enums.HTTP_CODES.OK)
-        //   .json(utils.createResponseObject(data4createResponseObject));
-        return data4createResponseObject;
-      }
+      console.log("countcount", count.length);
+
+      const data4createResponseObject = {
+        // req: req,
+        result: 0,
+        message: messages.ITEM_FETCHED,
+        payload: {
+          count: count.length,
+        },
+        logPayload: false,
+      };
+      // return res
+      //   .status(enums.HTTP_CODES.OK)
+      //   .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     } catch (error) {
       // logger.error(
       //   `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`

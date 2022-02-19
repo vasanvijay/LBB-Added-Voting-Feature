@@ -159,7 +159,8 @@ module.exports = (server, logger) => {
             await api4Notification.getNotificationCount.handler({
               user,
             });
-          io.emit("get-notification-count", { notification: "get" });
+          io.emit("get-notification-count-request", { notification: true });
+          io.emit("get-notification-request", { notification: true });
           console.log("answer add success.");
         } catch (error) {
           console.log("Error in adding Answer ", error);
@@ -737,29 +738,62 @@ module.exports = (server, logger) => {
         conection: conection,
       });
     });
-    socket.on("get-notification", async function ({ user, status }) {
-      console.log("hgjgjhghjhgjhgjghjhgjhgjhgjgh", status);
-      const notification = await api4Notification.getAllNotification.handler({
-        user,
-        status,
-      });
 
-      console.log("get-notification", notification);
-      io.in(socket.id).emit("get-notification", {
-        notification: notification,
-      });
+    socket.on("get-notification-request", async function ({ user }) {
+      try {
+        const notification = await api4Notification.getAllNotification.handler({
+          user,
+        });
+
+        console.log("get-notification", notification);
+        io.in(socket.id).emit("get-notification", {
+          notification: notification,
+        });
+      } catch (error) {
+        console.log("get-notification", error);
+      }
+    });
+    socket.on("change-notification-status", async function ({ user, status }) {
+      try {
+        await api4Notification.getAllNotification.handler({
+          user,
+          status,
+        });
+        const notification =
+          await api4Notification.getNotificationCount.handler({
+            user,
+          });
+
+        console.log("get-notification-count", notification);
+        io.in(socket.id).emit("get-notification-count", {
+          notification: notification,
+        });
+      } catch (error) {
+        console.log("get-notification", error);
+      }
     });
 
-    socket.on("get-notification-count", async function ({ user }) {
-      const notification = await api4Notification.getNotificationCount.handler({
-        user,
-      });
+    socket.on("get-notification-count-request", async function ({ user }) {
+      console.log(
+        "get-notification-count-requestcalledd------------------",
+        user
+      );
+      try {
+        const notificationCountData =
+          await api4Notification.getNotificationCount.handler({
+            user,
+          });
 
-      console.log("get-notification-count", notification);
-      console.log("get-notification-count", notification);
-      io.in(socket.id).emit("get-notification-count", {
-        notification: notification,
-      });
+        console.log(
+          "get-notification-countcalled----------------",
+          notificationCountData
+        );
+        io.in(socket.id).emit("get-notification-count", {
+          notification: notificationCountData,
+        });
+      } catch (error) {
+        console.log("get-notification-count", error);
+      }
     });
   });
 };
