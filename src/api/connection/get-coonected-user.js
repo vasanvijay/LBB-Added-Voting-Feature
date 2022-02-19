@@ -31,10 +31,10 @@ module.exports = exports = {
         },
         logPayload: false,
       };
-      // res
-      //   .status(enums.HTTP_CODES.OK)
-      //   .json(utils.createResponseObject(data4createResponseObject));
-      return data4createResponseObject;
+      res
+        .status(enums.HTTP_CODES.OK)
+        .json(utils.createResponseObject(data4createResponseObject));
+      // return data4createResponseObject;
     } catch (error) {
       logger.error(
         `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
@@ -48,10 +48,10 @@ module.exports = exports = {
         logPayload: false,
       };
 
-      return data4createResponseObject;
-      // res
-      //   .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-      //   .json(utils.createResponseObject(data4createResponseObject));
+      // return data4createResponseObject;
+      res
+        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+        .json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };
