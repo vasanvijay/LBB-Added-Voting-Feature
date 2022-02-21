@@ -5,6 +5,7 @@ const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
+const { sendPushNotification } = require("../../middlewares/pushNotification");
 const utils = require("../../utils");
 
 // Add Answer
@@ -16,7 +17,7 @@ module.exports = exports = {
     const { id } = req;
     if (!id) {
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.INVALID_PARAMETERS,
         payload: {},
@@ -37,11 +38,14 @@ module.exports = exports = {
           requestTo: id,
           createdAt: Date.now(),
           roomId: req.roomId,
+          typeOfRequest: req.typeOfRequest,
         };
         let newRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(
             newRequestObj
           );
+
+        console.log("iusRequestCreated--->", newRequest);
 
         let ntfObj = {
           userId: user.id,
@@ -61,31 +65,31 @@ module.exports = exports = {
         let findToken = await global.models.GLOBAL.USER.findOne({
           _id: id,
         });
-        try {
-          if (findToken.deviceToken !== "1234") {
-            let data = {
-              payload: ntfObj.description,
-              firebaseToken: findToken.deviceToken,
-            };
-            sendPushNotification(data);
-            res.status(200).send({
-              msg: "Notification sent successfully!",
-            });
-          }
-          res.status(200).send({
-            msg: "Notification sent successfully!",
-          });
-        } catch (e) {
-          res.status(500).send({
-            msg: "Unable to send notification!",
-          });
+        // try {
+        if (findToken.deviceToken !== "1234") {
+          let data = {
+            payload: ntfObj.description,
+            firebaseToken: findToken.deviceToken,
+          };
+          sendPushNotification(data);
+          // res.status(200).send({
+          //   msg: "Notification sent successfully!",
+          // });
         }
+        // res.status(200).send({
+        //   msg: "Notification sent successfully!",
+        // });
+        // } catch (e) {
+        //   res.status(500).send({
+        //     msg: "Unable to send notification!",
+        //   });
+        // }
         let notification = await global.models.GLOBAL.NOTIFICATION.create(
           ntfObj
         );
 
         const data4createResponseObject = {
-          req: req,
+          // req: req,
           result: 0,
           message: "Requested Successfully.",
           payload: { newRequest },
@@ -96,7 +100,7 @@ module.exports = exports = {
         // .json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4createResponseObject = {
-          req: req,
+          // req: req,
           result: -1,
           message: messages.GENERAL,
           payload: {},
@@ -107,11 +111,11 @@ module.exports = exports = {
         // .json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      // logger.error(
+      //   `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
+      // );
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.GENERAL,
         payload: {},

@@ -34,6 +34,7 @@ module.exports = exports = {
           { matchingRoom: false },
         ],
       });
+      console.log("chatRoom-->>", chatRoom);
       if (chatRoom) {
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
@@ -89,6 +90,8 @@ module.exports = exports = {
           createdAt: Date.now(),
           createdBy: user._id,
         });
+        console.log("chatRoom-->>create", chatRoom);
+
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
             {

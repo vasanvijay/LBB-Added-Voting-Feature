@@ -64,6 +64,7 @@ module.exports = exports = {
 
         let request = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
           roomId: ObjectId(req),
+          typeOfRequest: "requestProfileAccess",
           // requestBy: ObjectId(user.id),
         })
           .populate({
@@ -78,6 +79,45 @@ module.exports = exports = {
             select:
               "_id name email region currentRole subject profileImage countryOfResidence",
           });
+        let requestAudio =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+            roomId: ObjectId(req),
+            typeOfRequest: "requestAudioAccess",
+            // requestBy: ObjectId(user.id),
+          })
+            .populate({
+              path: "requestTo",
+              model: "user",
+              select:
+                "_id name email region currentRole subject profileImage countryOfResidence",
+            })
+            .populate({
+              path: "requestBy",
+              model: "user",
+              select:
+                "_id name email region currentRole subject profileImage countryOfResidence",
+            });
+        let requestVideo =
+          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+            roomId: ObjectId(req),
+            typeOfRequest: "requestVideoAccess",
+            // requestBy: ObjectId(user.id),
+          })
+            .populate({
+              path: "requestTo",
+              model: "user",
+              select:
+                "_id name email region currentRole subject profileImage countryOfResidence",
+            })
+            .populate({
+              path: "requestBy",
+              model: "user",
+              select:
+                "_id name email region currentRole subject profileImage countryOfResidence",
+            });
+        console.log("requestAudio----------->", requestAudio);
+        console.log("requestVideo----------->", requestVideo);
+
         console.log("request------------------------>", request);
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
@@ -112,6 +152,8 @@ module.exports = exports = {
             payload: {
               chats: chats,
               request: request,
+              requestAudio: requestAudio,
+              requestVideo: requestVideo,
               isFriend: isFriend == null ? false : true,
 
               text: "You are blocked this user, if you want to unblock this user, please go to setting and unblock this user.",
@@ -129,6 +171,8 @@ module.exports = exports = {
             payload: {
               chats: chats,
               request: request,
+              requestAudio: requestAudio,
+              requestVideo: requestVideo,
               text: "You are blocked by this user.",
               isFriend: isFriend == null ? false : true,
             },
@@ -145,6 +189,8 @@ module.exports = exports = {
             payload: {
               chats: chats,
               request: request,
+              requestAudio: requestAudio,
+              requestVideo: requestVideo,
               text: null,
               isFriend: isFriend == null ? false : true,
             },

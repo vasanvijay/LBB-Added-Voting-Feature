@@ -42,7 +42,7 @@ module.exports = (server, logger) => {
         let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
 
         console.log("chatHistory--->>", roomId);
-        console.log("history", chatHistory.payload);
+        console.log("////////////////history", chatHistory.payload);
         if (chatHistory.payload && chatHistory.payload.chats) {
           io.in(socket.id).emit("history", { chats: chatHistory.payload });
         } else {
@@ -208,28 +208,32 @@ module.exports = (server, logger) => {
     });
 
     // New Request in Chat
-    socket.on("new-request-chat", async function ({ user, id, roomId }) {
-      // console.log("add-answer------------->>>>>>", user);
-      try {
-        let addNewRequestInChat = await chatCtrl.requestProfile.handler({
-          user: user,
-          id: id,
-          roomId: roomId,
-        });
-        console.log(
-          "New Request in chat Socket---->>",
-          addNewRequestInChat.payload.newRequest
-        );
-        io.in(socket.id).emit(
-          "new-request-chat",
-          addNewRequestInChat.payload.newRequest
-        );
-        io.emit("check-answer");
-        console.log("request add success.");
-      } catch (error) {
-        console.log("Error in adding request ", error);
+    socket.on(
+      "new-request-chat",
+      async function ({ user, id, roomId, typeOfRequest }) {
+        // console.log("add-answer------------->>>>>>", user);
+        try {
+          let addNewRequestInChat = await chatCtrl.requestProfile.handler({
+            user: user,
+            id: id,
+            roomId: roomId,
+            typeOfRequest: typeOfRequest,
+          });
+          console.log(
+            "addNewRequestInChat----->",
+            addNewRequestInChat.payload.newRequest
+          );
+          io.in(socket.id).emit(
+            "new-request-chat",
+            addNewRequestInChat.payload.newRequest
+          );
+          io.emit("check-answer");
+          console.log("request add success.");
+        } catch (error) {
+          console.log("Error in adding request ", error);
+        }
       }
-    });
+    );
 
     //Accept Request in Answer
     socket.on(
@@ -259,27 +263,33 @@ module.exports = (server, logger) => {
     );
 
     //Accept Request in Chat
-    socket.on("accept-request-chat", async function ({ user, requestId }) {
-      // console.log("add-answer------------->>>>>>", user);
-      try {
-        let aacceptRequest = await chatCtrl.acceptRequest.handler({
-          user: user,
-          requestId: requestId,
-        });
-        console.log(
-          "Accept Request in Chat Socket---->>",
-          aacceptRequest.payload.updateRequest
-        );
-        io.in(socket.id).emit(
-          "accept-request-chat",
-          aacceptRequest.payload.updateRequest
-        );
-        io.emit("check-answer");
-        console.log("request accepted successfully.");
-      } catch (error) {
-        console.log("Error in accepting request ", error);
+    socket.on(
+      "accept-request-chat",
+      async function ({ user, requestId, status }) {
+        console.log("qqqqqqqqqttttttttyyyyyyyyy");
+        console.log("add-answer------------->>>>>>", status);
+        console.log("add-requestId------------->>>>>>", requestId);
+        try {
+          let aacceptRequest = await chatCtrl.acceptRequest.handler({
+            user: user,
+            requestId: requestId,
+            status: status,
+          });
+          console.log(
+            "Accept Request in Chat Socket---->>",
+            aacceptRequest.payload.updateRequest
+          );
+          io.in(socket.id).emit(
+            "accept-request-chat",
+            aacceptRequest.payload.updateRequest
+          );
+          io.emit("check-answer");
+          console.log("request accepted successfully.");
+        } catch (error) {
+          console.log("Error in accepting request ", error);
+        }
       }
-    });
+    );
 
     //Decline Request in Answer
     socket.on(

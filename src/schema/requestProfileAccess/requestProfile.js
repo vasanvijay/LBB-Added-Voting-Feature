@@ -9,6 +9,7 @@ module.exports = (connection) => {
     acceptedAT: { type: Date },
     acceptedBy: { type: mongoose.Schema.Types.ObjectId, refPath: "user" },
     roomId: { type: mongoose.Schema.Types.ObjectId },
+    typeOfRequest: { type: String, default: "requestProfileAccess" },
   });
   // return chat Schema;
   return connection.model(
