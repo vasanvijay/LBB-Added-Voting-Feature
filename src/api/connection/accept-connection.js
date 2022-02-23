@@ -3,36 +3,52 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const { sendPushNotification } = require("../../middlewares/pushNotification");
+const { getHeaderFromToken } = require("../../utils");
 const utils = require("../../utils");
 
 module.exports = exports = {
   //Router Handler
-  handler: async (req, res) => {
-    const { user } = req;
-    const { accepted } = req.query;
-    const { receiverId } = req.params;
+  handler: async ({ user, accepted, receiverId, connectionId }) => {
+    // const { user } = req;
+    // const { accepted } = req.query;
+    // const { receiverId } = req.params;
+    console.log(
+      "ffffffffffff-----111111111111111111111111111111111111111",
+      receiverId
+    );
+    const userData = await getHeaderFromToken(user);
+    console.log("userData============", userData);
     if (!receiverId) {
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.INVALID_PARAMETERS,
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
+      // return res
+      //   .status(enums.HTTP_CODES.BAD_REQUEST)
+      //   .json(utils.createResponseObject(data4createResponseObject));
     }
     if (accepted) {
+      console.log(
+        "ffffffffffff-----2222222222222222222222222222222222222222222222"
+      );
       let findUser = await global.models.GLOBAL.USER.find({
-        _id: user._id,
+        _id: userData.id,
       });
+      console.log("findUser===================", findUser);
       if (findUser.length > 0) {
+        console.log(
+          "ffffffffffff-----2222222222222222222222222222222222222222222222333",
+          findUser
+        );
         try {
-          const { connectionId } = req.body;
+          // const { connectionId } = req.body;
           let updatedConnectedData =
             await global.models.GLOBAL.USER.findOneAndUpdate(
-              { _id: user._id },
+              { _id: userData.id },
               {
                 $addToSet: {
                   accepted: receiverId,
@@ -44,18 +60,20 @@ module.exports = exports = {
             { _id: receiverId },
             {
               $addToSet: {
-                accepted: user._id,
+                accepted: userData.id,
               },
             },
             { new: true }
           );
+
+          console.log(updatedConnectedData, "updatedConnectedData");
           updatedConnectedData = JSON.parse(
             JSON.stringify(updatedConnectedData)
           );
           let ntfObj = {
-            userId: user._id,
+            userId: userData.id,
             receiverId: receiverId,
-            title: `Notification By ${user._id} to ${receiverId}`,
+            title: `Notification By ${userData.id} to ${receiverId}`,
             description: {
               data: { title: "Leaderbridge" },
               notification: {
@@ -63,8 +81,8 @@ module.exports = exports = {
                 body: " Accepted your connections request.",
               },
             },
-            createdBy: user._id,
-            updatedBy: user._id,
+            createdBy: userData.id,
+            updatedBy: userData.id,
             createdAt: Date.now(),
           };
           let findToken = await global.models.GLOBAL.USER.findOne({
@@ -80,12 +98,12 @@ module.exports = exports = {
 
           let participateIds = [];
           // check user type
-          participateIds.push(user._id);
+          participateIds.push(userData.id);
           participateIds.push(receiverId);
           let chatRoom = await global.models.GLOBAL.CHAT_ROOM.create({
             participateIds: participateIds,
             createdAt: Date.now(),
-            createdBy: user._id,
+            createdBy: userData.id,
           });
 
           console.log("chatRoom", chatRoom);
@@ -104,16 +122,17 @@ module.exports = exports = {
             _id: connectionId,
           });
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: 0,
             message: messages.ITEM_UPDATED,
             payload: { myConnection: updatedConnectedData[0]?.conected },
             logPayload: false,
           };
 
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          // res
+          //   .status(enums.HTTP_CODES.OK)
+          //   .json(utils.createResponseObject(data4createResponseObject));
+
           try {
             if (findToken.deviceToken !== "1234") {
               let data = {
@@ -133,20 +152,19 @@ module.exports = exports = {
               msg: "Unable to send notification!",
             });
           }
+          return data4createResponseObject;
         } catch (error) {
-          logger.error(
-            `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-          );
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: -1,
             message: messages.GENERAL,
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-            .json(utils.createResponseObject(data4createResponseObject));
+          // res
+          //   .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+          //   .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         }
       }
     }

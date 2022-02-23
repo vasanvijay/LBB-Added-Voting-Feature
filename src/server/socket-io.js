@@ -5,6 +5,7 @@ const answerCtrl = require("../api/new_answer");
 const { sendPushNotification } = require("../middlewares/pushNotification");
 const api4Connection = require("../../../leaderbridge-backend/src/api/connection/index");
 const api4Notification = require("../../../leaderbridge-backend/src/api/notification/index");
+const api4User = require("../../../leaderbridge-backend/src/api/user/index");
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
   const io = require("socket.io")(server, {
@@ -266,12 +267,10 @@ module.exports = (server, logger) => {
     socket.on(
       "accept-request-chat",
       async function ({ user, requestId, status }) {
-        console.log("qqqqqqqqqttttttttyyyyyyyyy");
-        console.log("add-answer------------->>>>>>", status);
-        console.log("add-requestId------------->>>>>>", requestId);
         try {
           let aacceptRequest = await chatCtrl.acceptRequest.handler({
             user: user,
+
             requestId: requestId,
             status: status,
           });
@@ -736,18 +735,109 @@ module.exports = (server, logger) => {
       });
     });
 
-    socket.on("connection-received", async function ({ user, received, sent }) {
-      console.log("00000000000000000000000000000", user, received, sent);
-      const conection = await api4Connection.getConnection.handler({
+    socket.on("connection-received", async function ({ user }) {
+      console.log("connection-received======", user);
+      const conection = await api4Connection.getConnectionreceived.handler({
         user,
-        received,
-        sent,
       });
       console.log("connection-received", conection);
       io.in(socket.id).emit("connection-received", {
         conection: conection,
       });
     });
+
+    socket.on("connection-received-sent", async function ({ user }) {
+      console.log("connection-received-sent======", user);
+      const conection = await api4Connection.getConnectionsent.handler({
+        user,
+      });
+      console.log(
+        "connection-received-sent=====================================",
+        conection
+      );
+      io.in(socket.id).emit("connection-received-sent", {
+        conection: conection,
+      });
+    });
+
+    socket.on(
+      "accept-connection",
+      async function ({ user, accepted, receiverId, connectionId }) {
+        console.log("accept-connection======", receiverId);
+        const conection = await api4Connection.acceptConnection.handler({
+          user,
+          accepted,
+          receiverId,
+          connectionId,
+        });
+        console.log("accept-connection", conection);
+        const conectionsent = await api4Connection.getConnectionsent.handler({
+          user,
+        });
+        console.log(
+          "connection-received-sent=====================================",
+          conection
+        );
+        io.in(socket.id).emit("connection-received-sent", {
+          conection: conectionsent,
+        });
+        const conectionreceived =
+          await api4Connection.getConnectionreceived.handler({
+            user,
+          });
+        console.log("connection-received", conection);
+        io.in(socket.id).emit("connection-received", {
+          conection: conectionreceived,
+        });
+        const conectionConected = await api4Connection.getConnected.handler({
+          user,
+        });
+        console.log("connection-connected", conection);
+        io.in(socket.id).emit("connection-connected", {
+          conection: conectionConected,
+        });
+        io.in(socket.id).emit("accept-connection", {
+          conection: conection,
+        });
+      }
+    );
+
+    socket.on(
+      "decline-connection",
+      async function ({ user, senderId, connectionId }) {
+        const conection = await api4Connection.diclineConnection.handler({
+          user,
+          senderId,
+          connectionId,
+        });
+        // console.log("accept-connection", conection)
+        const conectionsent = await api4Connection.getConnectionsent.handler({
+          user,
+        });
+
+        io.in(socket.id).emit("connection-received-sent", {
+          conection: conectionsent,
+        });
+        const conectionreceived =
+          await api4Connection.getConnectionreceived.handler({
+            user,
+          });
+        console.log("connection-received", conection);
+        io.in(socket.id).emit("connection-received", {
+          conection: conectionreceived,
+        });
+        const conectionConected = await api4Connection.getConnected.handler({
+          user,
+        });
+        console.log("connection-connected", conection);
+        io.in(socket.id).emit("connection-connected", {
+          conection: conectionConected,
+        });
+        io.in(socket.id).emit("decline-connection", {
+          conection: conection,
+        });
+      }
+    );
 
     socket.on("get-notification-request", async function ({ user }) {
       try {
@@ -804,6 +894,45 @@ module.exports = (server, logger) => {
       } catch (error) {
         console.log("get-notification-count", error);
       }
+    });
+
+    socket.on("block-user", async function ({ user, userId }) {
+      const conection = await api4User.blockUser.handler({
+        user,
+        userId,
+      });
+      console.log("accept-deeeeeee-connection", conection);
+
+      const conectionConected = await api4Connection.getConnected.handler({
+        user,
+      });
+      console.log("ytytytytytytytyt", conectionConected.payload.connection);
+      io.in(socket.id).emit("connection-connected", {
+        conection: conectionConected,
+      });
+      io.in(socket.id).emit("block-user", {
+        conection: conection,
+      });
+    });
+
+    socket.on("remove-user", async function ({ user, remove, removeId }) {
+      const conection = await api4Connection.removeConnection.handler({
+        user,
+        remove,
+        removeId,
+      });
+      console.log("accept-deeeeeee-connection", conection);
+
+      const conectionConected = await api4Connection.getConnected.handler({
+        user,
+      });
+      console.log("ytytytytytytytyt", conectionConected.payload.connection);
+      io.in(socket.id).emit("connection-connected", {
+        conection: conectionConected,
+      });
+      io.in(socket.id).emit("remove-user", {
+        conection: conection,
+      });
     });
   });
 };

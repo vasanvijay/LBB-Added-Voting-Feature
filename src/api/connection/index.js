@@ -1,5 +1,7 @@
 const addConnection = require("./add-connection");
 const getConnection = require("./get-connection");
+const getConnectionsent = require("./get-connection-sent");
+const getConnectionreceived = require("./get-connection-received");
 const acceptConnection = require("./accept-connection");
 const withdrawConnection = require("./withdraw-connection");
 const getConnected = require("./get-coonected-user");
@@ -14,4 +16,6 @@ module.exports = exports = {
   getConnected,
   diclineConnection,
   removeConnection,
+  getConnectionsent,
+  getConnectionreceived,
 };

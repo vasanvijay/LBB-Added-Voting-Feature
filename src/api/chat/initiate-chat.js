@@ -19,6 +19,7 @@ module.exports = exports = {
       const { id } = req.body;
       const { user } = req;
 
+      console.log("participateIds===================");
       let participateIds = [];
       // check user type
       participateIds.push(user._id);
@@ -35,6 +36,18 @@ module.exports = exports = {
         ],
       });
       console.log("chatRoom-->>", chatRoom);
+      const roomExist = await global.models.GLOBAL.CHAT_ROOM.findOne({
+        $and: [
+          {
+            participateIds: {
+              $size: participateIds.length,
+              $all: [...participateIds],
+            },
+          },
+          { matchingRoom: true },
+        ],
+      });
+      console.log("roomExist-->>", roomExist);
       if (chatRoom) {
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [

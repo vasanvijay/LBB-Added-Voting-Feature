@@ -12,11 +12,12 @@ module.exports = exports = {
   validation: Joi.object({
     questionId: Joi.string().required(),
   }),
-
   // route handler
   handler: async (req, res) => {
     try {
       const { questionId } = req.body;
+      console.log("this calleddddddd");
+
       const { user } = req;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: questionId,

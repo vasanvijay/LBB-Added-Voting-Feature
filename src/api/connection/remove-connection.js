@@ -3,34 +3,35 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
+const { getHeaderFromToken } = require("../../utils");
 
 module.exports = exports = {
   //Router Handler
-  handler: async (req, res) => {
-    const { user } = req;
-    const { remove } = req.query;
-    const { removeId } = req.params;
+  handler: async ({ user, remove, removeId }) => {
+    const userData = await getHeaderFromToken(user);
     if (!removeId) {
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.INVALID_PARAMETERS,
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+
+      return data4createResponseObject;
+      // return res
+      //   .status(enums.HTTP_CODES.BAD_REQUEST)
+      //   .json(utils.createResponseObject(data4createResponseObject));
     }
     if (remove) {
       let findUser = await global.models.GLOBAL.USER.find({
-        _id: user._id,
+        _id: userData.id,
       });
       if (findUser.length > 0) {
         try {
           let removeConnection =
             await global.models.GLOBAL.USER.findOneAndUpdate(
-              { _id: user._id },
+              { _id: userData.id },
               {
                 $pull: {
                   accepted: removeId,
@@ -42,49 +43,41 @@ module.exports = exports = {
             { _id: removeId },
             {
               $pull: {
-                accepted: user._id,
+                accepted: userData.id,
               },
             },
             { new: true }
           );
           if (removeConnection) {
             const data4createResponseObject = {
-              req: req,
+              // req: req,
               result: 0,
               message: messages.ITEM_UPDATED,
               payload: {},
               logPayload: false,
             };
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
+
+            return data4createResponseObject;
           } else {
             const data4createResponseObject = {
-              req: req,
+              // req: req,
               result: -1,
               message:
                 "Something Went wrong to remove Connection, Please Try Agin later",
               payload: {},
               logPayload: false,
             };
-            res
-              .status(enums.HTTP_CODES.BAD_REQUEST)
-              .json(utils.createResponseObject(data4createResponseObject));
+            return data4createResponseObject;
           }
         } catch (error) {
-          logger.error(
-            `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-          );
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: -1,
             message: messages.GENERAL,
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-            .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         }
       }
     }
