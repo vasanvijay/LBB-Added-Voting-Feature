@@ -14,16 +14,22 @@ module.exports = exports = {
     // const { received } = req.query;
 
     const userData = await getHeaderFromToken(user);
+
+    console.log("userData-------------------datat", userData);
     // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----", userData);
     // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----received", received);
     // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
 
     try {
       // let findConnection;
-
       let findConnection = await global.models.GLOBAL.CONNECTION.find({
         receiverId: userData.id,
       })
+        .populate({
+          path: "receiverId",
+          model: "user",
+          select: "_id name email profileImage region currentRole subject",
+        })
         .populate({
           path: "senderId",
           model: "user",
@@ -40,7 +46,7 @@ module.exports = exports = {
         payload: { findConnection },
         logPayload: false,
       };
-      console.log("Data---------", data4createResponseObject);
+      console.log("Data---------fdggdgdddddddddddd", data4createResponseObject);
       return data4createResponseObject;
 
       // res

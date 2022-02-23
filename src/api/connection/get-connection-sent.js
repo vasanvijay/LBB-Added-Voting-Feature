@@ -14,25 +14,28 @@ module.exports = exports = {
     // const { received } = req.query;
 
     const userData = await getHeaderFromToken(user);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----", userData);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----received", received);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
+
+    console.log("userData-------------------datat", userData);
 
     try {
       // let findConnection;
 
       let findConnection = await global.models.GLOBAL.CONNECTION.find({
-        receiverId: userData.id,
+        senderId: userData.id,
       })
         .populate({
           path: "receiverId",
           model: "user",
           select: "_id name email profileImage region currentRole subject",
         })
+        .populate({
+          path: "senderId",
+          model: "user",
+          select: "_id name email profileImage region currentRole subject",
+        })
         .sort({
           requestedAt: -1,
         });
-
       const data4createResponseObject = {
         // req: req,
         result: 0,
@@ -47,9 +50,6 @@ module.exports = exports = {
       //   .status(enums.HTTP_CODES.OK)
       //   .json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
       const data4createResponseObject = {
         // req: req,
         result: -1,

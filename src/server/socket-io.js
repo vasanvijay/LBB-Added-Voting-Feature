@@ -926,11 +926,41 @@ module.exports = (server, logger) => {
       const conectionConected = await api4Connection.getConnected.handler({
         user,
       });
-      console.log("ytytytytytytytyt", conectionConected.payload.connection);
+      console.log(
+        "ytytytytytytytyt==============",
+        conectionConected.payload.connection
+      );
       io.in(socket.id).emit("connection-connected", {
         conection: conectionConected,
       });
       io.in(socket.id).emit("remove-user", {
+        conection: conection,
+      });
+    });
+
+    socket.on("add-connection", async function ({ user, receiverId, message }) {
+      console.log(
+        "add-connection------------------",
+        user,
+        receiverId,
+        message
+      );
+      const conection = await api4Connection.addConnection.handler({
+        user,
+        receiverId,
+        message,
+      });
+
+      const conectionreceived =
+        await api4Connection.getConnectionreceived.handler({
+          user,
+        });
+
+      io.emit("connection-received", {
+        conection: "get",
+      });
+
+      io.in(socket.id).emit("add-connection", {
         conection: conection,
       });
     });
