@@ -14,6 +14,7 @@ const deactivateAccount = require("./deactivate-account");
 const blockUser = require("./block-user");
 const unBlockUser = require("./unblock-user");
 const getBlockuser = require("./get-block-user");
+const getBlockstatus = require("./get-block-status");
 const topUser = require("./top-user");
 const updatePassword = require("./update-password");
 const forgetPassword = require("./forget-password");
@@ -46,4 +47,5 @@ module.exports = exports = {
   verifyWorkEmail,
   agoraToken,
   sendMailForWrokEmail,
+  getBlockstatus,
 };

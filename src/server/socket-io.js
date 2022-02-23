@@ -913,6 +913,12 @@ module.exports = (server, logger) => {
       io.in(socket.id).emit("block-user", {
         conection: conection,
       });
+
+      // again check this is block user
+
+      io.emit("get-block-status", {
+        blockedUser: "get-block",
+      });
     });
 
     socket.on("remove-user", async function ({ user, remove, removeId }) {
@@ -960,8 +966,79 @@ module.exports = (server, logger) => {
         conection: "get",
       });
 
+      io.emit("connection-received-sent", {
+        conection: "get",
+      });
+
       io.in(socket.id).emit("add-connection", {
         conection: conection,
+      });
+    });
+
+    socket.on("withdraw-request", async function ({ user, connectionId }) {
+      const withdraw = await api4Connection.withdrawConnection.handler({
+        user,
+        connectionId,
+      });
+
+      io.in(socket.id).emit("withdraw-request", {
+        conection: withdraw,
+      });
+
+      io.emit("connection-received-sent", {
+        conection: "get",
+      });
+
+      io.emit("connection-received", {
+        conection: "get",
+      });
+
+      console.log("withdraw-request", withdraw);
+    });
+
+    socket.on("unblock-user", async function ({ user, userId }) {
+      const conection = await api4User.unBlockUser.handler({
+        user,
+        userId,
+      });
+
+      console.log("accept-deeeeeee-connection", conection);
+
+      const conectionConected = await api4Connection.getConnected.handler({
+        user,
+      });
+      io.in(socket.id).emit("connection-connected", {
+        conection: conectionConected,
+      });
+      io.in(socket.id).emit("unblock-user", {
+        conection: conection,
+      });
+
+      io.emit("get-block-status", {
+        blockedUser: "get-block",
+      });
+    });
+    socket.on("get-block-user", async function ({ user, query }) {
+      const blockedUser = await api4User.getBlockuser.handler({
+        user,
+        query,
+      });
+      console.log("getBlockUser.payload------->", blockedUser.payload);
+      io.in(socket.id).emit("get-block-user", {
+        blockedUser: blockedUser,
+      });
+    });
+
+    // get-block-user-status
+
+    socket.on("get-block-status", async function ({ user, userId }) {
+      const blockedUser = await api4User.getBlockstatus.handler({
+        user,
+        userId,
+      });
+      console.log("getBlockUser.payload------->", blockedUser.payload);
+      io.in(socket.id).emit("get-block-status", {
+        blockedUser: blockedUser,
       });
     });
   });

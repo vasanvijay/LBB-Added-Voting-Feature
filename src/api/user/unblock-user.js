@@ -6,27 +6,27 @@ const utils = require("../../utils");
 
 module.exports = exports = {
   //Router Handler
-  handler: async (req, res) => {
-    const { user } = req;
-    const { userId } = req.params;
+  handler: async ({ user, userId }) => {
+    const userData = await utils.getHeaderFromToken(user);
     if (!userId) {
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.INVALID_PARAMETERS,
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      // return res
+      //   .status(enums.HTTP_CODES.BAD_REQUEST)
+      //   .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
     let findUser = await global.models.GLOBAL.USER.findById(userId);
     if (findUser) {
       try {
         const updatedBlockUserList =
           await global.models.GLOBAL.USER.findOneAndUpdate(
-            { _id: user._id },
+            { _id: userData.id },
             {
               $pull: {
                 blockUser: userId,
@@ -35,21 +35,16 @@ module.exports = exports = {
             { new: true }
           );
         const data4createResponseObject = {
-          req: req,
+          // req: req,
           result: 0,
           message: messages.USER_UNBLOCK,
           payload: { blockUser: updatedBlockUserList.blockUser },
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
       } catch (error) {
-        logger.error(
-          `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-        );
         const data4createResponseObject = {
-          req: req,
+          // req: req
           result: -1,
           message: messages.GENERAL,
           payload: {},
@@ -67,9 +62,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.NOT_FOUND)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
   },
 };
