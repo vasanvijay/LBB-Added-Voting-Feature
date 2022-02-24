@@ -51,6 +51,7 @@
   "NAVIGATION_EXIST": "Sorry, the specified Navigation is already Assigned to this Role. Please try with different",
   "CONTACT_USER": "Thank you for Contacting us. ",
   "INITIATION_SUCCESS": "Chats initiated successfully",
+  "INITIATION_FAILED": "Sorry, Something Went wrong to initiate chat.Please try again.",
   "MESSAGE_SENT": "Message has been sent successfully",
   "MAIL_SENT": "E-mail has been send successfully.",
   "MESSAGES_FETCH_SUCCESS": "Messages fetched successfully.",

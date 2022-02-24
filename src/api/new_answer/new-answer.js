@@ -81,32 +81,82 @@ module.exports = exports = {
               },
             }
           );
-          let ntfObj = {
-            userId: user.id,
-            receiverId: findQuestion.createdBy,
-            title: `Notification By ${user.id} to ${findQuestion.createdBy}`,
-            description: {
-              data: { title: "Leaderbridge" },
-              notification: {
-                title: "Give Answer to your question!!!",
-                body: `Replied To Your Answer ${findQuestion.question}`,
+          if (user.id !== findQuestion.createdBy) {
+            let ntfObj = {
+              userId: user.id,
+              receiverId: findQuestion.createdBy,
+              title: `Notification By ${user.id} to ${findQuestion.createdBy}`,
+              description: {
+                data: { title: "Leaderbridge" },
+                notification: {
+                  title: "Give Answer to your question!!!",
+                  body: `Replied To Your Answer ${findQuestion.question}`,
+                },
               },
-            },
-            createdBy: user.id,
-            updatedBy: user.id,
-            question: question,
-            createdAt: Date.now(),
-          };
+              createdBy: user.id,
+              updatedBy: user.id,
+              question: question,
+              createdAt: Date.now(),
+            };
 
-          console.log("ntfObj--->>", ntfObj);
-          let findToken = await global.models.GLOBAL.USER.findOne({
-            _id: findQuestion.createdBy,
-          });
-          let notification = await global.models.GLOBAL.NOTIFICATION.create(
-            ntfObj
-          );
+            console.log("ntfObj--->>", ntfObj);
+            let findToken = await global.models.GLOBAL.USER.findOne({
+              _id: findQuestion.createdBy,
+            });
+            let notification = await global.models.GLOBAL.NOTIFICATION.create(
+              ntfObj
+            );
 
-          console.log("notification--->>", notification);
+            console.log("notification--->>", notification);
+          } else {
+            let findParticipants =
+              await global.models.GLOBAL.ANSWER_ROOM.agregate([
+                {
+                  $match: {
+                    _id: roomId,
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$participateIds",
+                  },
+                },
+                {
+                  $match: {
+                    participateIds: {
+                      $nin: [question, findQuestion.createdBy],
+                    },
+                  },
+                },
+              ]);
+            let ntfObj = {
+              userId: user.id,
+              receiverId: findParticipants[0].participateIds,
+              title: `Notification By ${user.id} to ${findQuestion.createdBy}`,
+              description: {
+                data: { title: "Leaderbridge" },
+                notification: {
+                  title: "Give Answer to your question!!!",
+                  body: `Replied To Your Answer ${findQuestion.question}`,
+                },
+              },
+              createdBy: user.id,
+              updatedBy: user.id,
+              question: question,
+              createdAt: Date.now(),
+            };
+
+            console.log("ntfObj--->>", ntfObj);
+            let findToken = await global.models.GLOBAL.USER.findOne({
+              _id: findQuestion.createdBy,
+            });
+            let notification = await global.models.GLOBAL.NOTIFICATION.create(
+              ntfObj
+            );
+
+            console.log("notification--->>", notification);
+          }
+
           // try {
           //   if (findToken.deviceToken !== "1234") {
           //     let data = {

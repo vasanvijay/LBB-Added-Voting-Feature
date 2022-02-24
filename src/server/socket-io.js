@@ -907,7 +907,6 @@ module.exports = (server, logger) => {
       const conectionConected = await api4Connection.getConnected.handler({
         user,
       });
-      console.log("ytytytytytytytyt", conectionConected.payload.connection);
       io.in(socket.id).emit("connection-connected", {
         conection: conectionConected,
       });
@@ -1003,8 +1002,6 @@ module.exports = (server, logger) => {
         userId,
       });
 
-      console.log("accept-deeeeeee-connection", conection);
-
       const conectionConected = await api4Connection.getConnected.handler({
         user,
       });
@@ -1019,14 +1016,33 @@ module.exports = (server, logger) => {
         blockedUser: "get-block",
       });
     });
+
     socket.on("get-block-user", async function ({ user, query }) {
+      console.log("get-block-user", user);
       const blockedUser = await api4User.getBlockuser.handler({
         user,
         query,
       });
-      console.log("getBlockUser.payload------->", blockedUser.payload);
-      io.in(socket.id).emit("get-block-user", {
-        blockedUser: blockedUser,
+
+      if (blockedUser?.payload?.blockUser.length > 0) {
+        io.in(socket.id).emit("get-block-user", {
+          blockedUser: blockedUser,
+        });
+      }
+    });
+
+    socket.on("unblock-user", async function ({ user, userId }) {
+      console.log("unblock-user--------", userId);
+      const unblock = await api4User.unBlockUser.handler({
+        user,
+        userId,
+      });
+
+      io.in(socket.id).emit("unblock-user", {
+        connection: unblock,
+      });
+      io.emit("get-block-user", {
+        blockedUser: "get-block",
       });
     });
 

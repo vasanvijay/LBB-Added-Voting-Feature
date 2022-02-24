@@ -31,6 +31,7 @@ module.exports = exports = {
       //   .status(enums.HTTP_CODES.BAD_REQUEST)
       //   .json(utils.createResponseObject(data4createResponseObject));
     }
+
     if (accepted) {
       console.log(
         "ffffffffffff-----2222222222222222222222222222222222222222222222"
@@ -96,15 +97,29 @@ module.exports = exports = {
             _id: connectionId,
           });
 
-          let participateIds = [];
-          // check user type
-          participateIds.push(userData.id);
-          participateIds.push(receiverId);
-          let chatRoom = await global.models.GLOBAL.CHAT_ROOM.create({
-            participateIds: participateIds,
-            createdAt: Date.now(),
-            createdBy: userData.id,
+          const roomExist = await global.models.GLOBAL.CHAT_ROOM.find({
+            participateIds: {
+              $all: [userData.id, receiverId],
+            },
           });
+
+          console.log(roomExist, "roomExist----------123");
+          let chatRoom;
+          if (roomExist.length == 0) {
+            let participateIds = [];
+            // check user type
+            participateIds.push(userData.id);
+            participateIds.push(receiverId);
+            chatRoom = await global.models.GLOBAL.CHAT_ROOM.create({
+              participateIds: participateIds,
+              createdAt: Date.now(),
+              createdBy: userData.id,
+            });
+            console.log(chatRoom, "chatRoom----------321");
+          } else {
+            chatRoom = roomExist[0];
+            console.log(chatRoom, "chatRoom----------123");
+          }
 
           console.log("chatRoom", chatRoom);
           let chat = {

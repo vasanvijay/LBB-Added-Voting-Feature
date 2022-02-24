@@ -46,7 +46,15 @@ module.exports = exports = {
           );
 
         console.log("iusRequestCreated--->", newRequest);
-
+        let notificationMsg;
+        if (typeOfReuest == "requestProfileAccess") {
+          notificationMsg =
+            "You have received request to access to view your profile.";
+        } else if (typeOfReuest == "requestAudioAccess") {
+          notificationMsg = "You have received request for audio call.";
+        } else if (typeOfReuest == "requestVideoAccess") {
+          notificationMsg = "You have received request for video call.";
+        }
         let ntfObj = {
           userId: user.id,
           receiverId: id,
@@ -54,8 +62,8 @@ module.exports = exports = {
           description: {
             data: { title: "Leaderbridge" },
             notification: {
-              title: "New Request profile Access!!!",
-              body: `You have received request to access to view your profile.`,
+              title: "New Request!!!",
+              body: notificationMsg,
             },
           },
           createdBy: user.id,

@@ -122,7 +122,7 @@ module.exports = exports = {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: messages.INITIATION_SUCCESS,
+            message: messages.INITIATION_FAILED,
             payload: { chatRoom, text },
             logPayload: false,
           };
