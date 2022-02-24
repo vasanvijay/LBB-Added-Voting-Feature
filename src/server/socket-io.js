@@ -160,6 +160,7 @@ module.exports = (server, logger) => {
             await api4Notification.getNotificationCount.handler({
               user,
             });
+
           io.emit("get-notification-count-request", { notification: true });
           io.emit("get-notification-request", { notification: true });
           console.log("answer add success.");
