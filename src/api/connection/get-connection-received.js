@@ -21,9 +21,13 @@ module.exports = exports = {
     // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
 
     try {
+      let findUser = await global.models.GLOBAL.USER.findOne({
+        _id: userData.id,
+      });
       // let findConnection;
       let findConnection = await global.models.GLOBAL.CONNECTION.find({
         receiverId: userData.id,
+        senderId: { $nin: findUser.blockUser },
       })
         .populate({
           path: "receiverId",

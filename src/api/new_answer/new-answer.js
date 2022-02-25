@@ -116,7 +116,7 @@ module.exports = exports = {
           }
           // else {
           //   let findParticipants =
-          //     await global.models.GLOBAL.ANSWER_ROOM.agregate([
+          //     await global.models.GLOBAL.ANSWER_ROOM.aggregate([
           //       {
           //         $match: {
           //           _id: roomId,

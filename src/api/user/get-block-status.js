@@ -16,14 +16,14 @@ module.exports = exports = {
           _id: userData.id,
           blockUser: userId,
         });
-        console.log("blockUser===================", blockUser);
         blockUser = JSON.parse(JSON.stringify(blockUser));
+        console.log("CBVCBVCBCBC===================", blockUser.length);
         const data4createResponseObject = {
           // req: req,
           result: 0,
           message: messages.ITEM_FETCHED,
           payload: {
-            isBlocked: blockUser ? true : false,
+            isBlocked: blockUser.length ? true : false,
           },
           logPayload: false,
         };
