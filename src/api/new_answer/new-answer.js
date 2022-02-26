@@ -32,7 +32,6 @@ module.exports = exports = {
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
           _id: roomId,
         });
-        console.log("answerrROROOMMM", findRoom);
         if (findRoom) {
           let addAnswer = {
             roomId: roomId,
@@ -71,8 +70,7 @@ module.exports = exports = {
             { $inc: { response: 1 } },
             { new: true }
           );
-          console.log("updatedQue--->>", updatedQue);
-          console.log("USERRRRRRRR---->", user);
+
           await global.models.GLOBAL.USER.findOneAndUpdate(
             { _id: user.id },
             {
@@ -113,55 +111,55 @@ module.exports = exports = {
             );
 
             console.log("notification--->>", notification);
+          } else {
+            let findParticipants =
+              await global.models.GLOBAL.ANSWER_ROOM.aggregate([
+                {
+                  $match: {
+                    _id: roomId,
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$participateIds",
+                  },
+                },
+                {
+                  $match: {
+                    participateIds: {
+                      $nin: [question, findQuestion.createdBy],
+                    },
+                  },
+                },
+              ]);
+
+            let ntfObj2 = {
+              userId: user.id,
+              receiverId: findRoom.createdBy,
+              title: `Notification AB By ${user.id} to ${findQuestion.createdBy}`,
+              description: {
+                data: { title: "Leaderbridge" },
+                notification: {
+                  title: "Give Answer to your question!!!",
+                  body: `Replied To Your Question  ${findQuestion.question}`,
+                },
+              },
+              createdBy: user.id,
+              updatedBy: user.id,
+              question: question,
+              createdAt: Date.now(),
+            };
+
+            console.log("ntfObj--->>", ntfObj2);
+            let findToken = await global.models.GLOBAL.USER.findOne({
+              _id: findQuestion.createdBy,
+            });
+            let notification = await global.models.GLOBAL.NOTIFICATION.create(
+              ntfObj2
+            );
+
+            console.log("notification--->>", notification);
           }
-          // else {
-          //   let findParticipants =
-          //     await global.models.GLOBAL.ANSWER_ROOM.aggregate([
-          //       {
-          //         $match: {
-          //           _id: roomId,
-          //         },
-          //       },
-          //       {
-          //         $unwind: {
-          //           path: "$participateIds",
-          //         },
-          //       },
-          //       {
-          //         $match: {
-          //           participateIds: {
-          //             $nin: [question, findQuestion.createdBy],
-          //           },
-          //         },
-          //       },
-          //     ]);
-          //   let ntfObj = {
-          //     userId: user.id,
-          //     receiverId: findParticipants[0].participateIds,
-          //     title: `Notification By ${user.id} to ${findQuestion.createdBy}`,
-          //     description: {
-          //       data: { title: "Leaderbridge" },
-          //       notification: {
-          //         title: "Give Answer to your question!!!",
-          //         body: `Replied To Your Answer ${findQuestion.question}`,
-          //       },
-          //     },
-          //     createdBy: user.id,
-          //     updatedBy: user.id,
-          //     question: question,
-          //     createdAt: Date.now(),
-          //   };
-
-          //   console.log("ntfObj--->>", ntfObj);
-          //   let findToken = await global.models.GLOBAL.USER.findOne({
-          //     _id: findQuestion.createdBy,
-          //   });
-          //   let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          //     ntfObj
-          //   );
-
-          //   console.log("notification--->>", notification);
-          // }
 
           // try {
           //   if (findToken.deviceToken !== "1234") {
