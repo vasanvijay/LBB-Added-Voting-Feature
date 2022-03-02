@@ -1,6 +1,6 @@
 // const { assign, isEmpty } = require("lodash");
 
-const { NODE_ENV = "local", PORT = "8080" } = process.env;
+const { NODE_ENV = "local", APP_PORT = "8080" } = process.env;
 
 const packageInfo = require("../../package.json");
 
@@ -24,7 +24,7 @@ const loadConfigurationFromFile = async (
 
   process.env.APP_ENVIRONMENT = NODE_ENV;
   process.env.APP_NAME = packageInfo.name.toUpperCase();
-  process.env.APP_PORT = PORT;
+  process.env.APP_PORT = APP_PORT;
   process.env.APP_RELEASE =
     packageInfo.name.toUpperCase() + "@" + packageInfo.version;
   process.env.APP_VERSION = packageInfo.version;
