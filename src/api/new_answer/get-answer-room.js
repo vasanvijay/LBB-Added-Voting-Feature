@@ -15,7 +15,7 @@ module.exports = exports = {
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: ObjectId(question),
       });
-      // console.log("QUE-->>", findQuestion);
+      // // console.log("QUE-->>", findQuestion);
       if (findQuestion) {
         const id = question;
         const answerBy = user.id;
@@ -38,13 +38,13 @@ module.exports = exports = {
             "_id name subject profileImage currentRole email blockUser region",
         });
 
-        // console.log("findAnswerRoom---->", findAnswerRoom);
+        // // console.log("findAnswerRoom---->", findAnswerRoom);
 
         for (let i = 0; i < findAnswerRoom.length; i++) {
           let answerById = await global.models.GLOBAL.ANSWER.find({
             roomId: findAnswerRoom[i]._id,
           }).sort({ createdAt: -1 });
-          // console.log("answerById---->", answerById);
+          // // console.log("answerById---->", answerById);
         }
 
         // const isFriend = await global.models.GLOBAL.USER.findOne({

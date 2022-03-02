@@ -56,7 +56,7 @@ module.exports = exports = {
       updationCriteria.isActive = isActive;
     }
 
-    // console.log("updationCriteria",updationCriteria);
+    // // console.log("updationCriteria",updationCriteria);
 
     try {
       const updatedCms = await global.models.GLOBAL.CMS.findByIdAndUpdate(

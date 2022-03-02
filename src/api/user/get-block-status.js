@@ -10,14 +10,14 @@ module.exports = exports = {
     const { user, userId } = req;
     const userData = await getHeaderFromToken(user);
     try {
-      console.log("vfdcxbcvbvcbcbcc", userId);
+      // console.log("vfdcxbcvbvcbcbcc", userId);
       if (userId) {
         let blockUser = await global.models.GLOBAL.USER.find({
           _id: userData.id,
           blockUser: userId,
         });
         blockUser = JSON.parse(JSON.stringify(blockUser));
-        console.log("CBVCBVCBCBC===================", blockUser.length);
+        // console.log("CBVCBVCBCBC===================", blockUser.length);
         const data4createResponseObject = {
           // req: req,
           result: 0,

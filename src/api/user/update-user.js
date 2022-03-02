@@ -65,7 +65,7 @@ module.exports = exports = {
       }
     } else {
       try {
-        // console.log("IMAGE--->>", req.body.profileImage);
+        // // console.log("IMAGE--->>", req.body.profileImage);
         if (req.body.subject) {
           const ImagesList = await global.models.GLOBAL.LEGENDS.aggregate([
             {
@@ -76,7 +76,7 @@ module.exports = exports = {
             },
           ]);
 
-          // console.log("LIST LENGHT", ImagesList?.length);
+          // // console.log("LIST LENGHT", ImagesList?.length);
 
           if (ImagesList.length !== 4) {
             return res.status(400).json({
@@ -111,13 +111,13 @@ module.exports = exports = {
               findUser.profileImage !== undefined ||
               findUser.profileImage !== ""
             ) {
-              // console.log("profileImage", findUser.profileImage);
+              // // console.log("profileImage", findUser.profileImage);
               const url = findUser?.profileImage?.split(".com/").slice(-1)[0];
-              // console.log(url);
+              // // console.log(url);
               if (url) {
                 utils.mediaDeleteS3(url, function (err) {
                   if (err) {
-                    console.log("s3 err", err);
+                    // console.log("s3 err", err);
                     return next(err);
                   }
                 });
@@ -125,18 +125,18 @@ module.exports = exports = {
                   myCanvas.toDataURL(),
                   req.body.subject
                 );
-                // console.log("IF IMAGE-->>", req.body.profileImage);
+                // // console.log("IF IMAGE-->>", req.body.profileImage);
               } else {
                 req.body.profileImage = await utils.uploadBase(
                   myCanvas.toDataURL(),
                   req.body.subject
                 );
-                // console.log("ELSE IMAGE-->>", req.body.profileImage);
+                // // console.log("ELSE IMAGE-->>", req.body.profileImage);
               }
             }
           }
         }
-        // console.log("BODY-->>", req.body);
+        // // console.log("BODY-->>", req.body);
         let updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
           { _id: user._id },
           {
@@ -148,7 +148,7 @@ module.exports = exports = {
           },
           { new: true }
         );
-        // console.log("UPDATED--->>", updateUser);
+        // // console.log("UPDATED--->>", updateUser);
         if (!updateUser) {
           const data4createResponseObject = {
             req: req,

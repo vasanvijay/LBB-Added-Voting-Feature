@@ -60,7 +60,7 @@ module.exports = exports = {
                   },
                 }
               );
-            console.log("LAST--->>", updateLastMessage);
+            // console.log("LAST--->>", updateLastMessage);
             if (updateMessage) {
               const data4createResponseObject = {
                 req: req,

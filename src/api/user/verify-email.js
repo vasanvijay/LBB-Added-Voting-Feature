@@ -17,7 +17,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { email } = req.body;
     let code = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
-    // console.log("Code---------->>>", code);
+    // // console.log("Code---------->>>", code);
     // const locale = utils.getLocale(req);
     let entry;
     // If codes already exists for this email in the database delete them
@@ -62,7 +62,7 @@ module.exports = exports = {
     // When USE_TEST_PIN is true (config.json)
     try {
       if (String(findUser.email) === String(email)) {
-        console.log("MAIL SENDING");
+        // console.log("MAIL SENDING");
         let transporter = nodemailer.createTransport({
           service: "gmail",
           host: "smtp.gmail.com",
@@ -155,7 +155,7 @@ module.exports = exports = {
                 
                 </html>`,
         });
-        console.log("Message sent: %s", info.messageId);
+        // console.log("Message sent: %s", info.messageId);
 
         if (config.MONGODB.GLOBAL.USE_TEST_PIN) {
           // If (dummyAccount) {

@@ -10,7 +10,7 @@ module.exports = exports = {
   handler: async ({ user, senderId, connectionId }) => {
     // const { user } = req;
     // const { decline } = req.query;
-    // console.log(user, "userDataygjgghjgjhghgjhg");
+    // // console.log(user, "userDataygjgghjgjhghgjhg");
     // const { senderId } = req.params;
     const userData = await getHeaderFromToken(user);
     if (!senderId) {

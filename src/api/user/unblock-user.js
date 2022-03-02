@@ -7,7 +7,7 @@ const utils = require("../../utils");
 module.exports = exports = {
   //Router Handler
   handler: async ({ user, userId }) => {
-    console.log("userId:UnBlock", userId);
+    // console.log("userId:UnBlock", userId);
     const userData = await utils.getHeaderFromToken(user);
     if (!userId) {
       const data4createResponseObject = {

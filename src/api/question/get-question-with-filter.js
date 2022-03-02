@@ -48,7 +48,7 @@ module.exports = exports = {
               for (let j = 0; j < user.abuseQuestion.length; j++) {
                 abuseQuestion.push(user.abuseQuestion[j].questionId);
               }
-              // console.log("Criteria ni moj", criteria);
+              // // console.log("Criteria ni moj", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
                 question: { $regex: search, $options: "i" },
@@ -104,7 +104,7 @@ module.exports = exports = {
           }
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
-              // console.log("criteria ni", criteria);
+              // // console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 // $and: [
                 $and: [
@@ -157,7 +157,7 @@ module.exports = exports = {
           }
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
-              // console.log("criteria ni", criteria);
+              // // console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 $and: [
                   { _id: { $nin: user.answerLater } },

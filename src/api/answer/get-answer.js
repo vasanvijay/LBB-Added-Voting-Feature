@@ -10,7 +10,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { answerByMe } = req.query;
-    console.log("answerByM========================e", answerByMe);
+    // console.log("answerByM========================e", answerByMe);
     try {
       let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -79,7 +79,7 @@ module.exports = exports = {
           receiverId: user._id,
         });
         const conectIdExist = (id) => {
-          console.log("check", id);
+          // console.log("check", id);
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
@@ -173,7 +173,7 @@ module.exports = exports = {
         }
 
         Answers = JSON.parse(JSON.stringify(Answers));
-        // console.log("ANSWERRRRR---------------->", Answers);
+        // // console.log("ANSWERRRRR---------------->", Answers);
         const data4createResponseObject = {
           req: req,
           result: 0,

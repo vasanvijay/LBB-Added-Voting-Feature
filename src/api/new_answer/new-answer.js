@@ -80,11 +80,11 @@ module.exports = exports = {
             }
           );
           if (user.id != findQuestion.createdBy.toString()) {
-            console.log(
-              user.id,
-              findQuestion.createdBy,
-              "-----------------vishv----------"
-            );
+            // console.log(
+            //   user.id,
+            //   findQuestion.createdBy,
+            //   "-----------------vishv----------"
+            // );
             let ntfObj = {
               userId: user.id,
               receiverId: findQuestion.createdBy,

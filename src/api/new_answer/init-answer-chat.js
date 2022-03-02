@@ -16,7 +16,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       const { questionId } = req.body;
-      console.log("this calleddddddd");
+      // console.log("this calleddddddd");
 
       const { user } = req;
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({

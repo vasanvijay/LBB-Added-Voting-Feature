@@ -12,10 +12,10 @@ module.exports = exports = {
     // const { user } = req;
     // const { accepted } = req.query;
     // const { receiverId } = req.params;
-    console.log(
-      "ffffffffffff-----111111111111111111111111111111111111111",
-      receiverId
-    );
+    // console.log(
+    //   "ffffffffffff-----111111111111111111111111111111111111111",
+    //   receiverId
+    // );
     const userData = await getHeaderFromToken(user);
     console.log("userData============", userData);
     if (!receiverId) {

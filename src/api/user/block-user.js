@@ -9,8 +9,8 @@ module.exports = exports = {
   //Router Handler
   handler: async ({ user, userId }) => {
     const userData = await getHeaderFromToken(user);
-    console.log("userData", userData);
-    console.log("userData", userId);
+    // console.log("userData", userData);
+    // console.log("userData", userId);
 
     //Check userId is not null
     if (!userId) {
@@ -37,7 +37,7 @@ module.exports = exports = {
             { new: true }
           );
 
-        console.log("updatedBlockUserList", updatedBlockUserList);
+        // console.log("updatedBlockUserList", updatedBlockUserList);
         const data4createResponseObject = {
           // req: req,
           result: 0,

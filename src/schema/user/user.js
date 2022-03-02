@@ -5,6 +5,7 @@ module.exports = (connection) => {
     name: String,
     email: String,
     password: String,
+    isOnline: { type: Boolean, default: false },
     verified: { type: Boolean, default: false },
     formFilled: { type: Boolean, default: false },
     userType: { type: String, default: "user" },

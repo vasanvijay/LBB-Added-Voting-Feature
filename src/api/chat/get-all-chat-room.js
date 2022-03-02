@@ -11,17 +11,37 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let user = await utils.getHeaderFromToken(req.user);
-
-      let chatRoom = await global.models.GLOBAL.CHAT_ROOM.find({
+      let chatRoom = [];
+      chatRoom = await global.models.GLOBAL.CHAT_ROOM.find({
         participateIds: { $in: [user.id] },
-      }).populate({
-        path: "participateIds",
-        model: "user",
-        match: {
-          _id: { $ne: user.id },
-        },
-        select: "_id name subject profileImage currentRole email blockUser",
-      });
+      })
+        .populate({
+          path: "participateIds",
+          model: "user",
+          match: {
+            _id: { $ne: user.id },
+          },
+          select:
+            "_id name subject profileImage currentRole email blockUser isOnline",
+        })
+        .lean();
+
+      for (let i = 0; i < chatRoom.length; i++) {
+        let unseenMessageCount = 0;
+        let chat = await global.models.GLOBAL.CHAT.find({
+          roomId: chatRoom[i]._id,
+        });
+
+        for (let j = 0; j < chat.length; j++) {
+          if (chat[j].seenBy.indexOf(user.id) === -1) {
+            if (chat[j]?.seenBy.length == 0) {
+              unseenMessageCount++;
+            }
+          }
+        }
+        chatRoom[i].unseenMessageCount = unseenMessageCount;
+      }
+
       const data4createResponseObject = {
         req: req,
         result: 0,
@@ -29,11 +49,10 @@ module.exports = exports = {
         payload: { room: chatRoom },
         logPayload: false,
       };
+
+      // console.log("chatRoom--->>1234567890", chatRoom);
       return data4createResponseObject;
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
       const data4createResponseObject = {
         req: req,
         result: -1,

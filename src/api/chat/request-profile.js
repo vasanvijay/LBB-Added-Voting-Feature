@@ -45,7 +45,7 @@ module.exports = exports = {
             newRequestObj
           );
 
-        console.log("iusRequestCreated--->", newRequest);
+        // console.log("iusRequestCreated--->", newRequest);
         let notificationMsg;
         if (typeOfReuest == "requestProfileAccess") {
           notificationMsg =

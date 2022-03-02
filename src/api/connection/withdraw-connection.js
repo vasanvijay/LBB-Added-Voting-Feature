@@ -9,7 +9,7 @@ module.exports = exports = {
   // route handler
   handler: async ({ user, connectionId }) => {
     const userData = await utils.getHeaderFromToken(user);
-    console.log("Connection ID: ", connectionId);
+    // console.log("Connection ID: ", connectionId);
     if (!connectionId) {
       const data4createResponseObject = {
         // req: req,
@@ -21,12 +21,12 @@ module.exports = exports = {
       return data4createResponseObject;
     }
 
-    console.log("User ID:connectionId", connectionId);
+    // console.log("User ID:connectionId", connectionId);
     try {
       let findConnection = await global.models.GLOBAL.CONNECTION.findById(
         connectionId
       );
-      console.log("findConnection: -----------", findConnection);
+      // console.log("findConnection: -----------", findConnection);
       if (findConnection) {
         const withdrawConnection =
           await global.models.GLOBAL.CONNECTION.findOneAndRemove({

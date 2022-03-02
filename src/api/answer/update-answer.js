@@ -31,7 +31,7 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.BAD_REQUEST)
         .json(utils.createResponseObject(data4createResponseObject));
     }
-    // console.log("USER--->>>", user);
+    // // console.log("USER--->>>", user);
     try {
       const updateAnswer = await global.models.GLOBAL.ANSWER.findOneAndUpdate(
         { _id: answerId, createdBy: user._id },
@@ -47,7 +47,7 @@ module.exports = exports = {
           new: true,
         }
       );
-      // console.log("UPDATE---->>", updateAnswer);
+      // // console.log("UPDATE---->>", updateAnswer);
       let updateLastMessage =
         await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
           {
@@ -59,7 +59,7 @@ module.exports = exports = {
             },
           }
         );
-      // console.log("ROOM-UPDATE--->>", updateLastMessage);
+      // // console.log("ROOM-UPDATE--->>", updateLastMessage);
       if (updateAnswer) {
         const data4createResponseObject = {
           req: req,

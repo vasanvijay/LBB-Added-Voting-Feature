@@ -80,7 +80,7 @@ module.exports = exports = {
               { new: true }
             );
           if (updateAnswer) {
-            // console.log("UPDATED----->>>>", updateAnswer);
+            // // console.log("UPDATED----->>>>", updateAnswer);
           }
         } else {
           let addAnswer = {
@@ -105,7 +105,7 @@ module.exports = exports = {
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM.create(roomObj);
         }
 
-        console.log("UserIDDDD--->>", user._id);
+        // console.log("UserIDDDD--->>", user._id);
         await global.models.GLOBAL.QUESTION.updateOne(
           { _id: question, createdBy: { $nin: user._id } },
           { $inc: { response: 1 } },

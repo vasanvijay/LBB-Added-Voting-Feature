@@ -41,9 +41,9 @@ module.exports = exports = {
           { createdBy: { $nin: user.blockUser, $nin: user._id } },
         ],
       });
-      // console.log("ANS-->>", ans);
+      // // console.log("ANS-->>", ans);
       cc = cc + ans;
-      // console.log("CC--->>", cc);
+      // // console.log("CC--->>", cc);
       user.subject.push(user.currentRole);
       user.subject.push(user.region);
       user.subject.push(user.gender);

@@ -11,13 +11,13 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const userData = await getHeaderFromToken(user);
-    console.log("userDatauserDatauserData", userData);
+    // console.log("userDatauserDatauserData", userData);
     try {
       let count = await global.models.GLOBAL.NOTIFICATION.find({
         receiverId: userData.id,
         status: true,
       });
-      console.log("countcount", count.length);
+      // console.log("countcount", count.length);
 
       const data4createResponseObject = {
         // req: req,

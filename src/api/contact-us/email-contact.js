@@ -233,12 +233,12 @@ module.exports = exports = {
                       </body>
                     </html>`,
         });
-        console.log("Message sent: %s", info.messageId);
+        // console.log("Message sent: %s", info.messageId);
         const Replayfiledtrue =
           await global.models.GLOBAL.CONTACT.findByIdAndUpdate(id, {
             reply: true,
           });
-        // console.log("Replayfiledtrue", Replayfiledtrue);
+        // // console.log("Replayfiledtrue", Replayfiledtrue);
         if (Replayfiledtrue) {
           await Replayfiledtrue.save();
 

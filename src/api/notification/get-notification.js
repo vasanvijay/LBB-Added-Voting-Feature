@@ -13,7 +13,7 @@ module.exports = exports = {
 
     let notification = [];
     const userData = await getHeaderFromToken(user);
-    console.log("userDa------------------", userData);
+    // console.log("userDa------------------", userData);
 
     let updateNotification = await global.models.GLOBAL.NOTIFICATION.updateMany(
       { receiverId: userData.id },
@@ -24,7 +24,7 @@ module.exports = exports = {
       },
       { new: true }
     );
-    console.log("updateNotificationnnn----------", updateNotification);
+    // console.log("updateNotificationnnn----------", updateNotification);
 
     try {
       let getNotification = await global.models.GLOBAL.NOTIFICATION.find({
@@ -37,7 +37,7 @@ module.exports = exports = {
           select: "_id subject profileImage currentRole",
         });
 
-      console.log("getNotification", getNotification.length);
+      // console.log("getNotification", getNotification.length);
       if (getNotification) {
         for (let i = 0; i < getNotification.length; i++) {
           if (getNotification[i].question) {
@@ -87,7 +87,7 @@ module.exports = exports = {
             notification.push(ntfObj);
           }
         }
-        console.log("I-----------------Am", status);
+        // console.log("I-----------------Am", status);
 
         const data4createResponseObject = {
           // req: req,

@@ -28,7 +28,7 @@ module.exports = exports = {
         for (let i = 0; i < user.abuseAnswer.length; i++) {
           abuseAnswer.push(ObjectId(user.abuseAnswer[i].answerId));
         }
-        // console.log("ABUSE--->>", abuseAnswer);
+        // // console.log("ABUSE--->>", abuseAnswer);
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
@@ -110,9 +110,9 @@ module.exports = exports = {
             $sort: { "data.createdAt": -1 },
           },
         ]);
-        // console.log("ANSWER-->>", answerRoom[0]?.data[0]?.answer?.answerBy);
+        // // console.log("ANSWER-->>", answerRoom[0]?.data[0]?.answer?.answerBy);
         // for (let i = 0; i < answerRoom.length; i++) {
-        //   console.log("I-->>", i);
+        //   // console.log("I-->>", i);
         // }
         let findRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({

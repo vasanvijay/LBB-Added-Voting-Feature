@@ -16,7 +16,7 @@ module.exports = exports = {
       for (var i = 0; i < user.abuseAnswer.length; i++) {
         abuseAnswer.push(user.abuseAnswer[i].answerId);
       }
-      // console.log("ABUSE--->>", abuseAnswer);
+      // // console.log("ABUSE--->>", abuseAnswer);
       let findAnswerRoom = await global.models.GLOBAL.ANSWER_ROOM.aggregate([
         {
           $match: {
@@ -69,14 +69,14 @@ module.exports = exports = {
           },
         },
       ]);
-      // console.log("findAnswerRoom--->>", findAnswerRoom);
+      // // console.log("findAnswerRoom--->>", findAnswerRoom);
 
       let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
         _id: room,
         "answer.answerBy": { $ne: user._id },
         "answer.messageStar": { $eq: true },
       });
-      // console.log("StarCOunt--->>>", staredCount);
+      // // console.log("StarCOunt--->>>", staredCount);
       if (findAnswerRoom) {
         const data4createResponseObject = {
           req: req,

@@ -5,7 +5,7 @@ const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
 const utils = require("../../utils");
-const ObjectId = require("mongodb").ObjectId;
+const { ObjectID } = require("mongodb");
 
 // Add chat by user
 module.exports = exports = {
@@ -16,19 +16,26 @@ module.exports = exports = {
   }),
   handler: async (req, res) => {
     const { roomId, sender, message, type, parentMessageId } = req;
-    // console.log("ID-->>", parentMessageId);
+    // // console.log("ID-->>", parentMessageId);
     // const { user } = req;
 
-    console.log("ID-->>", sender);
+    // console.log("ID-->>", sender);
     const chat_user = await global.models.GLOBAL.CHAT_ROOM.findById(roomId);
-    console.log("chat_user-->>", chat_user.participateIds);
+    // console.log("chat_user-->>", chat_user.participateIds);
     for (let i = 0; i < chat_user.participateIds.length; i++) {
       if (chat_user.participateIds[i] == sender) {
         chat_user.participateIds.splice(i, 1);
       }
     }
-    console.log("new participentIds-->>", chat_user.participateIds);
+    // console.log("new participentIds-->>", chat_user.participateIds);
     let receiverId = chat_user.participateIds[0];
+    const userOnline = await global.models.GLOBAL.USER.findOne({
+      _id: ObjectID(receiverId),
+      // isOnline: true,
+    });
+    console.log("userOnline-->>", userOnline);
+    let isDelivered =
+      userOnline === null ? false : userOnline.isOnline ? true : false;
     try {
       let chat = {
         roomId: roomId,
@@ -37,6 +44,8 @@ module.exports = exports = {
         type: type,
         parentMessageId: parentMessageId,
         createdAt: Date.now(),
+        sentTo: [receiverId],
+        deliveredTo: isDelivered ? [receiverId] : [],
       };
 
       let newMessage = await global.models.GLOBAL.CHAT.create(chat);
@@ -63,7 +72,7 @@ module.exports = exports = {
           { $set: { lastMessage: lastMessageObj } },
           { new: true }
         );
-      // console.log("NEW CHAT---->>", newChat);
+      // // console.log("NEW CHAT---->>", newChat);
 
       let ntfObj = {
         userId: sender,
@@ -80,10 +89,10 @@ module.exports = exports = {
         updatedBy: sender,
         createdAt: Date.now(),
       };
-      console.log("currentNotification-->>", ntfObj);
+      // console.log("currentNotification-->>", ntfObj);
 
       let notification = await global.models.GLOBAL.NOTIFICATION.create(ntfObj);
-      console.log("NEW CHAT---->>", notification);
+      // console.log("NEW CHAT---->>", notification);
       const data4createResponseObject = {
         req: req,
         result: 0,

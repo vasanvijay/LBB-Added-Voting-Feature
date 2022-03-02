@@ -27,8 +27,8 @@ module.exports = exports = {
       const answerExists = await global.models.GLOBAL.ANSWER.findOne({
         _id: answerId,
       });
-      // console.log("USER---->>", user._id);
-      // console.log("ANS---->>>", answerExists);
+      // // console.log("USER---->>", user._id);
+      // // console.log("ANS---->>>", answerExists);
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: answerExists.question,
       });

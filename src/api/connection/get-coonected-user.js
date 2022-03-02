@@ -12,9 +12,9 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     // const useData = await utils.getUserData(user);
-    // console.log(user, "useerData");
+    // // console.log(user, "useerData");
     const userData = await getHeaderFromToken(user);
-    console.log("userDataxxxx", userData);
+    // console.log("userDataxxxx", userData);
     // try {
     let findUser = await global.models.GLOBAL.USER.findOne({
       _id: userData.id,
@@ -39,50 +39,31 @@ module.exports = exports = {
         },
       },
       {
-        $group: {
-          _id: "$_id",
-          data: {
-            $push: "$$ROOT",
-          },
-        },
-      },
-      {
-        $project: {
-          data: {
-            $slice: ["$data", 1],
-          },
+        $lookup: {
+          from: "user",
+          localField: "accepted",
+          foreignField: "_id",
+          as: "accepted",
         },
       },
       {
         $unwind: {
-          path: "$data",
+          path: "$accepted",
         },
       },
       {
-        $lookup: {
-          from: "user",
-          localField: "data.accepted",
-          foreignField: "_id",
-          as: "data.accepted",
-        },
-      },
-      {
-        $project: {
-          _id: "$data._id",
-          name: "$data.name",
-          email: "$data.email",
-          profileImage: "$data.profileImage",
-          region: "$data.region",
-          currentRole: "$data.currentRole",
-          subject: "$data.subject",
-          accepted: "$data.accepted",
+        $group: {
+          _id: "_id",
+          accepted: {
+            $push: "$accepted",
+          },
         },
       },
     ]);
 
     // findConnection = JSON.parse(JSON.stringify(findConnection));
 
-    console.log("findAcceptedBlockedUser", findConnection);
+    // console.log("findAcceptedBlockedUser", findConnection);
 
     const data4createResponseObject = {
       // req: req,
@@ -95,7 +76,7 @@ module.exports = exports = {
       },
       logPayload: false,
     };
-    // console.log("qqwwqqwwqqww", findConnection[0].accepted);
+    // // console.log("qqwwqqwwqqww", findConnection[0].accepted);
     // res
     //   .status(enums.HTTP_CODES.OK)
     //   .json(utils.createResponseObject(data4createResponseObject));

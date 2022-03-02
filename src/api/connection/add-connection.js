@@ -10,10 +10,10 @@ module.exports = exports = {
   handler: async ({ user, receiverId, message }) => {
     // const { user } = req;
     // const { receiverId } = req.params;
-    console.log(
-      "heeeeeeeeeeeeeeeeee============>>>>>>add-connection------------------>",
-      user
-    );
+    // console.log(
+    //   "heeeeeeeeeeeeeeeeee============>>>>>>add-connection------------------>",
+    //   user
+    // );
 
     const userData = await utils.getHeaderFromToken(user);
     console.log("userData-------------------zzzzzzzz", userData);

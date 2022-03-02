@@ -18,7 +18,7 @@ module.exports = exports = {
       };
     }
 
-    console.log("criteria", criteria);
+    // console.log("criteria", criteria);
     try {
       let userArray = [];
       let findUser = await global.models.GLOBAL.USER.find(criteria).sort({
@@ -28,7 +28,7 @@ module.exports = exports = {
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
         });
-        // console.log("Find Connection --->", findConection);
+        // // console.log("Find Connection --->", findConection);
         let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
           receiverId: user._id,
         });

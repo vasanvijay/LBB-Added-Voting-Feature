@@ -10,8 +10,8 @@ const utils = require("../../utils");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    //    const { roomId } = req;
-
+    // const { roomId } = req;
+    console.log("first-->>", res);
     let user = await utils.getHeaderFromToken(res);
     try {
       let chats = await global.models.GLOBAL.CHAT.find({
@@ -19,9 +19,26 @@ module.exports = exports = {
       }).populate({
         path: "parentMessageId",
         model: "chat",
-        select: "roomId sender message messageType type createdAt updatedAt",
+        select:
+          "roomId sender message messageType type createdAt updatedAt sentTo deliveredTo",
       });
-      console.log("CHAT-->", chats);
+      console.log(
+        "chat1------------------------------>>",
+
+        req,
+        user.id
+      );
+      let updateChat = await global.models.GLOBAL.CHAT.updateMany(
+        { sentTo: ObjectId(user.id), roomId: ObjectId(req) },
+        { $addToSet: { seenBy: ObjectId(user.id) } }
+      );
+      console.log(
+        "chat------------------------------>>",
+        updateChat,
+        req,
+        user.id
+      );
+      // console.log("CHAT-->kkkkk", chats);
       if (chats) {
         let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
           _id: req,
@@ -31,11 +48,12 @@ module.exports = exports = {
           match: {
             _id: { $ne: user.id },
           },
-          select: "_id name subject profileImage currentRole email blockUser",
+          select: "_id name subject profileImage currentRole email blockUser ",
         });
-        console.log("findRoom--->", findRoom?.createdBy);
-        // console.log("ROOM--->>", findRoom.participateIds[0]._id);
-        // console.log("USER--->>", user.id);
+
+        // console.log("findRoom--->----------------------", findRoom);
+        // // console.log("ROOM--->>", findRoom.participateIds[0]._id);
+        // // console.log("USER--->>", user.id);
 
         // let findRequest =
         //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
@@ -57,7 +75,7 @@ module.exports = exports = {
         //     ],
         //   }).populate({
         //     path: "requestTo",
-        //     model: "user",
+        //     model: "user",""""
         //     select:
         //       "_id name email region currentRole subject profileImage countryOfResidence",
         //   });
@@ -115,10 +133,10 @@ module.exports = exports = {
               select:
                 "_id name email region currentRole subject profileImage countryOfResidence",
             });
-        console.log("requestAudio----------->", requestAudio);
-        console.log("requestVideo----------->", requestVideo);
+        // console.log("requestAudio----------->", requestAudio);
+        // console.log("requestVideo----------->", requestVideo);
 
-        console.log("request------------------------>", request);
+        // console.log("request------------------------>", request);
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
             {
@@ -134,17 +152,17 @@ module.exports = exports = {
           ],
         });
 
-        console.log("findRequest--->", user.id);
-        console.log("findRequest=========--->", findRoom.participateIds[0]._id);
+        // console.log("findRequest--->", user.id);
+        // console.log("findRequest=========--->", findRoom.participateIds[0]._id);
 
         const isFriend = await global.models.GLOBAL.USER.findOne({
           _id: user.id,
           accepted: findRoom.participateIds[0]._id,
         });
 
-        console.log("isFriend------", isFriend);
+        // console.log("isFriend------", isFriend);
         if (checkBlockByMe) {
-          console.log("By Me--->");
+          // console.log("By Me--->");
           const data4createResponseObject = {
             req: req,
             result: 0,
@@ -162,7 +180,7 @@ module.exports = exports = {
           };
           return data4createResponseObject;
         } else if (checkBlockByOther) {
-          console.log("By Other--->");
+          // console.log("By Other--->");
 
           const data4createResponseObject = {
             req: req,
@@ -180,7 +198,7 @@ module.exports = exports = {
           };
           return data4createResponseObject;
         } else {
-          console.log("<------------>");
+          // console.log("<------------>");
 
           const data4createResponseObject = {
             req: req,

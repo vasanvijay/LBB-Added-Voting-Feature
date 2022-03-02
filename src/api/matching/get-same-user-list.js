@@ -16,7 +16,7 @@ module.exports = exports = {
       let findMatching = await global.models.GLOBAL.MATCHING.find({
         matchingBy: user._id,
       });
-      // console.log("findMatching--->>", findMatching);
+      // // console.log("findMatching--->>", findMatching);
       for (let i = 0; i < findMatching.length; i++) {
         userId.push(findMatching[i].matchingTo);
       }
@@ -143,7 +143,7 @@ module.exports = exports = {
       ])
         .skip(skip)
         .limit(limit);
-      // console.log("USER-->>", findSameSubjectUser.length);
+      // // console.log("USER-->>", findSameSubjectUser.length);
 
       //   return res.send(findSameSubjectUser);
       const data4createResponseObject = {

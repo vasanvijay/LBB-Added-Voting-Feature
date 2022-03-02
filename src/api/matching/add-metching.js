@@ -12,7 +12,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { id } = req.params;
-    console.log("calledddddddddddddd");
+    // console.log("calledddddddddddddd");
     if (!id) {
       const data4createResponseObject = {
         req: req,
@@ -32,7 +32,7 @@ module.exports = exports = {
         { status: "Pending" },
       ],
     });
-    // console.log("MATCH---->>>", findCrossMatch);
+    // // console.log("MATCH---->>>", findCrossMatch);
     if (findCrossMatch) {
       try {
         const matchingObj = {
@@ -175,7 +175,7 @@ module.exports = exports = {
             });
           }
 
-          // console.log("CHAT-->>", chatRoom);
+          // // console.log("CHAT-->>", chatRoom);
         }
       } catch (error) {
         logger.error(
@@ -196,7 +196,7 @@ module.exports = exports = {
       const matchingExist = await global.models.GLOBAL.MATCHING.findOne({
         $and: [{ matchingBy: user._id }, { matchingTo: id }],
       });
-      // console.log("-----------------------------", matchingExist);
+      // // console.log("-----------------------------", matchingExist);
       if (matchingExist) {
         const data4createResponseObject = {
           req: req,
@@ -215,9 +215,9 @@ module.exports = exports = {
             matchingTo: id,
             status: "Pending",
           };
-          // console.log("OBJ--->>", matchingObj);
-          // console.log("OBJ--->>", user._id);
-          // console.log("OBJ--->>", id);
+          // // console.log("OBJ--->>", matchingObj);
+          // // console.log("OBJ--->>", user._id);
+          // // console.log("OBJ--->>", id);
           const newMatching = await global.models.GLOBAL.MATCHING.create(
             matchingObj
           );
@@ -231,7 +231,7 @@ module.exports = exports = {
           res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
-          // console.log("MATCH---->>>", newMatching);
+          // // console.log("MATCH---->>>", newMatching);
           let ntfObj = {
             userId: user._id,
             receiverId: id,

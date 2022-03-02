@@ -104,10 +104,10 @@ functions.serviceImageUploadS3 = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      console.log("file[0]", file);
+      // console.log("file[0]", file);
       cb(
         null,
-        "service/" +
+        "leader-bridge/service/" +
           "-" +
           "ser" +
           "-" +
@@ -132,7 +132,7 @@ functions.serviceImageUploadS3 = multer({
 });
 
 functions.mediaDeleteS3 = function (filename, callback) {
-  console.log(filename);
+  // console.log(filename);
   var s3 = new AWS.S3();
   var params = {
     Bucket: s3Config.bucket,
@@ -141,9 +141,9 @@ functions.mediaDeleteS3 = function (filename, callback) {
 
   s3.deleteObject(params, function (err, data) {
     if (data) {
-      console.log("file deleted", data);
+      // console.log("file deleted", data);
     } else {
-      console.log("err in delete object", err);
+      // console.log("err in delete object", err);
       // callback(null);
     }
   });
@@ -159,7 +159,7 @@ functions.uploadBase = async function (profileImage, subject) {
     Bucket: process.env.bucket,
     Key: `${subject}.${type}`, // type is not required
     Body: base64Data,
-    ACL: "public-read",
+    // ACL: "public-read",
     ContentEncoding: "base64", // required
     ContentType: `image/${type}`, // required. Notice the back ticks
   };
@@ -172,7 +172,7 @@ functions.uploadBase = async function (profileImage, subject) {
     key = Key;
     return location;
   } catch (error) {
-    console.log("image upload error --> ", error);
+    // console.log("image upload error --> ", error);
   }
 };
 

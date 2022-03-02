@@ -15,14 +15,14 @@ module.exports = exports = {
     const { byUser } = req.query;
     const { search } = req.query;
 
-    console.log("users-------", user);
+    // console.log("users-------", user);
     let criteria;
     if (byUser) {
       criteria = {
         createdBy: user._id,
       };
       if (question) {
-        console.log("-----------------");
+        // console.log("-----------------");
         criteria = {
           _id: ObjectId(question),
           createdBy: ObjectId(user._id),
@@ -34,7 +34,7 @@ module.exports = exports = {
         _id: ObjectId(question),
       };
     }
-    // console.log("CRITERIA--->>", criteria);
+    // // console.log("CRITERIA--->>", criteria);
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -65,7 +65,7 @@ module.exports = exports = {
           createdBy: user._id,
         });
       } else if (!byUser && search) {
-        // console.log("SEARCH-->>", search);
+        // // console.log("SEARCH-->>", search);
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
         user.subject.push(user.gender);
@@ -82,7 +82,7 @@ module.exports = exports = {
         for (var i = 0; i < user.abuseQuestion.length; i++) {
           abuseQuestion.push(user.abuseQuestion[i].questionId);
         }
-        console.log("abuseQuestion--->>", user.subject);
+        // console.log("abuseQuestion--->>", user.subject);
         quResult = await global.models.GLOBAL.QUESTION.find({
           question: { $regex: search, $options: "i" },
           $and: [
@@ -154,7 +154,7 @@ module.exports = exports = {
         user.subject.push(user.sexualOrientation);
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
-        console.log("user.------------", user);
+        // console.log("user.------------", user);
         quResult = await global.models.GLOBAL.QUESTION.find({
           $and: [
             { _id: { $nin: user.answerLater } },
@@ -183,7 +183,7 @@ module.exports = exports = {
           })
           .exec();
 
-        console.log("quResult", quResult);
+        // console.log("quResult", quResult);
         if (criteria) {
           quResult = await global.models.GLOBAL.QUESTION.find(criteria)
             .populate({
@@ -198,7 +198,7 @@ module.exports = exports = {
             })
             .exec();
 
-          console.log("quResult", quResult);
+          // console.log("quResult", quResult);
         }
         count = await global.models.GLOBAL.QUESTION.count({
           $and: [
@@ -272,14 +272,14 @@ module.exports = exports = {
             optionNames.push(item.optionName);
           });
         }
-        // console.log("OPT-->>", optionNames.length);
+        // // console.log("OPT-->>", optionNames.length);
         if (optionNames.length > 0) {
           const users = await global.models.GLOBAL.USER.find({
             $text: { $search: optionNames.join(" ") },
           })
             .count()
             .then((ress) => ress);
-          // console.log("USER-->>", users);
+          // // console.log("USER-->>", users);
           if (users == 0) {
             return await global.models.GLOBAL.USER.count();
           } else {

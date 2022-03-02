@@ -1,6 +1,6 @@
 // const { assign, isEmpty } = require("lodash");
 
-const { NODE_ENV = "local", PORT = "8088" } = process.env;
+const { NODE_ENV = "local", PORT = "8080" } = process.env;
 
 const packageInfo = require("../../package.json");
 

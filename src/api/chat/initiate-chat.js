@@ -19,7 +19,7 @@ module.exports = exports = {
       const { id } = req.body;
       const { user } = req;
 
-      console.log("participateIds===================");
+      // console.log("participateIds===================");
       let participateIds = [];
       // check user type
       participateIds.push(user._id);
@@ -35,7 +35,7 @@ module.exports = exports = {
           { matchingRoom: false },
         ],
       });
-      console.log("chatRoom-->>", chatRoom);
+      // console.log("chatRoom-->>", chatRoom);
       const roomExist = await global.models.GLOBAL.CHAT_ROOM.findOne({
         $and: [
           {
@@ -47,7 +47,7 @@ module.exports = exports = {
           { matchingRoom: true },
         ],
       });
-      console.log("roomExist-->>", roomExist);
+      // console.log("roomExist-->>", roomExist);
       if (chatRoom) {
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [
@@ -103,7 +103,7 @@ module.exports = exports = {
           createdAt: Date.now(),
           createdBy: user._id,
         });
-        console.log("chatRoom-->>create", chatRoom);
+        // console.log("chatRoom-->>create", chatRoom);
 
         let checkBlockByMe = await global.models.GLOBAL.USER.findOne({
           $and: [

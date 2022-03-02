@@ -15,7 +15,7 @@ module.exports = exports = {
 
     const userData = await getHeaderFromToken(user);
 
-    console.log("userData-------------------datat", userData);
+    // console.log("userData-------------------datat", userData);
 
     try {
       // let findConnection;
@@ -49,7 +49,7 @@ module.exports = exports = {
         payload: { findConnection },
         logPayload: false,
       };
-      console.log("Data---------", data4createResponseObject);
+      // console.log("Data---------", data4createResponseObject);
       return data4createResponseObject;
 
       // res

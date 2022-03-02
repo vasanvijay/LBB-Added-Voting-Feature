@@ -13,12 +13,12 @@ module.exports = exports = {
     // const { sent } = req.query;
     // const { received } = req.query;
 
-    console.log("ffffffffffff-----", user);
-    console.log("ffffffffffff-----sent", sent);
+    // console.log("ffffffffffff-----", user);
+    // console.log("ffffffffffff-----sent", sent);
     const userData = await getHeaderFromToken(user);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----", userData);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----received", received);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
+    // // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----", userData);
+    // // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----received", received);
+    // // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
 
     try {
       // let findConnection;
@@ -34,7 +34,7 @@ module.exports = exports = {
           .sort({
             requestedAt: -1,
           });
-        console.log("findConnection==========", findConnection);
+        // console.log("findConnection==========", findConnection);
         const data4createResponseObject = {
           // req: req,
           result: 0,
@@ -42,7 +42,7 @@ module.exports = exports = {
           payload: { findConnectionData },
           logPayload: false,
         };
-        console.log("Data---------", data4createResponseObject);
+        // console.log("Data---------", data4createResponseObject);
         return data4createResponseObject;
       } else if (received) {
         let findConnection = await global.models.GLOBAL.CONNECTION.find({
@@ -64,7 +64,7 @@ module.exports = exports = {
           payload: { findConnection },
           logPayload: false,
         };
-        console.log("Data---------", data4createResponseObject);
+        // console.log("Data---------", data4createResponseObject);
         return data4createResponseObject;
       }
 

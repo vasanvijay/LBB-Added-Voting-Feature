@@ -29,7 +29,7 @@ module.exports = exports = {
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
 
-      // console.log("findQue-->>", findQuestion);
+      // // console.log("findQue-->>", findQuestion);
       // let answer = await global.models.GLOBAL.ANSWER.find({
       //   $and: [{ isAbuse: false }, { question: question }],
       // })
@@ -100,7 +100,7 @@ module.exports = exports = {
       ])
         .skip(skip)
         .limit(limit);
-      // console.log("ANS--->>", answer);
+      // // console.log("ANS--->>", answer);
       if (answer) {
         answer = JSON.parse(JSON.stringify(answer));
         const data4createResponseObject = {

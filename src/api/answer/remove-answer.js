@@ -12,7 +12,7 @@ module.exports = exports = {
     const { user } = req;
     const { answerId } = req.params;
     const answerExists = await global.models.GLOBAL.ANSWER.findById(answerId);
-    console.log("ANS-->", answerExists);
+    // console.log("ANS-->", answerExists);
     if (!answerExists) {
       const data4createResponseObject = {
         req: req,

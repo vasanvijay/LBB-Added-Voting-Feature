@@ -249,7 +249,7 @@ module.exports = exports = {
               </body>
               </html>`,
             });
-            console.log("Message sent: %s", info.messageId);
+            // console.log("Message sent: %s", info.messageId);
             const data4createResponseObject = {
               req: req,
               result: 0,

@@ -16,7 +16,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
-    // console.log("USER-->>", user);
+    // // console.log("USER-->>", user);
     const { organizationEmail } = req.body;
 
     let findUser = await global.models.GLOBAL.USER.findOne({
@@ -36,7 +36,7 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     } else {
       try {
-        console.log("MAIL SENDING");
+        // console.log("MAIL SENDING");
         let transporter = nodemailer.createTransport({
           service: "gmail",
           host: "smtp.gmail.com",
@@ -130,7 +130,7 @@ module.exports = exports = {
                 
                 </html>`,
         });
-        console.log("Message sent: %s", info.messageId);
+        // console.log("Message sent: %s", info.messageId);
         const data4createResponseObject = {
           req: req,
           result: 0,

@@ -22,6 +22,7 @@ const getCount = require("./get-count");
 const sendMailForWrokEmail = require("./sent-mail-work-email");
 const agoraToken = require("./agora-token");
 const verifyWorkEmail = require("./verify-work-email");
+const updateOnlineStatus = require("./update-online-status");
 
 module.exports = exports = {
   userRegistration,
@@ -48,4 +49,5 @@ module.exports = exports = {
   agoraToken,
   sendMailForWrokEmail,
   getBlockstatus,
+  updateOnlineStatus,
 };

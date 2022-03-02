@@ -11,7 +11,7 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     let user = await utils.getHeaderFromToken(req.user);
-    console.log("id-----d-d-d-d", req.status);
+    // console.log("id-----d-d-d-d", req.status);
     const { requestId } = req;
     if (!requestId) {
       const data4createResponseObject = {
@@ -31,7 +31,7 @@ module.exports = exports = {
         await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
           _id: requestId,
         });
-      console.log("findRequestfindRequestfindRequest", findRequest);
+      // console.log("findRequestfindRequestfindRequest", findRequest);
       if (findRequest) {
         let updateRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndUpdate(

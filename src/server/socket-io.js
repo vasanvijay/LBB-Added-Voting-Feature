@@ -1,5 +1,6 @@
 "use strict";
 const activeUsers = new Set();
+const onlineUsers = {};
 const chatCtrl = require("../api/chat");
 const answerCtrl = require("../api/new_answer");
 const { sendPushNotification } = require("../middlewares/pushNotification");
@@ -32,6 +33,45 @@ module.exports = (server, logger) => {
     // );
 
     // Routes
+    socket.on("login", async function ({ userId }) {
+      console.log("login--->>1111111111111111111", userId);
+      console.log("a user " + userId + " connected");
+      // saving userId to object with socket ID
+      onlineUsers[socket.id] = userId;
+      console.log("onlineUsers", onlineUsers);
+      const userStatus = await api4User.updateOnlineStatus.handler({
+        userId,
+        status: true,
+      });
+      console.log(
+        "---------------------1-----------------",
+        userId,
+        userStatus
+      );
+    });
+
+    //
+
+    socket.on("disconnect", async () => {
+      console.log("user " + onlineUsers[socket.id] + " disconnected");
+      // remove saved socket from onlineUsers object
+      let userId = onlineUsers[socket.id];
+
+      console.log("-----2------", onlineUsers);
+      console.log("-----2------", userId);
+      const userStatus = await api4User.updateOnlineStatus.handler({
+        userId,
+        status: false,
+      });
+      console.log("userrrrStatussss", userStatus);
+      // // delete onlineUsers[socket.id];
+    });
+    socket.on("leaveRoom", async ({ roomId }) => {
+      console.log("leaveRoom", roomId);
+      socket.leave(roomId);
+    });
+
+    console.log("onlineUsers----global", onlineUsers);
     socket.on("join", async function ({ roomId, user }) {
       logger.info(`user join room : ${roomId}`);
       socket.userId = roomId;
@@ -42,8 +82,8 @@ module.exports = (server, logger) => {
       try {
         let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
 
-        console.log("chatHistory--->>", roomId);
-        console.log("////////////////history", chatHistory.payload);
+        console.log("chatHistory--->>", roomId, user);
+        // console.log("////////////////history", chatHistory.payload);
         if (chatHistory.payload && chatHistory.payload.chats) {
           io.in(socket.id).emit("history", { chats: chatHistory.payload });
         } else {
@@ -109,7 +149,7 @@ module.exports = (server, logger) => {
           io.emit("check-answer");
           console.log("message-sent");
         } catch (error) {
-          console.log("Error in sending message", error);
+          console.log("Error in sending message", error.message);
         }
       }
     );
@@ -441,10 +481,6 @@ module.exports = (server, logger) => {
         console.log("otherIddisconnect...................", res);
       }
     );
-
-    socket.on("disconnect", () => {
-      console.log("user disconnected");
-    });
 
     socket.on("delete-answer", async function ({ answerId }) {
       console.log("delete-answer", answerId);

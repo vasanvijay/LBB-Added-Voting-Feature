@@ -118,7 +118,7 @@ module.exports = exports = {
                     
                     </html>`,
             });
-            console.log("Message sent: %s", info.messageId);
+            // console.log("Message sent: %s", info.messageId);
           }
           const data4createResponseObject = {
             req: req,

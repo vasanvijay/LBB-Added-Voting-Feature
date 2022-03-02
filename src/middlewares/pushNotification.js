@@ -14,11 +14,11 @@ const sendPushNotification = async (data) => {
     .messaging()
     .sendToDevice(data.firebaseToken, data.payload, options)
     .then(function (response) {
-      console.log("response", response);
+      // console.log("response", response);
       return response;
     })
     .catch(function (error) {
-      console.log("Error sending message:", error);
+      // console.log("Error sending message:", error);
       return error;
     });
 };

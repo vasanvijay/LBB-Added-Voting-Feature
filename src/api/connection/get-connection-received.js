@@ -15,10 +15,10 @@ module.exports = exports = {
 
     const userData = await getHeaderFromToken(user);
 
-    console.log("userData-------------------datat", userData);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----", userData);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----received", received);
-    // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
+    // console.log("userData-------------------datat", userData);
+    // // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----", userData);
+    // // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----received", received);
+    // // console.log("DDDDDDDDDDDDDDDDDDDffffffffffff-----sent", sent);
 
     try {
       let findUser = await global.models.GLOBAL.USER.findOne({
@@ -50,7 +50,7 @@ module.exports = exports = {
         payload: { findConnection },
         logPayload: false,
       };
-      console.log("Data---------fdggdgdddddddddddd", data4createResponseObject);
+      // console.log("Data---------fdggdgdddddddddddd", data4createResponseObject);
       return data4createResponseObject;
 
       // res
