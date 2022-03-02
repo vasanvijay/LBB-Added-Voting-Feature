@@ -74,8 +74,9 @@ functions.isTest = () => process.env.APP_ENVIRONMENT.toLowerCase() === "test";
 
 /* Mask a name to initials - e.g., change Bhargav Butani to A. B. */
 
-functions.passwordHash = (password) =>
-  crypto.createHash("sha512").update(password.toString()).digest("hex");
+// functions.passwordHash = (password) =>
+//   crypto.createHash("sha512").update(password.toString()).digest("hex");
+functions.passwordHash = (password) => md5(password);
 
 /** Sort a JSON by keys */
 functions.sortByKeys = (obj) => {
