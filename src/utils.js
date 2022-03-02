@@ -7,7 +7,7 @@ const { default: jwtDecode } = require("jwt-decode");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 var AWS = require("aws-sdk");
-
+const md5 = require("md5");
 const { s3Config } = require("./middlewares/config");
 AWS.config.update({
   accessKeyId: s3Config.clientId,
