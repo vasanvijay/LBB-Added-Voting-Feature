@@ -7,6 +7,8 @@ const { sendPushNotification } = require("../middlewares/pushNotification");
 const api4Connection = require("../../../leaderbridge-backend/src/api/connection/index");
 const api4Notification = require("../../../leaderbridge-backend/src/api/notification/index");
 const api4User = require("../../../leaderbridge-backend/src/api/user/index");
+const api4Question = require("../../../leaderbridge-backend/src/api/question/index");
+const { ObjectId } = require("mongodb");
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
   const io = require("socket.io")(server, {
@@ -75,21 +77,44 @@ module.exports = (server, logger) => {
     socket.on("join", async function ({ roomId, user }) {
       logger.info(`user join room : ${roomId}`);
       socket.userId = roomId;
-      activeUsers.add(roomId);
 
       socket.join(roomId);
 
       try {
-        let chatHistory = await chatCtrl.getMessages.handler(roomId, user);
+        if (roomId) {
+          let chatHistory;
+          // let ln = await io.in(roomId).allSockets();
 
-        console.log("chatHistory--->>", roomId, user);
-        // console.log("////////////////history", chatHistory.payload);
-        if (chatHistory.payload && chatHistory.payload.chats) {
-          io.in(socket.id).emit("history", { chats: chatHistory.payload });
-        } else {
-          io.in(socket.id).emit("history", {});
+          // if (ln.size == 2) {
+          //   chatHistory = await chatCtrl.getMessages.handler(
+          //     roomId,
+          //     user,
+          //     "user"
+          //   );
+          // } else {
+          chatHistory = await chatCtrl.getMessages.handler(roomId, user);
+          // }
+
+          console.log(
+            "chatHistory--->>",
+            roomId,
+
+            user,
+            chatHistory.payload.chats[chatHistory.payload.chats.length - 1]
+          );
+          // console.log("////////////////history", chatHistory.payload);
+          if (chatHistory.payload && chatHistory.payload.chats) {
+            io.in(roomId).emit("history", { chats: chatHistory.payload });
+          } else {
+            io.in(roomId).emit("history", {});
+          }
+          console.log("history sent");
+          console.log(
+            "%%%%%%%%%%%%%%%%&&&&&&&&&&&_________________________&&&&&&&&&&&&&&&&&&&&message-sent",
+            user,
+            roomId
+          );
         }
-        console.log("history sent");
       } catch (error) {
         console.log("Error in finding Chats ", error);
       }
@@ -116,6 +141,7 @@ module.exports = (server, logger) => {
         // console.log("history", allChatRoom.payload.room);
         io.in(socket.id).emit("chat-room", {
           room: allChatRoom.payload.room,
+          userId: allChatRoom.payload.userId,
         });
         console.log("Room data sent");
       } catch (error) {
@@ -128,16 +154,36 @@ module.exports = (server, logger) => {
       async function ({ roomId, sender, message, type, parentMessageId }) {
         // console.log({ roomId, sender, message, parentMessageId });
         try {
-          let newMsg = await chatCtrl.sendMessage.handler({
-            roomId: roomId,
-            sender: sender,
-            message: message,
-            type: type,
-            parentMessageId: parentMessageId,
-          });
+          console.log(
+            "%%%%%%%%%%%%%%%%&&&&&&&&&&&_________________________&&&&&&&&&&&&&&&&&&&&message-sent",
+            sender,
+            roomId
+          );
+          let ln = await io.in(roomId).allSockets();
+          let newMsg;
+          if (ln.size == 2) {
+            newMsg = await chatCtrl.sendMessage.handler({
+              roomId: roomId,
+              sender: sender,
+              message: message,
+              type: type,
+              parentMessageId: parentMessageId,
+              flag: "seen",
+            });
+          } else {
+            newMsg = await chatCtrl.sendMessage.handler({
+              roomId: roomId,
+              sender: sender,
+              message: message,
+              type: type,
+              parentMessageId: parentMessageId,
+            });
+          }
+
           // newMsg = JSON.parse(JSON.stringify(newMsg));
           // newMsg["network"] = "1"
           // console.log("new-message", newMsg.payload.newChat);
+
           io.in(roomId).emit("new-message", newMsg.payload.newChat);
           io.emit("check-answer");
 
@@ -147,7 +193,6 @@ module.exports = (server, logger) => {
             chats: chatHistory.payload.chats,
           });
           io.emit("check-answer");
-          console.log("message-sent");
         } catch (error) {
           console.log("Error in sending message", error.message);
         }

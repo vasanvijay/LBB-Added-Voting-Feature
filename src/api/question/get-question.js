@@ -15,8 +15,8 @@ module.exports = exports = {
     const { byUser } = req.query;
     const { search } = req.query;
 
-    // console.log("users-------", user);
-    let criteria;
+    console.log("users-------", user);
+    let criteria = {};
     if (byUser) {
       criteria = {
         createdBy: user._id,
@@ -198,7 +198,7 @@ module.exports = exports = {
             })
             .exec();
 
-          // console.log("quResult", quResult);
+          console.log("quResult--", quResult);
         }
         count = await global.models.GLOBAL.QUESTION.count({
           $and: [
@@ -291,70 +291,73 @@ module.exports = exports = {
       };
 
       for (let i = 0; i < quResult.length; i++) {
-        if (conectIdExist(quResult[i].createdBy._id)) {
-          let questionObj = {
-            _id: quResult[i]._id,
-            displayProfile: quResult[i].displayProfile,
-            allowConnectionRequest: quResult[i].allowConnectionRequest,
-            response: quResult[i].response,
-            status: quResult[i].status,
-            question: quResult[i].question,
-            filter: quResult[i]?.filter,
-            createdAt: quResult[i].createdAt,
-            userName: quResult[i].createdBy.name,
-            createdBy: quResult[i].createdBy,
-            isFriend: "true",
-            reach: await reachCount(quResult[i]),
-          };
-          questionDetais.push(questionObj);
-        } else if (sentIdExist(quResult[i].createdBy._id)) {
-          let questionObj = {
-            _id: quResult[i]._id,
-            displayProfile: quResult[i].displayProfile,
-            allowConnectionRequest: quResult[i].allowConnectionRequest,
-            response: quResult[i].response,
-            status: quResult[i].status,
-            question: quResult[i].question,
-            filter: quResult[i]?.filter,
-            createdAt: quResult[i].createdAt,
-            userName: quResult[i].createdBy.name,
-            createdBy: quResult[i].createdBy,
-            isFriend: "sent",
-            reach: await reachCount(quResult[i]),
-          };
-          questionDetais.push(questionObj);
-        } else if (pandingIdExist(quResult[i].createdBy._id)) {
-          let questionObj = {
-            _id: quResult[i]._id,
-            displayProfile: quResult[i].displayProfile,
-            allowConnectionRequest: quResult[i].allowConnectionRequest,
-            response: quResult[i].response,
-            status: quResult[i].status,
-            question: quResult[i].question,
-            filter: quResult[i]?.filter,
-            createdAt: quResult[i].createdAt,
-            userName: quResult[i].createdBy.name,
-            createdBy: quResult[i].createdBy,
-            isFriend: "pending",
-            reach: await reachCount(quResult[i]),
-          };
-          questionDetais.push(questionObj);
-        } else {
-          let questionObj = {
-            _id: quResult[i]._id,
-            displayProfile: quResult[i].displayProfile,
-            allowConnectionRequest: quResult[i].allowConnectionRequest,
-            response: quResult[i].response,
-            status: quResult[i].status,
-            question: quResult[i].question,
-            filter: quResult[i]?.filter,
-            createdAt: quResult[i].createdAt,
-            userName: quResult[i].createdBy.name,
-            createdBy: quResult[i].createdBy,
-            isFriend: "false",
-            reach: await reachCount(quResult[i]),
-          };
-          questionDetais.push(questionObj);
+        console.log("quResult[i]", quResult[i]);
+        if (quResult[i].createdBy != null) {
+          if (conectIdExist(quResult[i]?.createdBy?._id)) {
+            let questionObj = {
+              _id: quResult[i]._id,
+              displayProfile: quResult[i].displayProfile,
+              allowConnectionRequest: quResult[i].allowConnectionRequest,
+              response: quResult[i].response,
+              status: quResult[i].status,
+              question: quResult[i].question,
+              filter: quResult[i]?.filter,
+              createdAt: quResult[i].createdAt,
+              userName: quResult[i].createdBy.name,
+              createdBy: quResult[i].createdBy,
+              isFriend: "true",
+              reach: await reachCount(quResult[i]),
+            };
+            questionDetais.push(questionObj);
+          } else if (sentIdExist(quResult[i].createdBy._id)) {
+            let questionObj = {
+              _id: quResult[i]._id,
+              displayProfile: quResult[i].displayProfile,
+              allowConnectionRequest: quResult[i].allowConnectionRequest,
+              response: quResult[i].response,
+              status: quResult[i].status,
+              question: quResult[i].question,
+              filter: quResult[i]?.filter,
+              createdAt: quResult[i].createdAt,
+              userName: quResult[i].createdBy.name,
+              createdBy: quResult[i].createdBy,
+              isFriend: "sent",
+              reach: await reachCount(quResult[i]),
+            };
+            questionDetais.push(questionObj);
+          } else if (pandingIdExist(quResult[i].createdBy._id)) {
+            let questionObj = {
+              _id: quResult[i]._id,
+              displayProfile: quResult[i].displayProfile,
+              allowConnectionRequest: quResult[i].allowConnectionRequest,
+              response: quResult[i].response,
+              status: quResult[i].status,
+              question: quResult[i].question,
+              filter: quResult[i]?.filter,
+              createdAt: quResult[i].createdAt,
+              userName: quResult[i].createdBy.name,
+              createdBy: quResult[i].createdBy,
+              isFriend: "pending",
+              reach: await reachCount(quResult[i]),
+            };
+            questionDetais.push(questionObj);
+          } else {
+            let questionObj = {
+              _id: quResult[i]._id,
+              displayProfile: quResult[i].displayProfile,
+              allowConnectionRequest: quResult[i].allowConnectionRequest,
+              response: quResult[i].response,
+              status: quResult[i].status,
+              question: quResult[i].question,
+              filter: quResult[i]?.filter,
+              createdAt: quResult[i].createdAt,
+              userName: quResult[i].createdBy.name,
+              createdBy: quResult[i].createdBy,
+              isFriend: "false",
+              reach: await reachCount(quResult[i]),
+            };
+            questionDetais.push(questionObj);
+          }
         }
       }
       const data4createResponseObject = {

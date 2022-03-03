@@ -9,6 +9,7 @@ const multerS3 = require("multer-s3");
 var AWS = require("aws-sdk");
 
 const { s3Config } = require("./middlewares/config");
+const md5 = require("md5");
 AWS.config.update({
   accessKeyId: s3Config.clientId,
   secretAccessKey: s3Config.clientSecret,

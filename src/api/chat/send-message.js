@@ -15,7 +15,7 @@ module.exports = exports = {
     message: Joi.string().required(),
   }),
   handler: async (req, res) => {
-    const { roomId, sender, message, type, parentMessageId } = req;
+    const { roomId, sender, message, type, parentMessageId, flag } = req;
     // // console.log("ID-->>", parentMessageId);
     // const { user } = req;
 
@@ -47,6 +47,9 @@ module.exports = exports = {
         sentTo: [receiverId],
         deliveredTo: isDelivered ? [receiverId] : [],
       };
+      if (flag == "seen") {
+        chat.seenBy = [receiverId];
+      }
 
       let newMessage = await global.models.GLOBAL.CHAT.create(chat);
 

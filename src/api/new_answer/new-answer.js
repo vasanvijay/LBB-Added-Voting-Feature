@@ -136,7 +136,7 @@ module.exports = exports = {
             let ntfObj2 = {
               userId: user.id,
               receiverId: findRoom.createdBy,
-              title: `Notification AB By ${user.id} to ${findQuestion.createdBy}`,
+              title: `Notification By ${user.id} to ${findQuestion.createdBy}`,
               description: {
                 data: { title: "Leaderbridge" },
                 notification: {

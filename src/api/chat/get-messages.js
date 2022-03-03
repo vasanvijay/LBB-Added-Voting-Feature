@@ -9,11 +9,51 @@ const utils = require("../../utils");
 // Retrieve and return all Chats for particular user from the database.
 module.exports = exports = {
   // route handler
-  handler: async (req, res) => {
+  handler: async (req, res, f) => {
     // const { roomId } = req;
     console.log("first-->>", res);
     let user = await utils.getHeaderFromToken(res);
     try {
+      // if (f == "user") {
+      //   let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
+      //     _id: req,
+      //   }).populate({
+      //     path: "participateIds",
+      //     model: "user",
+      //     match: {
+      //       _id: { $ne: user.id },
+      //     },
+      //     select: "_id name subject profileImage currentRole email blockUser ",
+      //   });
+      //   let updateRChat = await global.models.GLOBAL.CHAT.updateMany(
+      //     {
+      //       sentTo: findRoom.participateIds[0]._id,
+      //       roomId: ObjectId(req),
+      //     },
+      //     { $addToSet: { seenBy: findRoom.participateIds[0]._id } }
+      //   );
+      //   console.log(
+      //     "findRoom-------------------vvv",
+      //     findRoom.participateIds[0]._id,
+      //     req
+      //   );
+      //   let updateChat = await global.models.GLOBAL.CHAT.updateMany(
+      //     { sentTo: ObjectId(user.id), roomId: ObjectId(req) },
+      //     { $addToSet: { seenBy: ObjectId(user.id) } }
+      //   );
+      // } else {
+      let updateChat = await global.models.GLOBAL.CHAT.updateMany(
+        { sentTo: ObjectId(user.id), roomId: ObjectId(req) },
+        { $addToSet: { seenBy: ObjectId(user.id) } }
+      );
+      // }
+      console.log(
+        "chat------------------------------>>",
+        // updateChat,
+        req,
+        user.id
+      );
+
       let chats = await global.models.GLOBAL.CHAT.find({
         roomId: req,
       }).populate({
@@ -25,16 +65,6 @@ module.exports = exports = {
       console.log(
         "chat1------------------------------>>",
 
-        req,
-        user.id
-      );
-      let updateChat = await global.models.GLOBAL.CHAT.updateMany(
-        { sentTo: ObjectId(user.id), roomId: ObjectId(req) },
-        { $addToSet: { seenBy: ObjectId(user.id) } }
-      );
-      console.log(
-        "chat------------------------------>>",
-        updateChat,
         req,
         user.id
       );
