@@ -273,21 +273,21 @@ module.exports = exports = {
           });
         }
         // // console.log("OPT-->>", optionNames.length);
-        if (optionNames.length > 0) {
-          const users = await global.models.GLOBAL.USER.find({
-            $text: { $search: optionNames.join(" ") },
-          })
-            .count()
-            .then((ress) => ress);
-          // // console.log("USER-->>", users);
-          if (users == 0) {
-            return await global.models.GLOBAL.USER.count();
-          } else {
-            return users;
-          }
-        } else {
-          return await global.models.GLOBAL.USER.count();
-        }
+        // if (optionNames.length > 0) {
+        //   const users = await global.models.GLOBAL.USER.find({
+        //     $text: { $search: optionNames.join(" ") },
+        //   })
+        //     .count()
+        //     .then((ress) => ress);
+        //   // // console.log("USER-->>", users);
+        //   if (users == 0) {
+        //     return await global.models.GLOBAL.USER.count();
+        //   } else {
+        //     return users;
+        //   }
+        // } else {
+        return await global.models.GLOBAL.USER.count();
+        // }
       };
 
       for (let i = 0; i < quResult.length; i++) {
