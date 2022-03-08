@@ -211,21 +211,26 @@ module.exports = (server, logger) => {
       }
     });
 
-    socket.on("answer", async function ({ user, roomId }) {
-      // console.log("answer------------->>>>>>", user, roomId);
-      try {
-        let answer = await answerCtrl.getAnswerByRoom.handler({
-          user: user,
-          roomId: roomId,
-        });
-        // console.log("get----->>>", answer.payload);
+    socket.on(
+      "answer",
+      async function ({ user, roomId, roomListId, roomMakeid }) {
+        console.log("answer------------->>>>>>", user, roomId);
+        try {
+          let answer = await answerCtrl.getAnswerByRoom.handler({
+            user: user,
+            roomId: roomId,
+            roomListId: roomListId,
+            roomMakeid: roomMakeid,
+          });
+          // console.log("get----->>>", answer.payload);
 
-        io.in(socket.id).emit("answer", answer.payload);
-        console.log("answer data sent");
-      } catch (error) {
-        console.log("Error in finding Chats ", error);
+          io.in(socket.id).emit("answer", answer.payload);
+          console.log("answer data sent");
+        } catch (error) {
+          console.log("Error in finding Chats ", error);
+        }
       }
-    });
+    );
 
     socket.on(
       "add-answer",

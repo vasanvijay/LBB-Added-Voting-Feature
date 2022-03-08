@@ -39,6 +39,7 @@ module.exports = exports = {
             createdBy: user.id,
             question: question,
             createdAt: Date.now(),
+            status: 0,
           };
           let addNewAnswer = await global.models.GLOBAL.ANSWER.create(
             addAnswer

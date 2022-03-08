@@ -9,186 +9,464 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let user = await utils.getHeaderFromToken(req.user);
-      let { roomId } = req;
-      let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
-        _id: ObjectId(roomId),
-      });
-      if (findRoom) {
-        let findAnswer = await global.models.GLOBAL.ANSWER.find({
-          roomId: ObjectId(roomId),
-        }).populate({
-          path: "createdBy",
-          model: "user",
-          select:
-            "_id name subject profileImage currentRole countryOfResidence",
+
+      let { roomId, roomListId, roomMakeid } = req;
+      console.log("roomId------", roomId, user.id);
+      console.log("roomId------roomListId", roomListId);
+
+      if (roomId && !roomListId && roomMakeid) {
+        let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+          _id: roomId,
         });
-
-        if (!findAnswer.length < 0) {
-          const data4createResponseObject = {
-            req: req,
-            result: -1,
-            message: messages.GENERAL,
-            payload: {},
-            logPayload: false,
-          };
-          return data4createResponseObject;
-        } else {
-          let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
-            _id: findRoom.questionId,
+        let body = { status: 0 };
+        if (findQuestion.createdBy == user.id) {
+          body = {};
+        }
+        let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+          questionId: ObjectId(roomId),
+        });
+        if (findRoom) {
+          let findAnswer = await global.models.GLOBAL.ANSWER.find({
+            question: ObjectId(roomId),
+          }).populate({
+            path: "createdBy",
+            model: "user",
+            select:
+              "_id name subject profileImage currentRole countryOfResidence",
           });
-          if (findQuestion.createdBy == user.id) {
-            // let findRequest =
-            //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-            //     $and: [
-            //       { requestBy: user.id },
-            //       { requestTo: findRoom.createdBy },
-            //     ],
-            //   }).populate({
-            //     path: "requestBy",
-            //     model: "user",
-            //     select:
-            //       "_id name email region currentRole subject profileImage countryOfResidence",
-            //   });
-            // let receivedRequest =
-            //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-            //     $and: [
-            //       { requestBy: findRoom.createdBy },
-            //       { requestTo: user.id },
-            //     ],
-            //   }).populate({
-            //     path: "requestTo",
-            //     model: "user",
-            //     select:
-            //       "_id name email region currentRole subject profileImage countryOfResidence",
-            //   });
-            let findRequest =
-              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-                roomId: ObjectId(roomId),
-              })
-                .populate({
-                  path: "requestTo",
-                  model: "user",
-                  select:
-                    "_id name email region currentRole subject profileImage countryOfResidence",
-                })
-                .populate({
-                  path: "requestBy",
-                  model: "user",
-                  select:
-                    "_id name email region currentRole subject profileImage countryOfResidence",
-                });
+          findAnswer = await global.models.GLOBAL.ANSWER.aggregate([
+            {
+              $lookup: {
+                from: "user",
+                localField: "createdBy",
+                foreignField: "_id",
+                as: "createdBy",
+              },
+            },
+            {
+              $unwind: {
+                path: "$createdBy",
+              },
+            },
+            {
+              $project: {
+                "createdBy.password": 0,
+              },
+            },
+            {
+              $facet: {
+                myans: [
+                  {
+                    $match: {
+                      "createdBy._id": ObjectId(user.id),
+                    },
+                  },
+                ],
+                allans: [
+                  {
+                    $match: {
+                      "createdBy._id": {
+                        $ne: new ObjectId("61f92acf2e86a0ec30769d47"),
+                      },
+                      ...body,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $project: {
+                all: {
+                  $setUnion: ["$myans", "$allans"],
+                },
+              },
+            },
+            {
+              $unwind: {
+                path: "$all",
+              },
+            },
+            {
+              $project: {
+                _id: "$all._id",
+                isUpdated: "$all.isUpdated",
+                isAbuse: "$all.isAbuse",
+                isStar: "$all.isStar",
+                roomId: "$all.roomId",
+                answer: "$all.answer",
+                createdBy: "$all.createdBy",
+                question: "$all.question",
+                createdAt: "$all.createdAt",
+                __v: "$all.__v",
+                status: "$all.status",
+              },
+            },
+            {
+              $sort: {
+                createdAt: 1,
+              },
+            },
+          ]);
+          // .populate({
+          //   path: "createdBy",
+          //   model: "user",
+          //   select:
+          //     "_id name subject profileImage currentRole countryOfResidence",
+          // });
 
-            let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
-              senderId: user.id,
-              receiverId: findRoom.createdBy,
-            });
-
-            let isFriend;
-            if (checkRequest) {
-              isFriend = "pending";
-            } else {
-              const checkRequestProfile =
-                await global.models.GLOBAL.USER.findOne({
-                  _id: user.id,
-                  accepted: findRoom.createdBy,
-                });
-
-              isFriend = checkRequestProfile == null ? "false" : "true";
-            }
-
+          console.log("findAnswer", findAnswer);
+          if (!findAnswer.length < 0) {
             const data4createResponseObject = {
               req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: {
-                answer: findAnswer,
-                request: findRequest,
-                isFriend: isFriend,
-              },
+              result: -1,
+              message: messages.GENERAL,
+              payload: {},
               logPayload: false,
             };
             return data4createResponseObject;
           } else {
-            // let findRequest =
-            //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-            //     $and: [
-            //       { requestBy: user.id },
-            //       { requestTo: findQuestion.createdBy },
-            //     ],
-            //   }).populate({
-            //     path: "requestBy",
-            //     model: "user",
-            //     select:
-            //       "_id name email region currentRole subject profileImage countryOfResidence",
-            //   });
-            // let receivedRequest =
-            //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-            //     $and: [
-            //       { requestBy: findQuestion.createdBy },
-            //       { requestTo: user.id },
-            //     ],
-            //   }).populate({
-            //     path: "requestTo",
-            //     model: "user",
-            //     select:
-            //       "_id name email region currentRole subject profileImage countryOfResidence",
-            //   });
-            let findRequest =
-              await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-                roomId: ObjectId(roomId),
-              })
-                .populate({
-                  path: "requestTo",
-                  model: "user",
-                  select:
-                    "_id name email region currentRole subject profileImage countryOfResidence",
-                })
-                .populate({
-                  path: "requestBy",
-                  model: "user",
-                  select:
-                    "_id name email region currentRole subject profileImage countryOfResidence",
-                });
-
-            let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
-              senderId: user.id,
-              receiverId: findRoom.createdBy,
+            let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+              _id: findRoom.questionId,
             });
-            let isFriend;
-            if (checkRequest) {
-              isFriend = "pending";
-            } else {
-              const checkRequestProfile =
-                await global.models.GLOBAL.USER.findOne({
-                  _id: user.id,
-                  accepted: findRoom.createdBy,
-                });
 
-              isFriend = checkRequestProfile == null ? "false" : "true";
+            console.log("findQuestion----------", findQuestion);
+            if (findQuestion.createdBy == user.id) {
+              // let findRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: user.id },
+              //       { requestTo: findRoom.createdBy },
+              //     ],
+              //   }).populate({
+              //     path: "requestBy",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              // let receivedRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: findRoom.createdBy },
+              //       { requestTo: user.id },
+              //     ],
+              //   }).populate({
+              //     path: "requestTo",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              let findRequest =
+                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                  roomId: ObjectId(roomMakeid),
+                })
+                  .populate({
+                    path: "requestTo",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  })
+                  .populate({
+                    path: "requestBy",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  });
+
+              let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
+                senderId: user.id,
+                receiverId: findRoom.createdBy,
+              });
+
+              let isFriend;
+              if (checkRequest) {
+                isFriend = "pending";
+              } else {
+                const checkRequestProfile =
+                  await global.models.GLOBAL.USER.findOne({
+                    _id: user.id,
+                    accepted: findRoom.createdBy,
+                  });
+
+                isFriend = checkRequestProfile == null ? "false" : "true";
+              }
+
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                  request: findRequest,
+                  isFriend: isFriend,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            } else {
+              // let findRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: user.id },
+              //       { requestTo: findQuestion.createdBy },
+              //     ],
+              //   }).populate({
+              //     path: "requestBy",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              // let receivedRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: findQuestion.createdBy },
+              //       { requestTo: user.id },
+              //     ],
+              //   }).populate({
+              //     path: "requestTo",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              let findRequest =
+                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                  roomId: ObjectId(roomMakeid),
+                })
+                  .populate({
+                    path: "requestTo",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  })
+                  .populate({
+                    path: "requestBy",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  });
+
+              let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
+                senderId: user.id,
+                receiverId: findRoom.createdBy,
+              });
+              let isFriend;
+              if (checkRequest) {
+                isFriend = "pending";
+              } else {
+                const checkRequestProfile =
+                  await global.models.GLOBAL.USER.findOne({
+                    _id: user.id,
+                    accepted: findRoom.createdBy,
+                  });
+
+                isFriend = checkRequestProfile == null ? "false" : "true";
+              }
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                  request: findRequest,
+                  isFriend: isFriend,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
             }
+          }
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.ITEM_NOT_FOUND,
+            payload: {},
+            logPayload: false,
+          };
+          return data4createResponseObject;
+        }
+      } else if (!roomId && roomListId && roomMakeid) {
+        let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
+          _id: ObjectId(roomListId),
+        });
+        if (findRoom) {
+          let findAnswer = await global.models.GLOBAL.ANSWER.find({
+            roomId: ObjectId(roomListId),
+          }).populate({
+            path: "createdBy",
+            model: "user",
+            select:
+              "_id name subject profileImage currentRole countryOfResidence",
+          });
+
+          console.log("A----------------------Sada");
+
+          if (!findAnswer.length < 0) {
             const data4createResponseObject = {
               req: req,
-              result: 0,
-              message: messages.ITEM_FETCHED,
-              payload: {
-                answer: findAnswer,
-                request: findRequest,
-                isFriend: isFriend,
-              },
+              result: -1,
+              message: messages.GENERAL,
+              payload: {},
               logPayload: false,
             };
             return data4createResponseObject;
+          } else {
+            let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+              _id: findRoom.questionId,
+            });
+            if (findQuestion.createdBy == user.id) {
+              // let findRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: user.id },
+              //       { requestTo: findRoom.createdBy },
+              //     ],
+              //   }).populate({
+              //     path: "requestBy",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              // let receivedRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: findRoom.createdBy },
+              //       { requestTo: user.id },
+              //     ],
+              //   }).populate({
+              //     path: "requestTo",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              let findRequest =
+                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                  roomId: ObjectId(roomMakeid),
+                })
+                  .populate({
+                    path: "requestTo",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  })
+                  .populate({
+                    path: "requestBy",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  });
+
+              let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
+                senderId: user.id,
+                receiverId: findRoom.createdBy,
+              });
+
+              let isFriend;
+              if (checkRequest) {
+                isFriend = "pending";
+              } else {
+                const checkRequestProfile =
+                  await global.models.GLOBAL.USER.findOne({
+                    _id: user.id,
+                    accepted: findRoom.createdBy,
+                  });
+
+                isFriend = checkRequestProfile == null ? "false" : "true";
+              }
+
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                  request: findRequest,
+                  isFriend: isFriend,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            } else {
+              // let findRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: user.id },
+              //       { requestTo: findQuestion.createdBy },
+              //     ],
+              //   }).populate({
+              //     path: "requestBy",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              // let receivedRequest =
+              //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+              //     $and: [
+              //       { requestBy: findQuestion.createdBy },
+              //       { requestTo: user.id },
+              //     ],
+              //   }).populate({
+              //     path: "requestTo",
+              //     model: "user",
+              //     select:
+              //       "_id name email region currentRole subject profileImage countryOfResidence",
+              //   });
+              let findRequest =
+                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                  roomId: ObjectId(roomMakeid),
+                })
+                  .populate({
+                    path: "requestTo",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  })
+                  .populate({
+                    path: "requestBy",
+                    model: "user",
+                    select:
+                      "_id name email region currentRole subject profileImage countryOfResidence",
+                  });
+
+              let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
+                senderId: user.id,
+                receiverId: findRoom.createdBy,
+              });
+              let isFriend;
+              if (checkRequest) {
+                isFriend = "pending";
+              } else {
+                const checkRequestProfile =
+                  await global.models.GLOBAL.USER.findOne({
+                    _id: user.id,
+                    accepted: findRoom.createdBy,
+                  });
+
+                isFriend = checkRequestProfile == null ? "false" : "true";
+              }
+              const data4createResponseObject = {
+                req: req,
+                result: 0,
+                message: messages.ITEM_FETCHED,
+                payload: {
+                  answer: findAnswer,
+                  request: findRequest,
+                  isFriend: isFriend,
+                },
+                logPayload: false,
+              };
+              return data4createResponseObject;
+            }
           }
+        } else {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.ITEM_NOT_FOUND,
+            payload: {},
+            logPayload: false,
+          };
+          return data4createResponseObject;
         }
-      } else {
-        const data4createResponseObject = {
-          req: req,
-          result: -1,
-          message: messages.ITEM_NOT_FOUND,
-          payload: {},
-          logPayload: false,
-        };
-        return data4createResponseObject;
       }
     } catch (error) {
       logger.error(
