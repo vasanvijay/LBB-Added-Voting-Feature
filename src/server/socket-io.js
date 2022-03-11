@@ -256,7 +256,6 @@ module.exports = (server, logger) => {
 
           io.emit("get-notification-count-request", { notification: true });
           io.emit("get-notification-request", { notification: true });
-          console.log("answer add success.");
         } catch (error) {
           console.log("Error in adding Answer ", error);
         }
