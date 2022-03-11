@@ -16,7 +16,7 @@ module.exports = exports = {
     // );
 
     const userData = await utils.getHeaderFromToken(user);
-    console.log("userData-------------------zzzzzzzz", userData);
+
     if (!receiverId) {
       const data4createResponseObject = {
         // req: req,
@@ -34,7 +34,7 @@ module.exports = exports = {
       senderId: userData.id,
       receiverId: receiverId,
     });
-    console.log("request--->>", findConnection);
+    // console.log("request--->>", findConnection);
     if (findConnection !== null) {
       const data4createResponseObject = {
         // req: req,
@@ -91,10 +91,10 @@ module.exports = exports = {
             payload: { updatedReceiverData },
             logPayload: false,
           };
-          console.log(
-            "updatedReceiverData------------------------------------>",
-            updatedReceiverData
-          );
+          // console.log(
+          //   "updatedReceiverData------------------------------------>",
+          //   updatedReceiverData
+          // );
 
           try {
             if (findToken.deviceToken !== "1234") {

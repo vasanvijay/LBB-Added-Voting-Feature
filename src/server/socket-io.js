@@ -8,6 +8,7 @@ const api4Connection = require("../../../leaderbridge-backend/src/api/connection
 const api4Notification = require("../../../leaderbridge-backend/src/api/notification/index");
 const api4User = require("../../../leaderbridge-backend/src/api/user/index");
 const api4Question = require("../../../leaderbridge-backend/src/api/question/index");
+const api4Answer = require("../../../leaderbridge-backend/src/api/answer/index");
 const { ObjectId } = require("mongodb");
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
@@ -27,7 +28,7 @@ module.exports = (server, logger) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("User connected", socket.id);
+    // console.log("User connected", socket.id);
     // logger.info(
     //   `CONN [${socket.id}] [WS] ${socket.handshake.url} ${JSON.stringify(
     //     socket.handshake
@@ -36,44 +37,44 @@ module.exports = (server, logger) => {
 
     // Routes
     socket.on("login", async function ({ userId }) {
-      console.log("login--->>1111111111111111111", userId);
-      console.log("a user " + userId + " connected");
+      // console.log("login--->>1111111111111111111", userId);
+      // console.log("a user " + userId + " connected");
       // saving userId to object with socket ID
       onlineUsers[socket.id] = userId;
-      console.log("onlineUsers", onlineUsers);
+      // console.log("onlineUsers", onlineUsers);
       const userStatus = await api4User.updateOnlineStatus.handler({
         userId,
         status: true,
       });
-      console.log(
-        "---------------------1-----------------",
-        userId,
-        userStatus
-      );
+      // console.log(
+      //   "---------------------1-----------------",
+      //   userId,
+      //   userStatus
+      // );
     });
 
     //
 
     socket.on("disconnect", async () => {
-      console.log("user " + onlineUsers[socket.id] + " disconnected");
+      // console.log("user " + onlineUsers[socket.id] + " disconnected");
       // remove saved socket from onlineUsers object
       let userId = onlineUsers[socket.id];
 
-      console.log("-----2------", onlineUsers);
-      console.log("-----2------", userId);
+      // console.log("-----2------", onlineUsers);
+      // console.log("-----2------", userId);
       const userStatus = await api4User.updateOnlineStatus.handler({
         userId,
         status: false,
       });
-      console.log("userrrrStatussss", userStatus);
+      // console.log("userrrrStatussss", userStatus);
       // // delete onlineUsers[socket.id];
     });
     socket.on("leaveRoom", async ({ roomId }) => {
-      console.log("leaveRoom", roomId);
+      // console.log("leaveRoom", roomId);
       socket.leave(roomId);
     });
 
-    console.log("onlineUsers----global", onlineUsers);
+    // console.log("onlineUsers----global", onlineUsers);
     socket.on("join", async function ({ roomId, user }) {
       logger.info(`user join room : ${roomId}`);
       socket.userId = roomId;
@@ -95,25 +96,25 @@ module.exports = (server, logger) => {
           chatHistory = await chatCtrl.getMessages.handler(roomId, user);
           // }
 
-          console.log(
-            "chatHistory--->>",
-            roomId,
+          // console.log(
+          //   "chatHistory--->>",
+          //   roomId,
 
-            user,
-            chatHistory.payload.chats[chatHistory.payload.chats.length - 1]
-          );
+          //   user,
+          //   chatHistory.payload.chats[chatHistory.payload.chats.length - 1]
+          // );
           // console.log("////////////////history", chatHistory.payload);
           if (chatHistory.payload && chatHistory.payload.chats) {
             io.in(roomId).emit("history", { chats: chatHistory.payload });
           } else {
             io.in(roomId).emit("history", {});
           }
-          console.log("history sent");
-          console.log(
-            "%%%%%%%%%%%%%%%%&&&&&&&&&&&_________________________&&&&&&&&&&&&&&&&&&&&message-sent",
-            user,
-            roomId
-          );
+          // console.log("history sent");
+          // console.log(
+          //   "%%%%%%%%%%%%%%%%&&&&&&&&&&&_________________________&&&&&&&&&&&&&&&&&&&&message-sent",
+          //   user,
+          //   roomId
+          // );
         }
       } catch (error) {
         console.log("Error in finding Chats ", error);
@@ -223,9 +224,10 @@ module.exports = (server, logger) => {
             roomMakeid: roomMakeid,
           });
           // console.log("get----->>>", answer.payload);
-
-          io.in(socket.id).emit("answer", answer.payload);
-          console.log("answer data sent");
+          if (answer?.payload?.answer) {
+            io.in(socket.id).emit("answer", answer.payload);
+            console.log("answer data sent");
+          }
         } catch (error) {
           console.log("Error in finding Chats ", error);
         }
@@ -234,7 +236,7 @@ module.exports = (server, logger) => {
 
     socket.on(
       "add-answer",
-      async function ({ user, question, answer, roomId }) {
+      async function ({ user, question, answer, roomId, status }) {
         // console.log("add-answer------------->>>>>>", user);
         try {
           let addAnswer = await answerCtrl.newAnswer.handler({
@@ -242,6 +244,7 @@ module.exports = (server, logger) => {
             question: question,
             answer: answer,
             roomId: roomId,
+            status: status,
           });
           // console.log("addAnswer Socket---->>", addAnswer.payload.answer);
           io.in(socket.id).emit("add-answer", addAnswer.payload.answer);
@@ -514,9 +517,6 @@ module.exports = (server, logger) => {
     socket.on(
       "rejectCall",
       async function ({ channelName, otherId, isForVideoCall, token }) {
-        console.log("chanel name............ reject", channelName);
-        console.log("otherId........++++++++++ reject", otherId);
-        console.log("token.........+++++++++++ reject", token);
         const res = {
           msg: "call disconnected",
           channelName: String(channelName),
@@ -526,15 +526,10 @@ module.exports = (server, logger) => {
         };
         io.in(String(channelName)).emit("onRejectCall", res);
         io.in(String(otherId)).emit("onRejectCall", res);
-
-        console.log("channelNamedisconnect...................", res);
-        console.log("otherIddisconnect...................", res);
       }
     );
 
     socket.on("delete-answer", async function ({ answerId }) {
-      console.log("delete-answer", answerId);
-
       // let deleteAnswer = await api4Answer.deleteAnswer.handler({
       //   answerId: answerId,
       // });
@@ -578,7 +573,6 @@ module.exports = (server, logger) => {
             createdAt: Date.now(),
           };
 
-          console;
           await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
             {
               // _id:roomId,
@@ -603,7 +597,7 @@ module.exports = (server, logger) => {
               payload: {},
               logPayload: false,
             };
-            console.log("delete-answer", deleteAnswer);
+
             io.in(socket.id).emit("delete-answer", deleteAnswer);
             io.emit("check-answer");
             res
@@ -1146,6 +1140,46 @@ module.exports = (server, logger) => {
       console.log("getBlockUser.payload------->", blockedUser.payload);
       io.in(socket.id).emit("get-block-status", {
         blockedUser: blockedUser,
+      });
+    });
+
+    socket.on("answer-everyone", async function ({ user, questionId, status }) {
+      const Everyone = await api4Answer.everyoneAnswer.handler({
+        user,
+        questionId,
+        status,
+      });
+      io.in(socket.id).emit("who-can-see", {
+        WhoSee: "get",
+      });
+      io.in(socket.id).emit("answer-everyone", {
+        Everyone: Everyone,
+      });
+    });
+
+    socket.on("answer-admin", async function ({ user, questionId, status }) {
+      const AdminAnswer = await api4Answer.onlyAdmin.handler({
+        user,
+        questionId,
+        status,
+      });
+      io.in(socket.id).emit("who-can-see", {
+        WhoSee: "get",
+      });
+      io.in(socket.id).emit("answer-admin", {
+        Admin: AdminAnswer,
+      });
+    });
+
+    socket.on("who-can-see", async function ({ user, questionId }) {
+      const WhoSee = await api4Answer.WhoCanseeAnswer.handler({
+        user,
+        questionId,
+      });
+
+      // console.log("who-can-see", WhoSee);
+      io.in(socket.id).emit("who-can-see", {
+        WhoSee: WhoSee,
       });
     });
   });

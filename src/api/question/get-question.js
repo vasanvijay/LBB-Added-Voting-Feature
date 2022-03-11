@@ -15,6 +15,8 @@ module.exports = exports = {
     const { byUser } = req.query;
     const { search } = req.query;
 
+    console.log("User------------------------question", question);
+
     console.log("users-------", user);
     let criteria = {};
     if (byUser) {
@@ -34,7 +36,7 @@ module.exports = exports = {
         _id: ObjectId(question),
       };
     }
-    // // console.log("CRITERIA--->>", criteria);
+    console.log("CRITERIA--->>", criteria);
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -60,6 +62,7 @@ module.exports = exports = {
             createdAt: -1,
           })
           .exec();
+        console.log("byUser-------", quResult);
         count = await global.models.GLOBAL.QUESTION.count({
           ...criteria,
           createdBy: user._id,
@@ -90,6 +93,7 @@ module.exports = exports = {
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
             { createdBy: { $nin: user.blockUser } },
+            { createdBy: { $nin: user._id } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
@@ -155,37 +159,30 @@ module.exports = exports = {
         user.subject = [...user.subject, ...user.ethnicity];
         user.subject = [...user.subject, ...user.countryOfOrigin];
         // console.log("user.------------", user);
-        quResult = await global.models.GLOBAL.QUESTION.find({
-          $and: [
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { _id: { $nin: questionArray } },
-            { createdBy: { $nin: user.blockUser } },
-          ],
-          $or: [
-            { "filter.options.optionName": { $exists: false } },
-            { "filter.options.optionName": { $in: user.subject } },
-          ],
-          createdBy: { $nin: user.blockUser },
-          createdBy: { $nin: user._id },
-          reportAbuse: false,
-        })
-          .populate({
-            path: "createdBy",
-            model: "user",
-            select: "_id name subject profileImage currentRole",
-          })
-          .skip(skip)
-          .limit(limit)
-          .sort({
-            createdAt: -1,
-          })
-          .exec();
 
-        // console.log("quResult", quResult);
-        if (criteria) {
-          quResult = await global.models.GLOBAL.QUESTION.find(criteria)
+        // uncomment and use this if below query does not work
+        // {
+        //   // $and: [
+        //   //   { _id: { $nin: user.answerLater } },
+        //   //   { _id: { $nin: user.removeQuestion } },
+        //   //   { _id: { $nin: abuseQuestion } },
+        //   //   { _id: { $nin: questionArray } },
+        //   //   { createdBy: { $nin: user.blockUser } },
+        //   //   { createdBy: { $nin: user._id } },
+        //   // ],
+        //   // $or: [
+        //   //   { "filter.options.optionName": { $exists: false } },
+        //   //   { "filter.options.optionName": { $in: user.subject } },
+        //   // ],
+        //   // createdBy: { $nin: user.blockUser },
+        //   // createdBy: { $nin: user._id },
+        //   reportAbuse: false,
+        // }
+        if (question) {
+          console.log("quResult-->>>>>>>>>v", "quResult");
+          quResult = await global.models.GLOBAL.QUESTION.find({
+            ...criteria,
+          })
             .populate({
               path: "createdBy",
               model: "user",
@@ -197,9 +194,56 @@ module.exports = exports = {
               createdAt: -1,
             })
             .exec();
-
-          console.log("quResult--", quResult);
+        } else {
+          quResult = await global.models.GLOBAL.QUESTION.find({
+            $and: [
+              { _id: { $nin: user.answerLater } },
+              { _id: { $nin: user.removeQuestion } },
+              { _id: { $nin: abuseQuestion } },
+              { _id: { $nin: questionArray } },
+              { createdBy: { $nin: user.blockUser } },
+              { createdBy: { $nin: user._id } },
+              criteria,
+            ],
+            $or: [
+              { "filter.options.optionName": { $exists: false } },
+              { "filter.options.optionName": { $in: user.subject } },
+            ],
+            createdBy: { $nin: user.blockUser },
+            createdBy: { $nin: user._id },
+            reportAbuse: false,
+          })
+            .populate({
+              path: "createdBy",
+              model: "user",
+              select: "_id name subject profileImage currentRole",
+            })
+            .skip(skip)
+            .limit(limit)
+            .sort({
+              createdAt: -1,
+            })
+            .exec();
         }
+
+        console.log("quResult-->>>>>>>>>v", quResult);
+        // if (criteria) {
+        //   console.log("im in criteria", criteria);
+        //   quResult = await global.models.GLOBAL.QUESTION.find(criteria)
+        //     .populate({
+        //       path: "createdBy",
+        //       model: "user",
+        //       select: "_id name subject profileImage currentRole",
+        //     })
+        //     .skip(skip)
+        //     .limit(limit)
+        //     .sort({
+        //       createdAt: -1,
+        //     })
+        //     .exec();
+
+        //   console.log("quResult--", quResult);
+        // }
         count = await global.models.GLOBAL.QUESTION.count({
           $and: [
             { _id: { $nin: user.answerLater } },

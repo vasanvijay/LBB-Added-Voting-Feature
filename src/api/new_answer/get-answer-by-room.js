@@ -11,8 +11,6 @@ module.exports = exports = {
       let user = await utils.getHeaderFromToken(req.user);
 
       let { roomId, roomListId, roomMakeid } = req;
-      console.log("roomId------", roomId, user.id);
-      console.log("roomId------roomListId", roomListId);
 
       if (roomId && !roomListId && roomMakeid) {
         let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
@@ -35,6 +33,11 @@ module.exports = exports = {
               "_id name subject profileImage currentRole countryOfResidence",
           });
           findAnswer = await global.models.GLOBAL.ANSWER.aggregate([
+            {
+              $match: {
+                question: ObjectId(roomId),
+              },
+            },
             {
               $lookup: {
                 from: "user",
@@ -66,7 +69,7 @@ module.exports = exports = {
                   {
                     $match: {
                       "createdBy._id": {
-                        $ne: new ObjectId("61f92acf2e86a0ec30769d47"),
+                        $ne: ObjectId(user.id),
                       },
                       ...body,
                     },
@@ -114,7 +117,6 @@ module.exports = exports = {
           //     "_id name subject profileImage currentRole countryOfResidence",
           // });
 
-          console.log("findAnswer", findAnswer);
           if (!findAnswer.length < 0) {
             const data4createResponseObject = {
               req: req,
@@ -129,7 +131,6 @@ module.exports = exports = {
               _id: findRoom.questionId,
             });
 
-            console.log("findQuestion----------", findQuestion);
             if (findQuestion.createdBy == user.id) {
               // let findRequest =
               //   await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
@@ -297,8 +298,6 @@ module.exports = exports = {
             select:
               "_id name subject profileImage currentRole countryOfResidence",
           });
-
-          console.log("A----------------------Sada");
 
           if (!findAnswer.length < 0) {
             const data4createResponseObject = {

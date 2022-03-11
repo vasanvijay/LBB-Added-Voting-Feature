@@ -15,6 +15,9 @@ const removeRoomAnswer = require("./delete-into-room");
 const abuseAnswer = require("./abuse-answer");
 const acceptAbuse = require("./accept-abuse-reason-answer");
 const declineAbuse = require("./decline-abuse-request-answer");
+const everyoneAnswer = require("./answer-everyone");
+const onlyAdmin = require("./answer-admin");
+const WhoCanseeAnswer = require("./who-can-see");
 
 module.exports = exports = {
   addAnswer,
@@ -34,4 +37,7 @@ module.exports = exports = {
   abuseAnswer,
   acceptAbuse,
   declineAbuse,
+  everyoneAnswer,
+  onlyAdmin,
+  WhoCanseeAnswer,
 };

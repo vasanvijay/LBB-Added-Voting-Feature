@@ -17,7 +17,7 @@ module.exports = exports = {
     //   receiverId
     // );
     const userData = await getHeaderFromToken(user);
-    console.log("userData============", userData);
+    // console.log("userData============", userData);
     if (!receiverId) {
       const data4createResponseObject = {
         // req: req,
@@ -33,18 +33,18 @@ module.exports = exports = {
     }
 
     if (accepted) {
-      console.log(
-        "ffffffffffff-----2222222222222222222222222222222222222222222222"
-      );
+      // console.log(
+      //   "ffffffffffff-----2222222222222222222222222222222222222222222222"
+      // );
       let findUser = await global.models.GLOBAL.USER.find({
         _id: userData.id,
       });
       console.log("findUser===================", findUser);
       if (findUser.length > 0) {
-        console.log(
-          "ffffffffffff-----2222222222222222222222222222222222222222222222333",
-          findUser
-        );
+        // console.log(
+        //   "ffffffffffff-----2222222222222222222222222222222222222222222222333",
+        //   findUser
+        // );
         try {
           // const { connectionId } = req.body;
           let updatedConnectedData =
@@ -67,7 +67,7 @@ module.exports = exports = {
             { new: true }
           );
 
-          console.log(updatedConnectedData, "updatedConnectedData");
+          // console.log(updatedConnectedData, "updatedConnectedData");
           updatedConnectedData = JSON.parse(
             JSON.stringify(updatedConnectedData)
           );
@@ -115,13 +115,13 @@ module.exports = exports = {
               createdAt: Date.now(),
               createdBy: userData.id,
             });
-            console.log(chatRoom, "chatRoom----------321");
+            // console.log(chatRoom, "chatRoom----------321");
           } else {
             chatRoom = roomExist[0];
-            console.log(chatRoom, "chatRoom----------123");
+            // console.log(chatRoom, "chatRoom----------123");
           }
 
-          console.log("chatRoom", chatRoom);
+          // console.log("chatRoom", chatRoom);
           let chat = {
             roomId: chatRoom._id,
             sender: msg.senderId,
