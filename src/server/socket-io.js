@@ -1181,5 +1181,27 @@ module.exports = (server, logger) => {
         WhoSee: WhoSee,
       });
     });
+
+    socket.on("answer-room-admin", async function ({ questionId }) {
+      const AnswerRoomAdmin = await answerCtrl.getAnswerByRoomAdmin.handler({
+        questionId,
+      });
+
+      console.log("answer-room-admin", AnswerRoomAdmin);
+      io.in(socket.id).emit("answer-room-admin", {
+        AnswerRoomAdmin: AnswerRoomAdmin,
+      });
+    });
+
+    socket.on("get-answer-admin", async function ({ roomId }) {
+      const AnswerRoomAdmin = await answerCtrl.getAnswerAdmin.handler({
+        roomId,
+      });
+
+      console.log("get-answer-admin", AnswerRoomAdmin);
+      io.in(socket.id).emit("get-answer-admin", {
+        AnswerRoomAdmin: AnswerRoomAdmin,
+      });
+    });
   });
 };
