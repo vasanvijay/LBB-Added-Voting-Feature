@@ -111,6 +111,26 @@ module.exports = exports = {
             );
 
             console.log("notification--->>", notification);
+            try {
+              if (findToken.deviceToken !== "1234") {
+                let data = {
+                  payload: ntfObj.description,
+                  firebaseToken: findToken.deviceToken,
+                };
+                sendPushNotification(data);
+                // res.status(200).send({
+                //   msg: "Notification sent successfully!",
+                // });
+              }
+              // res.status(200).send({
+              //   msg: "Notification sent successfully!",
+              // });
+            } catch (e) {
+              // res.status(500).send({
+              //   msg: "Unable to send notification!",
+              // });
+              console.log("e--->>", e);
+            }
           } else {
             let findParticipants =
               await global.models.GLOBAL.ANSWER_ROOM.aggregate([
@@ -159,29 +179,29 @@ module.exports = exports = {
             );
 
             console.log("notification--->>", notification);
+            try {
+              if (findToken.deviceToken !== "1234") {
+                let data = {
+                  payload: ntfObj2.description,
+                  firebaseToken: findToken.deviceToken,
+                };
+                sendPushNotification(data);
+                // res.status(200).send({
+                //   msg: "Notification sent successfully!",
+                // });
+              }
+              // res.status(200).send({
+              //   msg: "Notification sent successfully!",
+              // });
+            } catch (e) {
+              // res.status(500).send({
+              //   msg: "Unable to send notification!",
+              // });
+              console.log("e--->>", e);
+            }
           }
 
-          // try {
-          //   if (findToken.deviceToken !== "1234") {
-          //     let data = {
-          //       payload: ntfObj.description,
-          //       firebaseToken: findToken.deviceToken,
-          //     };
-          //     sendPushNotification(data);
-          //     res.status(200).send({
-          //       msg: "Notification sent successfully!",
-          //     });
-          //     return;
-          //   }
-          //   res.status(200).send({
-          //     msg: "Notification sent successfully!",
-          //   });
-          // } catch (e) {
-          //   res.status(500).send({
-          //     msg: "Unable to send notification!",
-          //   });
-          //   console.log("e--->>", e);
-          // }
+          
 
           const data4createResponseObject = {
             // req: req,
