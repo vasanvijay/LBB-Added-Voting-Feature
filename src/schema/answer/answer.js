@@ -12,6 +12,7 @@ module.exports = (connection) => {
     isUpdated: { type: Boolean, default: false },
     isAbuse: { type: Boolean, default: false },
     isStar: { type: Boolean, default: false },
+    status: { type: Number, default: 0 },
   });
   return connection.model("answer", answerSchema, "answer");
 };

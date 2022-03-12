@@ -4,14 +4,16 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 const { sendPushNotification } = require("../../middlewares/pushNotification");
+const { ObjectId } = require("mongodb");
 
 // Add Answer
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { question, answer, roomId } = req;
+    const { question, answer, roomId, status } = req;
     let user = await utils.getHeaderFromToken(req.user);
-    // console.log("USER--->>", user);
+    console.log("USER--->>", user);
+
     if (!question || !answer || !roomId) {
       const data4createResponseObject = {
         req: req,
@@ -28,21 +30,34 @@ module.exports = exports = {
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
+
+      console.log("====-=-", findQuestion);
+      let everyoneAnswer = await global.models.GLOBAL.ANSWER.find({
+        question: ObjectId(question),
+        createdBy: ObjectId(user.id),
+        status: 0,
+      });
+      console.log("EVERYONE-ANSWER", everyoneAnswer);
       if (findQuestion) {
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.findOne({
           _id: roomId,
         });
+        console.log("FIND-ROOM", findRoom);
         if (findRoom) {
-          let addAnswer = {
+          let addAnswer;
+          addAnswer = {
             roomId: roomId,
             answer: answer,
             createdBy: user.id,
             question: question,
             createdAt: Date.now(),
+            status: status,
           };
+
           let addNewAnswer = await global.models.GLOBAL.ANSWER.create(
             addAnswer
           );
+          // let updateAnswer = await global.models.GLOBAL.ANSWER.updateMany
           let lastMessageObj = {
             answerId: addNewAnswer._id,
             answer: addNewAnswer.answer,
@@ -102,7 +117,6 @@ module.exports = exports = {
               createdAt: Date.now(),
             };
 
-            console.log("ntfObj--->>", ntfObj);
             let findToken = await global.models.GLOBAL.USER.findOne({
               _id: findQuestion.createdBy,
             });
@@ -170,7 +184,6 @@ module.exports = exports = {
               createdAt: Date.now(),
             };
 
-            console.log("ntfObj--->>", ntfObj2);
             let findToken = await global.models.GLOBAL.USER.findOne({
               _id: findQuestion.createdBy,
             });

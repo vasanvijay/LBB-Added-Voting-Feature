@@ -8,6 +8,7 @@ module.exports = (connection) => {
     createdAt: { type: Date },
     updatedAt: { type: Date },
     isUpdated: { type: Boolean, default: false },
+    status: { type: Number, default: 0 },
   });
   // return answer Schema;
   return connection.model("answer", answerSchema, "answer");

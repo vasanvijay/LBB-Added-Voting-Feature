@@ -11,6 +11,8 @@ module.exports = exports = {
     let user = await utils.getHeaderFromToken(req.user);
 
     const { id } = req;
+
+    console.log("id------------------new", id, req.roomId, "------", req.user);
     if (!id) {
       const data4createResponseObject = {
         req: req,

@@ -8,6 +8,7 @@ const requestProfile = require("./request-profile-access");
 const requestProfileInSeeAns = require("./request-profile-in-see-answer");
 const acceptRequest = require("./accept-request");
 const declineRequest = require("./decline-profile-access-request");
+const getAnswerRequest = require("./get-request-by-room");
 
 module.exports = exports = {
   getAnswerByRoom,
@@ -20,4 +21,5 @@ module.exports = exports = {
   requestProfileInSeeAns,
   acceptRequest,
   declineRequest,
+  getAnswerRequest,
 };
