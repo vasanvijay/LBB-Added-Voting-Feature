@@ -14,6 +14,7 @@ module.exports = exports = {
     try {
       let criteria = [];
       let searchUser = [];
+
       let renge = [];
       let distinctUser;
 

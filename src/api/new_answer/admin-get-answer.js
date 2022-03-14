@@ -10,7 +10,7 @@ module.exports = exports = {
     try {
       let { roomId } = req;
 
-      console.log("roomId--------12-1", roomId);
+      console.log("roomId--------12-122222", roomId);
 
       let findAnswer = await global.models.GLOBAL.ANSWER.find({
         roomId: ObjectId(roomId),
@@ -20,11 +20,14 @@ module.exports = exports = {
         select: "_id name subject profileImage currentRole countryOfResidence",
       });
 
+      console.log("findAnswer--------12-122222", findAnswer);
       const data4createResponseObject = {
         req: req,
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
+        result: 0,
+        message: messages.ITEM_FETCHED,
+        payload: {
+          Answer: findAnswer,
+        },
         logPayload: false,
       };
       return data4createResponseObject;

@@ -9,9 +9,14 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let user = await utils.getHeaderFromToken(req.user);
-
+      console.log("user--------------------------------------", user);
+      let findUser = await global.models.GLOBAL.USER.findOne({ _id: user.id });
+      let abuseAnswerData = [];
+      for (let i = 0; i < findUser.abuseAnswer.length; i++) {
+        abuseAnswerData.push(ObjectId(findUser.abuseAnswer[i].answerId));
+      }
       let { roomId, roomListId, roomMakeid } = req;
-
+      console.log("roomId--------12-122222----", roomId);
       if (roomId && !roomListId && roomMakeid) {
         let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
           _id: roomId,
@@ -36,6 +41,7 @@ module.exports = exports = {
             {
               $match: {
                 question: ObjectId(roomId),
+                _id: { $nin: abuseAnswerData },
               },
             },
             {
