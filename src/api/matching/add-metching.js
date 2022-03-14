@@ -162,17 +162,17 @@ module.exports = exports = {
                 firebaseToken: findToken.deviceToken,
               };
               sendPushNotification(data);
-              res.status(200).send({
-                msg: "Notification sent successfully!",
-              });
+              // res.status(200).send({
+              //   msg: "Notification sent successfully!",
+              // });
             }
-            res.status(200).send({
-              msg: "Notification sent successfully!",
-            });
+            // res.status(200).send({
+            //   msg: "Notification sent successfully!",
+            // });
           } catch (e) {
-            res.status(500).send({
-              msg: "Unable to send notification!",
-            });
+            // res.status(500).send({
+            //   msg: "Unable to send notification!",
+            // });
           }
 
           // // console.log("CHAT-->>", chatRoom);
@@ -260,17 +260,17 @@ module.exports = exports = {
                 firebaseToken: findToken.deviceToken,
               };
               sendPushNotification(data);
-              res.status(200).send({
-                msg: "Notification sent successfully!",
-              });
+              // res.status(200).send({
+              //   msg: "Notification sent successfully!",
+              // });
             }
-            res.status(200).send({
-              msg: "Notification sent successfully!",
-            });
+            // res.status(200).send({
+            //   msg: "Notification sent successfully!",
+            // });
           } catch (e) {
-            res.status(500).send({
-              msg: "Unable to send notification!",
-            });
+            // res.status(500).send({
+            //   msg: "Unable to send notification!",
+            // });
           }
         } catch (error) {
           logger.error(

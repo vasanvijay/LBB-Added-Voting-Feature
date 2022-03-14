@@ -14,7 +14,7 @@ const sendPushNotification = async (data) => {
     .messaging()
     .sendToDevice(data.firebaseToken, data.payload, options)
     .then(function (response) {
-      // console.log("response", response);
+      console.log("response--notification", response);
       return response;
     })
     .catch(function (error) {
