@@ -11,6 +11,7 @@ module.exports = exports = {
     const { user } = req;
     const { answerByMe } = req.query;
     // console.log("answerByM========================e", answerByMe);
+    console.log("answerByMeXXXXXXXXXXXXXXXXXX", answerByMe);
     try {
       let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -46,6 +47,7 @@ module.exports = exports = {
         abuseQuestion.push(user.abuseQuestion[i].questionId);
       }
       let answer = [];
+      console.log("questionArray[i]xxxxxxx", questionArray[i]);
       for (let i = 0; i < questionArray.length; i++) {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
           $and: [
@@ -53,7 +55,7 @@ module.exports = exports = {
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
-            { createdBy: { $nin: [user.blockUser, user._id] } },
+            { createdBy: { $nin: [user._id] } },
           ],
         })
           .populate({

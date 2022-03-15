@@ -10,7 +10,7 @@ const { ObjectId } = require("mongodb");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { question, answer, roomId, status } = req;
+    const { question, answer, roomId, status, user_type } = req;
     let user = await utils.getHeaderFromToken(req.user);
     console.log("USER--->>", user);
 
@@ -52,6 +52,7 @@ module.exports = exports = {
             question: question,
             createdAt: Date.now(),
             status: status,
+            user_type: user_type,
           };
 
           let addNewAnswer = await global.models.GLOBAL.ANSWER.create(
@@ -213,8 +214,6 @@ module.exports = exports = {
               console.log("e--->>", e);
             }
           }
-
-          
 
           const data4createResponseObject = {
             // req: req,

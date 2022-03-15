@@ -8,6 +8,7 @@ const { getHeaderFromToken } = require("../../utils");
 module.exports = exports = {
   //Router Handler
   handler: async ({ user, userId }) => {
+    console.log("-----------------1111111111", user);
     const userData = await getHeaderFromToken(user);
     // console.log("userData", userData);
     // console.log("userData", userId);

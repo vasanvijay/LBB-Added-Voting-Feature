@@ -236,7 +236,7 @@ module.exports = (server, logger) => {
 
     socket.on(
       "add-answer",
-      async function ({ user, question, answer, roomId, status }) {
+      async function ({ user, question, answer, roomId, status, user_type }) {
         // console.log("add-answer------------->>>>>>", user);
         try {
           let addAnswer = await answerCtrl.newAnswer.handler({
@@ -245,6 +245,7 @@ module.exports = (server, logger) => {
             answer: answer,
             roomId: roomId,
             status: status,
+            user_type: user_type,
           });
           // console.log("addAnswer Socket---->>", addAnswer.payload.answer);
           io.in(socket.id).emit("add-answer", addAnswer.payload.answer);

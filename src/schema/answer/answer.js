@@ -13,6 +13,7 @@ module.exports = (connection) => {
     isAbuse: { type: Boolean, default: false },
     isStar: { type: Boolean, default: false },
     status: { type: Number, default: 0 },
+    user_type: { type: String, default: "user" },
   });
   return connection.model("answer", answerSchema, "answer");
 };
