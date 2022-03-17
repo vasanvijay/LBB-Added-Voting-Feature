@@ -614,6 +614,8 @@ module.exports = (server, logger) => {
             res
               .status(enums.HTTP_CODES.OK)
               .json(utils.createResponseObject(data4createResponseObject));
+
+            io.emit("check-answer");
           }
         } else {
           const data4createResponseObject = {
@@ -626,6 +628,7 @@ module.exports = (server, logger) => {
           res
             .status(enums.HTTP_CODES.OK)
             .json(utils.createResponseObject(data4createResponseObject));
+          io.emit("check-answer");
         }
 
         console.log("answer deleted successfully.");
