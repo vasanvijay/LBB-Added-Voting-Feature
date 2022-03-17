@@ -1207,5 +1207,17 @@ module.exports = (server, logger) => {
         AnswerRoomAdmin: AnswerRoomAdmin,
       });
     });
+
+    socket.on("abuse-answer", async function ({ user, answerId, reason }) {
+      const AbuseAnswer = await api4Answer.abuseAnswer.handler({
+        user,
+        answerId,
+        reason,
+      });
+      io.emit("check-answer");
+      io.in(socket.id).emit("abuse-answer", {
+        AbuseAnswer: AbuseAnswer,
+      });
+    });
   });
 };
