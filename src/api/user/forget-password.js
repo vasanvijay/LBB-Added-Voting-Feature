@@ -36,8 +36,7 @@ module.exports = exports = {
               .json(utils.createResponseObject(data4createResponseObject));
           } else {
             let transporter = nodemailer.createTransport({
-              service: "gmail",
-              host: "smtp.gmail.com",
+              host: process.env.HOST,
               port: 587,
               secure: false,
               auth: {
