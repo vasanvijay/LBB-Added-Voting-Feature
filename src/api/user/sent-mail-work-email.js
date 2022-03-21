@@ -38,7 +38,8 @@ module.exports = exports = {
       try {
         // console.log("MAIL SENDING");
         let transporter = nodemailer.createTransport({
-          host: process.env.HOST,
+          service: "gmail",
+          host: "smtp.gmail.com",
           port: 587,
           secure: false,
           auth: {
