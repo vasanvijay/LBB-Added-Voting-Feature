@@ -14,15 +14,17 @@ module.exports = exports = {
   }),
 
   handler: async (req, res) => {
-    const { user } = req;
-    const { answerId } = req.params;
-    const { reason } = req.body;
+    const { user, answerId, reason } = req;
+
+    const userData = await utils.getHeaderFromToken(user);
+
+    console.log();
 
     try {
       if (answerId) {
         const reportAbuse = await global.models.GLOBAL.USER.findOneAndUpdate(
           {
-            _id: user._id,
+            _id: userData.id,
           },
           {
             $addToSet: {
@@ -42,9 +44,13 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+
+          console.log("reportAbuse----------", reportAbuse);
+          // res
+          //   .status(enums.HTTP_CODES.OK)
+          //   .json(utils.createResponseObject(data4createResponseObject));
+
+          return data4createResponseObject;
         } else {
           const data4createResponseObject = {
             req: req,
@@ -53,9 +59,7 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.BAD_REQUEST)
-            .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         }
       }
     } catch (error) {
@@ -69,9 +73,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
   },
 };
