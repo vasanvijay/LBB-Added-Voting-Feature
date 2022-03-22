@@ -144,7 +144,7 @@ module.exports = (server, logger) => {
           room: allChatRoom.payload.room,
           userId: allChatRoom.payload.userId,
         });
-        console.log("Room data sent");
+        console.log("Room data sent", allChatRoom.payload.room);
       } catch (error) {
         console.log("Error in finding Room ", error);
       }

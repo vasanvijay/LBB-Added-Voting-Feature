@@ -69,4 +69,10 @@ router.delete(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.deletedQuestion.handler
 );
+
+router.get(
+  "/search-question",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.searchQuestion.handler
+);
 module.exports = exports = router;

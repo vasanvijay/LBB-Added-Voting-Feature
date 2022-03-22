@@ -9,58 +9,66 @@ const ObjectId = require("mongodb").ObjectId;
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    try {
-      let user = await utils.getHeaderFromToken(req.user);
-      let chatRoom = [];
-      chatRoom = await global.models.GLOBAL.CHAT_ROOM.find({
-        participateIds: { $in: [user.id] },
+    // try {
+    let user = await utils.getHeaderFromToken(req.user);
+    let chatRoom = [];
+    chatRoom = await global.models.GLOBAL.CHAT_ROOM.find({
+      participateIds: { $in: [user.id] },
+    })
+      .populate({
+        path: "participateIds",
+        model: "user",
+        match: {
+          _id: { $ne: user.id },
+        },
+        select:
+          "_id name subject profileImage currentRole email blockUser isOnline",
       })
-        .populate({
-          path: "participateIds",
-          model: "user",
-          match: {
-            _id: { $ne: user.id },
-          },
-          select:
-            "_id name subject profileImage currentRole email blockUser isOnline",
-        })
-        .lean();
+      .lean();
 
-      for (let i = 0; i < chatRoom.length; i++) {
-        let unseenMessageCount = 0;
-        let chat = await global.models.GLOBAL.CHAT.find({
-          roomId: chatRoom[i]._id,
-        });
+    for (let i = 0; i < chatRoom.length; i++) {
+      let unseenMessageCount = 0;
+      let chat = await global.models.GLOBAL.CHAT.find({
+        roomId: chatRoom[i]._id,
+      });
 
-        for (let j = 0; j < chat.length; j++) {
-          if (chat[j].seenBy.indexOf(user.id) === -1) {
-            if (chat[j]?.seenBy.length == 0) {
-              unseenMessageCount++;
-            }
+      for (let j = 0; j < chat.length; j++) {
+        console.log(
+          "chat[j].seenBy-->>",
+          typeof chat[j]?.seenBy[0],
+          typeof user.id
+        );
+        if (`${chat[j]?.sender}` != user.id) {
+          if (`${chat[j]?.seenBy[0]}` != user.id) {
+            // if (chat[j].seenBy.indexOf(user.id) === -1) {
+            // if (chat[j]?.seenBy.length == 0) {
+            unseenMessageCount++;
+            // }
           }
         }
-        chatRoom[i].unseenMessageCount = unseenMessageCount;
       }
-
-      const data4createResponseObject = {
-        req: req,
-        result: 0,
-        message: messages.SUCCESS,
-        payload: { room: chatRoom },
-        logPayload: false,
-      };
-
-      console.log("chatRoom--->>1234567890", chatRoom);
-      return data4createResponseObject;
-    } catch (error) {
-      const data4createResponseObject = {
-        req: req,
-        result: -1,
-        message: messages.GENERAL,
-        payload: {},
-        logPayload: false,
-      };
-      return data4createResponseObject;
+      chatRoom[i].unseenMessageCount = unseenMessageCount;
     }
+
+    const data4createResponseObject = {
+      req: req,
+      result: 0,
+      message: messages.SUCCESS,
+      payload: { room: chatRoom },
+      logPayload: false,
+    };
+
+    console.log("chatRoom--->>1234567890", chatRoom);
+    return data4createResponseObject;
+    // } catch (error) {
+    //   const data4createResponseObject = {
+    //     req: req,
+    //     result: -1,
+    //     message: messages.GENERAL,
+    //     payload: {},
+    //     logPayload: false,
+    //   };
+    //   return data4createResponseObject;
+    // }
   },
 };

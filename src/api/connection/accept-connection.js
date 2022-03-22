@@ -120,14 +120,25 @@ module.exports = exports = {
             chatRoom = roomExist[0];
             // console.log(chatRoom, "chatRoom----------123");
           }
+          // const userOnline = await global.models.GLOBAL.USER.findOne({
+          //   _id: ObjectID(receiverId),
+          //   // isOnline: true,
+          // });
 
-          // console.log("chatRoom", chatRoom);
+          // console.log("userOnline----------1-1-1-1-", userOnline);
+          // console.log(userOnline, "userOnline----------");
+          // let isDelivered =
+          //   userOnline === null ? false : userOnline.isOnline ? true : false;
           let chat = {
             roomId: chatRoom._id,
             sender: msg.senderId,
             message: msg.message,
             type: "string",
             parentMessageId: null,
+            sentTo: [receiverId],
+            seenBy: [receiverId],
+            // deliveredTo: isDelivered ? [receiverId] : [],
+            // deliveredTo: isDelivered ? [receiverId] : [],
             createdAt: Date.now(),
           };
 

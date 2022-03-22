@@ -9,6 +9,7 @@ const reportQuestion = require("./report-abuse");
 const getReportedQuestion = require("./get-reported-question");
 const acceptAbuse = require("./accept-abuse-reason");
 const declineRequest = require("./decline-abuse-request");
+const searchQuestion = require("./get-search-api");
 
 module.exports = exports = {
   createQuestion,
@@ -22,4 +23,5 @@ module.exports = exports = {
   getReportedQuestion,
   acceptAbuse,
   declineRequest,
+  searchQuestion,
 };
