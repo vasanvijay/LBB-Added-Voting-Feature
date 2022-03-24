@@ -54,6 +54,7 @@ module.exports = exports = {
       user.subject.push(user.religiousAffiliation);
       user.subject.push(user.levelOfEducation);
       user.subject.push(user.sexualOrientation);
+
       user.subject = [...user.subject, ...user.ethnicity];
       user.subject = [...user.subject, ...user.countryOfOrigin];
       let allQuestion = await global.models.GLOBAL.QUESTION.count({

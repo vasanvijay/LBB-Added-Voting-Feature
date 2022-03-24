@@ -124,7 +124,7 @@ module.exports = exports = {
             subject: "$user.subject",
             createdAt: "$user.createdAt",
             lastLogin: "$user.lastLogin",
-            accepted: "$user.accepted".length,
+            accepted: "$user.accepted",
           },
         },
         {
@@ -133,6 +133,61 @@ module.exports = exports = {
               { _id: { $ne: ObjectId(user._id) } },
               { _id: { $nin: userId } },
             ],
+          },
+        },
+        {
+          $lookup: {
+            from: "question",
+            let: {
+              id: "$_id",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$$id", "$createdBy"],
+                  },
+                },
+              },
+            ],
+            as: "questionCount",
+          },
+        },
+        {
+          $lookup: {
+            from: "answer",
+            let: {
+              id: "$_id",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$$id", "$createdBy"],
+                  },
+                },
+              },
+              {
+                $group: {
+                  _id: "$question",
+                },
+              },
+            ],
+            as: "answerCount",
+          },
+        },
+        {
+          $addFields: {
+            questionCount: {
+              $size: "$questionCount",
+            },
+          },
+        },
+        {
+          $addFields: {
+            answerCount: {
+              $size: "$answerCount",
+            },
           },
         },
         {

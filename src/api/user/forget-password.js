@@ -20,36 +20,36 @@ module.exports = exports = {
     let findUser = await global.models.GLOBAL.USER.findOne({
       $or: [{ email: { $eq: email } }],
     });
-    try {
-      if (findUser) {
-        if (String(findUser.email) === String(email)) {
-          if (!email) {
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.INVALID_PARAMETERS,
-              payload: {},
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.BAD_REQUEST)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            let transporter = nodemailer.createTransport({
-              host: process.env.HOST,
-              port: 587,
-              secure: false,
-              auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.PASSWORD,
-              },
-            });
-            console.log("transporter", transporter);
-            let info = await transporter.sendMail({
-              from: process.env.EMAIL,
-              to: email,
-              subject: "Account Verification Code",
-              html: `<!DOCTYPE html>
+    // try {
+    if (findUser) {
+      if (String(findUser.email) === String(email)) {
+        if (!email) {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INVALID_PARAMETERS,
+            payload: {},
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.BAD_REQUEST)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          let transporter = nodemailer.createTransport({
+            host: process.env.HOST,
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.PASSWORD,
+            },
+          });
+          console.log("transporter", transporter);
+          let info = await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Reset Your Password",
+            html: `<!DOCTYPE html>
                     <html lang="en">
                     
                     <head>
@@ -100,7 +100,7 @@ module.exports = exports = {
                                                 <p align="left" style="color: #000000; font-size: 30px; font-weight: 500; margin: 0 0 1rem 0;">We recieve your request to reset your password. Click the button below to get started.</p>
 
                                                 <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">If it doesn’t work, you can copy and paste the following link in your browser:</p>
-                                                <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">https://leaderbridge.com/reset-password/${findUser._id} </p>
+                                                <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;"><a href="https://leaderbridge.com/reset-password/${findUser._id}"><p>style="color:blue">https://leaderbridge.com/reset-password/${findUser._id}</p></a></p>
                                                 <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">Regards</p>
                                                 <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">LeaderBridge Team</p>
                                                 <p align="center" style="color: #585d6a; font-size: 14px; margin: 0;">If you have any questions, feel free message us at support@leaderbridge.com.</p>
@@ -117,46 +117,46 @@ module.exports = exports = {
                     </body>
                     
                     </html>`,
-            });
-            console.log("Message sent: %s", info);
-          }
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.MAIL_SENT,
-            payload: {},
-            logPayload: false,
-          };
-          return res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          });
+          console.log("Message sent: %s", info);
         }
-      } else {
         const data4createResponseObject = {
           req: req,
-          result: -1,
-          message: messages.USER_DOES_NOT_EXIST,
+          result: 0,
+          message: messages.MAIL_SENT,
           payload: {},
           logPayload: false,
         };
         return res
-          .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
+          .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       }
-    } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error while deleting the old codes from the database: ${error.message}\n${error.stack}`
-      );
+    } else {
       const data4createResponseObject = {
         req: req,
         result: -1,
-        message: messages.FAILED_VERIFICATION,
+        message: messages.USER_DOES_NOT_EXIST,
         payload: {},
         logPayload: false,
       };
       return res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+        .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
         .json(utils.createResponseObject(data4createResponseObject));
     }
+    // } catch (error) {
+    //   logger.error(
+    //     `${req.originalUrl} - Error while deleting the old codes from the database: ${error.message}\n${error.stack}`
+    //   );
+    //   const data4createResponseObject = {
+    //     req: req,
+    //     result: -1,
+    //     message: messages.FAILED_VERIFICATION,
+    //     payload: {},
+    //     logPayload: false,
+    //   };
+    //   return res
+    //     .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+    //     .json(utils.createResponseObject(data4createResponseObject));
+    // }
   },
 };
