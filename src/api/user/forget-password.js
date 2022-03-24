@@ -36,15 +36,15 @@ module.exports = exports = {
               .json(utils.createResponseObject(data4createResponseObject));
           } else {
             let transporter = nodemailer.createTransport({
-              service: "gmail",
-              host: "smtp.gmail.com",
+              host: process.env.HOST,
               port: 587,
               secure: false,
               auth: {
-                user: process.env.EMAIL,
+                user: process.env.USER,
                 pass: process.env.PASSWORD,
               },
             });
+            console.log("transporter", transporter);
             let info = await transporter.sendMail({
               from: process.env.EMAIL,
               to: email,
@@ -118,7 +118,7 @@ module.exports = exports = {
                     
                     </html>`,
             });
-            // console.log("Message sent: %s", info.messageId);
+            console.log("Message sent: %s", info);
           }
           const data4createResponseObject = {
             req: req,

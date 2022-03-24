@@ -142,12 +142,11 @@ module.exports = exports = {
             };
 
             let transporter = nodemailer.createTransport({
-              service: "gmail",
-              host: "smtp.gmail.com",
+              host: process.env.HOST,
               port: 587,
               secure: false,
               auth: {
-                user: process.env.EMAIL,
+                user: process.env.USER,
                 pass: process.env.PASSWORD,
               },
             });
