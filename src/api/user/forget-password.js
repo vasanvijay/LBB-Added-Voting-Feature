@@ -20,36 +20,36 @@ module.exports = exports = {
     let findUser = await global.models.GLOBAL.USER.findOne({
       $or: [{ email: { $eq: email } }],
     });
-    try {
-      if (findUser) {
-        if (String(findUser.email) === String(email)) {
-          if (!email) {
-            const data4createResponseObject = {
-              req: req,
-              result: -1,
-              message: messages.INVALID_PARAMETERS,
-              payload: {},
-              logPayload: false,
-            };
-            return res
-              .status(enums.HTTP_CODES.BAD_REQUEST)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            let transporter = nodemailer.createTransport({
-              host: process.env.HOST,
-              port: 587,
-              secure: false,
-              auth: {
-                user: process.env.USER,
-                pass: process.env.PASSWORD,
-              },
-            });
-            console.log("transporter", transporter);
-            let info = await transporter.sendMail({
-              from: process.env.EMAIL,
-              to: email,
-              subject: "Reset Your Password",
-              html: `<!DOCTYPE html>
+    // try {
+    if (findUser) {
+      if (String(findUser.email) === String(email)) {
+        if (!email) {
+          const data4createResponseObject = {
+            req: req,
+            result: -1,
+            message: messages.INVALID_PARAMETERS,
+            payload: {},
+            logPayload: false,
+          };
+          return res
+            .status(enums.HTTP_CODES.BAD_REQUEST)
+            .json(utils.createResponseObject(data4createResponseObject));
+        } else {
+          let transporter = nodemailer.createTransport({
+            host: process.env.HOST,
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.USER,
+              pass: process.env.PASSWORD,
+            },
+          });
+          console.log("transporter", transporter);
+          let info = await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Reset Your Password",
+            html: `<!DOCTYPE html>
                     <html lang="en">
                     
                     <head>
@@ -117,46 +117,46 @@ module.exports = exports = {
                     </body>
                     
                     </html>`,
-            });
-            console.log("Message sent: %s", info);
-          }
-          const data4createResponseObject = {
-            req: req,
-            result: 0,
-            message: messages.MAIL_SENT,
-            payload: {},
-            logPayload: false,
-          };
-          return res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          });
+          console.log("Message sent: %s", info);
         }
-      } else {
         const data4createResponseObject = {
           req: req,
-          result: -1,
-          message: messages.USER_DOES_NOT_EXIST,
+          result: 0,
+          message: messages.MAIL_SENT,
           payload: {},
           logPayload: false,
         };
         return res
-          .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
+          .status(enums.HTTP_CODES.OK)
           .json(utils.createResponseObject(data4createResponseObject));
       }
-    } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error while deleting the old codes from the database: ${error.message}\n${error.stack}`
-      );
+    } else {
       const data4createResponseObject = {
         req: req,
         result: -1,
-        message: messages.FAILED_VERIFICATION,
+        message: messages.USER_DOES_NOT_EXIST,
         payload: {},
         logPayload: false,
       };
       return res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+        .status(enums.HTTP_CODES.METHOD_NOT_ALLOWED)
         .json(utils.createResponseObject(data4createResponseObject));
     }
+    // } catch (error) {
+    //   logger.error(
+    //     `${req.originalUrl} - Error while deleting the old codes from the database: ${error.message}\n${error.stack}`
+    //   );
+    //   const data4createResponseObject = {
+    //     req: req,
+    //     result: -1,
+    //     message: messages.FAILED_VERIFICATION,
+    //     payload: {},
+    //     logPayload: false,
+    //   };
+    //   return res
+    //     .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+    //     .json(utils.createResponseObject(data4createResponseObject));
+    // }
   },
 };
