@@ -17,12 +17,16 @@ module.exports = exports = {
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      let question = await global.models.GLOBAL.USER.find({ _id: user._id })
+      var question = await global.models.GLOBAL.USER.find({ _id: user._id })
         .populate({
           path: "answerLater",
           model: "question",
           select:
             "_id question response filter status view displayProfile allowConnectionRequest createdAt createdBy",
+          populate: {
+            path: "createdBy",
+            model: "user",
+          },
         })
         .skip(skip)
         .limit(limit);
@@ -90,6 +94,7 @@ module.exports = exports = {
               currentRole: 1,
             }
           );
+
           if (conectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
@@ -165,7 +170,11 @@ module.exports = exports = {
         Question = JSON.parse(JSON.stringify(Question));
         if (search) {
           let abcd = question[0]?.answerLater.filter((question) => {
-            if (question.question.search(search) > 0) {
+            console.log(
+              "createdBy--------------------vishv",
+              question.createdBy
+            );
+            if (question.question.search(search) >= 0) {
               return question;
             }
           });

@@ -9,9 +9,11 @@ module.exports = exports = {
   // route handler
   handler: async (req, res) => {
     const { user } = req;
+    const { search } = req.query;
     const { answerByMe } = req.query;
     // console.log("answerByM========================e", answerByMe);
     console.log("answerByMeXXXXXXXXXXXXXXXXXX", answerByMe);
+    console.log("answerByMeXXXXXXXXXXXXXXXXXX", user);
     try {
       let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -19,10 +21,17 @@ module.exports = exports = {
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
-        "question",
-        { $and: [{ createdBy: user._id }] }
-      );
+      let questionData = {};
+      if (search) {
+        let findQuestions = await global.models.GLOBAL.QUESTION.find({
+          question: { $regex: search, $options: "i" },
+        }).distinct("_id");
+        questionData = { question: { $in: findQuestions } };
+      }
+
+      let questionArray = await global.models.GLOBAL.ANSWER.find(
+        questionData
+      ).distinct("question", { $and: [{ createdBy: user._id }] });
       let optionNames = [];
       let reachCount = async (question) => {
         for (let k = 0; k < question.filter.length; k++) {

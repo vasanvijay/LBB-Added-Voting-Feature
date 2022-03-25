@@ -97,6 +97,8 @@ module.exports = exports = {
             _id: connectionId,
           });
 
+          console.log("333332211122", msg);
+
           const roomExist = await global.models.GLOBAL.CHAT_ROOM.find({
             participateIds: {
               $all: [userData.id, receiverId],
@@ -129,15 +131,16 @@ module.exports = exports = {
           // console.log(userOnline, "userOnline----------");
           // let isDelivered =
           //   userOnline === null ? false : userOnline.isOnline ? true : false;
+
           let chat = {
             roomId: chatRoom._id,
             sender: msg.senderId,
             message: msg.message,
             type: "string",
             parentMessageId: null,
-            sentTo: [receiverId],
-            seenBy: [receiverId],
-            // deliveredTo: isDelivered ? [receiverId] : [],
+            sentTo: [msg.receiverId],
+            seenBy: [],
+            deliveredTo: [msg.receiverId],
             // deliveredTo: isDelivered ? [receiverId] : [],
             createdAt: Date.now(),
           };

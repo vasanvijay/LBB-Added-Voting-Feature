@@ -87,7 +87,7 @@ module.exports = exports = {
                                                 class="company-logo-align"
                                                 style=" padding: 2rem 2rem 1rem 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto;"
                                                 align="center">
-                                                    <img  src="https://www.leaderbridge.com/frontend-assets/images/logo/logo-lb.png" style= "margin:0 auto; width: 80px;height: 80px;cursor: pointer;"/>
+                                                    <img  src="https://leadersbridge.s3.amazonaws.com/site-assets/logo.png" style= "margin:0 auto; width: 80px;height: 80px;cursor: pointer;"/>
                                                 </div>
                                             </td>
                                         </tr>
