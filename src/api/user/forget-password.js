@@ -100,7 +100,7 @@ module.exports = exports = {
                                                 <p align="left" style="color: #000000; font-size: 30px; font-weight: 500; margin: 0 0 1rem 0;">We recieve your request to reset your password. Click the button below to get started.</p>
 
                                                 <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">If it doesn’t work, you can copy and paste the following link in your browser:</p>
-                                                <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;"><a href="https://leaderbridge.com/reset-password/${findUser._id}"><p>style="color:blue">https://leaderbridge.com/reset-password/${findUser._id}</p></a></p>
+                                                <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;"><a href="https://leaderbridge.com/reset-password/${findUser._id}">https://leaderbridge.com/reset-password/${findUser._id}</a></p>
                                                 <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">Regards</p>
                                                 <p align="left" style="color: #585d6a; font-size: 14px; margin: 0;">LeaderBridge Team</p>
                                                 <p align="center" style="color: #585d6a; font-size: 14px; margin: 0;">If you have any questions, feel free message us at support@leaderbridge.com.</p>
