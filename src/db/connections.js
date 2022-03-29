@@ -32,6 +32,9 @@ module.exports = async () => {
         CMS: require("../schema/cms/cms")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),
+        CONTENT: require("../schema/Content/Content")(
+          mongooseConnections.GLOBAL.LEADER_BRIDGE
+        ),
         FILTER: require("../schema/filter/filter")(
           mongooseConnections.GLOBAL.LEADER_BRIDGE
         ),

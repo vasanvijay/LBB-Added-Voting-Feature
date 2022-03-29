@@ -9,6 +9,7 @@ module.exports = (app, logger) => {
   const questionRoute = require("../routes/question/index");
   const contactRoute = require("../routes/contact/index");
   const cmsRoute = require("../routes/cms/index");
+  const ContentRoute = require("../routes/Content/index");
   const answerRoute = require("../routes/answer/index");
   const chatRoute = require("../routes/chat/index");
   const connectionRoute = require("../routes/connection/index");
@@ -25,6 +26,7 @@ module.exports = (app, logger) => {
   app.use(["/api/v1/question"], questionRoute);
   app.use(["/api/v1/contact"], contactRoute);
   app.use(["/api/v1/cms"], cmsRoute);
+  app.use(["/api/v1/content"], ContentRoute);
   app.use(["/api/v1/answer"], answerRoute);
   app.use(["/api/v1/chat"], chatRoute);
   app.use(["/api/v1/connection"], connectionRoute);

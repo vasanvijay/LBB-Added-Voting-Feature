@@ -633,9 +633,6 @@ module.exports = (server, logger) => {
 
         console.log("answer deleted successfully.");
       } catch (error) {
-        logger.error(
-          `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-        );
         const data4createResponseObject = {
           // req: req,
           result: -1,
