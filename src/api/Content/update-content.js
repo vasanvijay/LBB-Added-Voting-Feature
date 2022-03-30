@@ -13,13 +13,15 @@ module.exports = exports = {
     title: Joi.string().allow(),
     description: Joi.string().allow(),
     isActive: Joi.boolean().allow(),
+    checkedData: Joi.boolean().allow(),
   }),
 
   handler: async (req, res) => {
-    const { cmsId, checked } = req.query;
+    const { cmsId } = req.query;
 
-    console.log("1111111111111111111333333333333", checked);
-    const { title, description, isActive } = req.body;
+    const { title, description, isActive, checkedData } = req.body;
+
+    console.log("111111111111111111112222222222", req.body);
     if (!cmsId) {
       const data4createResponseObject = {
         req: req,
@@ -48,13 +50,14 @@ module.exports = exports = {
     }
 
     let updationCriteria = {};
+
+    if (checkedData == true) {
+      updationCriteria.userId = [];
+    }
     if (title) {
       updationCriteria.title = title;
     }
 
-    if (checked) {
-      updationCriteria.userId = [];
-    }
     if (description) {
       updationCriteria.description = description;
     }
@@ -62,11 +65,12 @@ module.exports = exports = {
       updationCriteria.isActive = isActive;
     }
 
-    // console.log("updationCriteria", checked, updationCriteria);
+    console.log("updationCriteria", updationCriteria);
 
     try {
       const updatedCms = await global.models.GLOBAL.CONTENT.findByIdAndUpdate(
         { _id: cmsId },
+
         updationCriteria,
         { new: true }
       );
