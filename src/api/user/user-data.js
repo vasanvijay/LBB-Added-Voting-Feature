@@ -210,14 +210,14 @@ module.exports = exports = {
                                           class="company-logo-align"
                                           style=" padding: 2rem 2rem 1rem 2rem;"
                                           align="center">
-                                              <img src="https://www.leaderbridge.com/frontend-assets/images/logo/logo-lb.png"/>
+                                              <img src="https://leadersbridge.s3.amazonaws.com/site-assets/logo.png"/>
                                           </div>
                                           <h1 align="center" style="color: #021F4C; font-size: 30px; line-height: 40px; margin: 0 0 2rem 0;">Welcome</h1>
                                       </td>
                                   </tr>
                               <tr>
                                   <td style="padding:  0 30px 30px 30px;">
-                                      <span style="font-size: 16px; line-height: 22px; color: #323232; padding-bottom: 1.25rem; display: block;">Hii${currentRole},</span>
+                                      <span style="font-size: 16px; line-height: 22px; color: #323232; padding-bottom: 1.25rem; display: block;">Hello ${findUser.name},</span>
                                       <p style="font-size: 16px; line-height: 22px; color: #323232; margin: 0;">Welcome to the LeaderBridge® Family!</p>
                                       <p style="font-size: 16px; line-height: 22px; color: #323232; margin: 0;">
                                           Because this is a Beta launch and the value of the network increases with the number of members, we will inform you by email of our progress in reaching the first 500 members. At that point, as an early subscriber, you will still have 12 more months of free use. We’ll inform you in advance before the 12 months are up. If you wish, you can turn off the sound of LeaderBridge® notifications by going to the three-vertical-dot More Options icon and choosing Settings. You

@@ -88,7 +88,7 @@ module.exports = exports = {
                                             class="company-logo-align"
                                             style=" padding: 2rem 2rem 1rem 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto;"
                                             align="center">
-                                                <img  src="https://www.leaderbridge.com/frontend-assets/images/logo/logo-lb.png" style= "margin:0 auto; width: 80px;height: 80px;cursor: pointer;"/>
+                                                <img  src="https://leadersbridge.s3.amazonaws.com/site-assets/logo.png " style= "margin:0 auto; width: 80px;height: 80px;cursor: pointer;"/>
                                             </div>
                                         </td>
                                     </tr>
@@ -97,7 +97,7 @@ module.exports = exports = {
                                             <div class="user-information" 
                                             style="padding: 25px; background-color: #021f4c; width: 91.6%;"
                                             >
-                                            <h1 align="center" style="color: #fff; font-size: 35px; font-weight: 500; margin: 0 0 1rem 0;">Hi ${findUser.name}</h1>
+                                            <h1 align="center" style="color: #fff; font-size: 35px; font-weight: 500; margin: 0 0 1rem 0;">Hi ${findUser.name},</h1>
                                             <p align="center" style="color: #fff; font-size: 30px; font-weight: 500; margin: 0 0 1rem 0;">Welcome to LeaderBridge®</p>
                                             <span align="center" style="display: block; font-size: 16px; color: #fff;">Thank you for signing up on LeaderBridge®</span>
                                             </div>
