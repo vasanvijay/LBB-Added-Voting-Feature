@@ -12,10 +12,12 @@ module.exports = exports = {
     name: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().required(),
+    deviceToken: Joi.string().allow(),
   }),
 
   handler: async (req, res) => {
     const { email, name, password, deviceToken } = req.body;
+    console.log("req.body--------------------------new user", req.body);
     if (!email || !name || !password) {
       const data4createResponseObject = {
         req: req,
