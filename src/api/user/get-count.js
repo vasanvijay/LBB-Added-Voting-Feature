@@ -13,11 +13,13 @@ module.exports = exports = {
     try {
       let questionAsked = await global.models.GLOBAL.QUESTION.count({
         createdBy: user._id,
+        status: "active",
       });
 
       let answerLaters = await global.models.GLOBAL.USER.findOne({
         _id: user._id,
       });
+
       let answerLaterCount = answerLaters.answerLater.length;
 
       let answer = 0;
@@ -38,6 +40,8 @@ module.exports = exports = {
           { _id: { $nin: user.answerLater } },
           { _id: { $nin: user.removeQuestion } },
           { _id: { $nin: abuseQuestion } },
+          { status: { $in: "active" } },
+
           { createdBy: { $nin: user.blockUser, $nin: user._id } },
         ],
       });
@@ -71,8 +75,11 @@ module.exports = exports = {
         ],
         createdBy: { $nin: user.blockUser },
         createdBy: { $nin: user._id },
+        status: { $in: "active" },
         reportAbuse: false,
       });
+
+      console.log("allQuestion--->", allQuestion);
       const data4createResponseObject = {
         req: req,
         result: 0,
@@ -89,9 +96,6 @@ module.exports = exports = {
         .status(enums.HTTP_CODES.OK)
         .json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
       const data4createResponseObject = {
         req: req,
         result: -1,

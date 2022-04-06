@@ -22,6 +22,7 @@ module.exports = exports = {
     if (byUser) {
       criteria = {
         createdBy: user._id,
+        status: "active",
       };
       if (question) {
         // console.log("-----------------");
@@ -49,6 +50,7 @@ module.exports = exports = {
       if (byUser) {
         quResult = await global.models.GLOBAL.QUESTION.find({
           ...criteria,
+
           createdBy: user._id,
         })
           .populate({

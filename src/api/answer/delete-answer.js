@@ -8,20 +8,16 @@ const utils = require("../../utils");
 // Remove Answer
 module.exports = exports = {
   // route handler
-  handler: async (req, res) => {
-    const { user } = req;
-    const { answerId } = req.params;
+  handler: async ({ answerId }) => {
     if (!answerId) {
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.INVALID_PARAMETERS,
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      data4createResponseObject;
     }
     try {
       const answerExists = await global.models.GLOBAL.ANSWER.findOne({
@@ -41,53 +37,42 @@ module.exports = exports = {
 
         if (deleteAnswer) {
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: 0,
             message: "Answer deleted successfully",
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         } else {
           const data4createResponseObject = {
-            req: req,
+            // req: req,
             result: -1,
             message: messages.NOT_ALLOWED,
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          return data4createResponseObject;
         }
       } else {
         const data4createResponseObject = {
-          req: req,
+          // req: req,
           result: -1,
           message: "Sorry, Something went wrong to delete answer.",
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return data4createResponseObject;
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
       const data4createResponseObject = {
-        req: req,
+        // req: req,
         result: -1,
         message: messages.GENERAL,
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return data4createResponseObject;
     }
   },
 };

@@ -9,6 +9,7 @@ const api4Notification = require("../../../leaderbridge-backend/src/api/notifica
 const api4User = require("../../../leaderbridge-backend/src/api/user/index");
 const api4Question = require("../../../leaderbridge-backend/src/api/question/index");
 const api4Answer = require("../../../leaderbridge-backend/src/api/answer/index");
+const messages = require("../../json/messages.json");
 const { ObjectId } = require("mongodb");
 module.exports = (server, logger) => {
   logger.info("Socket.io server started");
@@ -530,134 +531,127 @@ module.exports = (server, logger) => {
     );
 
     socket.on("delete-answer", async function ({ answerId }) {
-      // let deleteAnswer = await api4Answer.deleteAnswer.handler({
-      //   answerId: answerId,
-      // });
+      let deleteAnswer = await api4Answer.deleteAnswer.handler({
+        answerId: answerId,
+      });
+      io.in(socket.id).emit("delete-answer", deleteAnswer);
+      io.emit("check-answer");
+      // console.log("delete-answer", deleteAnswer);
 
       // delete answer from answer collection
 
-      if (!answerId) {
-        const data4createResponseObject = {
-          // req: req,
-          result: -1,
-          message: messages.INVALID_PARAMETERS,
-          payload: {},
-          logPayload: false,
-        };
-        return res
-          .status(enums.HTTP_CODES.BAD_REQUEST)
-          .json(utils.createResponseObject(data4createResponseObject));
-      }
-      try {
-        const answerExists = await global.models.GLOBAL.ANSWER.findOne({
-          _id: answerId,
-        });
-        // console.log("USER---->>", user._id);
-        // console.log("ANS---->>>", answerExists);
-        let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
-          _id: answerExists.question,
-        });
-        if (findQuestion) {
-          const deleteAnswer =
-            await global.models.GLOBAL.ANSWER.findOneAndRemove({
-              _id: answerId,
-            });
+      // if (!answerId) {
+      //   const data4createResponseObject = {
+      //     // req: req,
+      //     result: -1,
+      //     message: messages.INVALID_PARAMETERS,
+      //     payload: {},
+      //     logPayload: false,
+      //   };
+      //   return data4createResponseObject;
+      // }
+      // try {
+      //   const answerExists = await global.models.GLOBAL.ANSWER.findOne({
+      //     _id: answerId,
+      //   });
+      //   // console.log("USER---->>", user._id);
+      //   // console.log("ANS---->>>", answerExists);
+      //   let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+      //     _id: answerExists.question,
+      //   });
+      //   if (findQuestion) {
+      //     const deleteAnswer =
+      //       await global.models.GLOBAL.ANSWER.findOneAndRemove({
+      //         _id: answerId,
+      //       });
 
-          const getLastAnswer = await global.models.GLOBAL.ANSWER.findOne({
-            question: findQuestion._id,
-          }).sort({ createdAt: -1 });
+      //     const getLastAnswer = await global.models.GLOBAL.ANSWER.findOne({
+      //       question: findQuestion._id,
+      //     }).sort({ createdAt: -1 });
 
-          let lastMessageObj = {
-            answerId: getLastAnswer._id,
-            answer: getLastAnswer.answer,
-            createdAt: Date.now(),
-          };
+      //     let lastMessageObj = {
+      //       answerId: getLastAnswer._id,
+      //       answer: getLastAnswer.answer,
+      //       createdAt: Date.now(),
+      //     };
 
-          await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
-            {
-              // _id:roomId,
-              _id: getLastAnswer.roomId,
-            },
-            { $set: { lastMessage: lastMessageObj } },
-            { new: true }
-          );
+      //     await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
+      //       {
+      //         // _id:roomId,
+      //         _id: getLastAnswer.roomId,
+      //       },
+      //       { $set: { lastMessage: lastMessageObj } },
+      //       { new: true }
+      //     );
 
-          const decreaseResponse =
-            await global.models.GLOBAL.QUESTION.updateOne(
-              { _id: findQuestion._id, createdBy: findQuestion.createdBy },
-              { $inc: { response: -1 } },
-              { new: true }
-            );
+      //     const decreaseResponse =
+      //       await global.models.GLOBAL.QUESTION.updateOne(
+      //         { _id: findQuestion._id, createdBy: findQuestion.createdBy },
+      //         { $inc: { response: -1 } },
+      //         { new: true }
+      //       );
 
-          if (deleteAnswer) {
-            const data4createResponseObject = {
-              // req: req,
-              result: 0,
-              message: "Answer deleted successfully",
-              payload: {},
-              logPayload: false,
-            };
+      //     if (deleteAnswer) {
+      //       // const data4createResponseObject = {
+      //       //   // req: req,
+      //       //   result: 0,
+      //       //   message: "Answer deleted successfully",
+      //       //   payload: {},
+      //       //   logPayload: false,
+      //       // };
 
-            io.in(socket.id).emit("delete-answer", deleteAnswer);
-            io.emit("check-answer");
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
-          } else {
-            const data4createResponseObject = {
-              // req: req,
-              result: -1,
-              message: messages.NOT_ALLOWED,
-              payload: {},
-              logPayload: false,
-            };
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
-
-            io.emit("check-answer");
-          }
-        } else {
-          const data4createResponseObject = {
-            // req: req,
-            result: -1,
-            message: "Sorry, Something went wrong to delete answer.",
-            payload: {},
-            logPayload: false,
-          };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
-          io.emit("check-answer");
-        }
-
-        console.log("answer deleted successfully.");
-      } catch (error) {
-        const data4createResponseObject = {
-          // req: req,
-          result: -1,
-          message: messages.GENERAL,
-          payload: {},
-          logPayload: false,
-        };
-        res
-          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-          .json(utils.createResponseObject(data4createResponseObject));
-      }
+      //       io.in(socket.id).emit("delete-answer", deleteAnswer);
+      //       io.emit("check-answer");
+      //       return data4createResponseObject;
+      //     } else {
+      //       // const data4createResponseObject = {
+      //       //   // req: req,
+      //       //   result: -1,
+      //       //   message: messages.NOT_ALLOWED,
+      //       //   payload: {},
+      //       //   logPayload: false,
+      //       // };
+      //       io.emit("check-answer");
+      //       return data4createResponseObject;
+      //     }
+      //   } else {
+      //     // const data4createResponseObject = {
+      //     //   // req: req,
+      //     //   result: -1,
+      //     //   message: "Sorry, Something went wrong to delete answer.",
+      //     //   payload: {},
+      //     //   logPayload: false,
+      //     // };
+      //     io.emit("check-answer");
+      //     io.in(socket.id).emit("delete-answer", deleteAnswer);
+      //     return data4createResponseObject;
+      //   }
+      // } catch (error) {
+      //   // const data4createResponseObject = {
+      //   //   // req: req,
+      //   //   result: -1,
+      //   //   message: messages.GENERAL,
+      //   //   payload: {},
+      //   //   logPayload: false,
+      //   // };
+      //   // res
+      //   //   .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
+      //   //   .json(utils.createResponseObject(data4createResponseObject));
+      // }
     });
 
     socket.on("edit-answer", async function ({ answerId, answer }) {
       if (!answerId) {
-        const data4createResponseObject = {
-          // req: req,
-          result: -1,
-          message: "Invalid parameters",
-          payload: {},
-          logPayload: false,
-        };
-        return res
-          .status(enums.HTTP_CODES.BAD_REQUEST)
-          .json(utils.createResponseObject(data4createResponseObject));
+        // const data4createResponseObject = {
+        //   // req: req,
+        //   result: -1,
+        //   message: "Invalid parameters",
+        //   payload: {},
+        //   logPayload: false,
+        // };
+        // return res
+        //   .status(enums.HTTP_CODES.BAD_REQUEST)
+        //   .json(utils.createResponseObject(data4createResponseObject));
       }
       try {
         const answerExists = await global.models.GLOBAL.ANSWER.findOne({
@@ -690,9 +684,9 @@ module.exports = (server, logger) => {
             console.log("edit-answer", editAnswer);
             io.in(socket.id).emit("edit-answer", editAnswer);
             io.emit("check-answer");
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
+            // res
+            //   .status(enums.HTTP_CODES.OK)
+            //   .json(utils.createResponseObject(data4createResponseObject));
           } else {
             const data4createResponseObject = {
               // req: req,
@@ -701,7 +695,7 @@ module.exports = (server, logger) => {
               payload: {},
               logPayload: false,
             };
-            res.status(enums.HTTP_CODES.OK);
+            // res.status(enums.HTTP_CODES.OK);
           }
         }
       } catch (error) {

@@ -32,6 +32,7 @@ module.exports = exports = {
     try {
       let abuseQuestion = [];
       const { filter } = req.body;
+      console.log("11111111111111111", filter);
       let distinctQue;
       const QuestionsArray = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -55,6 +56,7 @@ module.exports = exports = {
                 $and: [
                   { _id: { $nin: user.answerLater } },
                   { _id: { $nin: abuseQuestion } },
+                  { _id: user._id },
                   { createdBy: { $nin: user.blockUser } },
                   { "filter.options.optionName": filter[i] },
                   { reportAbuse: { $nin: true } },
@@ -74,7 +76,14 @@ module.exports = exports = {
 
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
-                  Questions.push(quResult[j]);
+                  //add if already not in array
+                  let found = Questions.find(
+                    (q) => q._id.toString() == quResult[j]._id.toString()
+                  );
+                  console.log("---hgffgfg", found);
+                  if (found == null) {
+                    Questions.push(quResult[j]);
+                  }
                 }
               }
             }
@@ -98,6 +107,8 @@ module.exports = exports = {
             }
           );
         } else if (!byUser) {
+          console.log("111111111111", byUser);
+
           abuseQuestion = [];
           for (let j = 0; j < user.abuseQuestion.length; j++) {
             abuseQuestion.push(user.abuseQuestion[j].questionId);
@@ -127,11 +138,22 @@ module.exports = exports = {
 
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
-                  Questions.push(quResult[j]);
+                  //add if already not in array
+                  let found = Questions.find(
+                    (q) => q._id.toString() == quResult[j]._id.toString()
+                  );
+                  console.log("---hgffgfg", found);
+                  if (found == null) {
+                    Questions.push(quResult[j]);
+                  }
                 }
               }
             }
           }
+          Questions = new Set(Questions);
+          //set to array
+          Questions = Array.from(Questions);
+          console.log("Questions------------------------", Questions);
           distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map(
             (id) => {
               return {
@@ -155,6 +177,7 @@ module.exports = exports = {
           for (let j = 0; j < user.abuseQuestion.length; j++) {
             abuseQuestion.push(user.abuseQuestion[j].questionId);
           }
+
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               // // console.log("criteria ni", criteria);
@@ -164,7 +187,7 @@ module.exports = exports = {
                   { _id: { $nin: user.removeQuestion } },
                   { _id: { $nin: abuseQuestion } },
                   { createdBy: { $nin: user.blockUser } },
-                  { createdBy: { $nin: user._id } },
+                  { createdBy: user._id },
                   { reportAbuse: { $nin: true } },
                   { "filter.options.optionName": filter[i] },
                 ],
@@ -183,11 +206,21 @@ module.exports = exports = {
 
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
-                  Questions.push(quResult[j]);
+                  //add if already not in array
+                  let found = Questions.find(
+                    (q) => q._id.toString() == quResult[j]._id.toString()
+                  );
+                  console.log("---hgffgfg", found);
+                  if (found == null) {
+                    Questions.push(quResult[j]);
+                  }
                 }
               }
             }
           }
+          //set to array
+          Questions = Array.from(Questions);
+          console.log("Questionsvvvvvvvvvvvvvvvvvvvvvvvvvv-", Questions);
           distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map(
             (id) => {
               return {
