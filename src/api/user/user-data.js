@@ -204,17 +204,16 @@ module.exports = exports = {
                       <tr>
                           <td style="padding: 20px 0 30px 0;">
                               <table align="center" cellpadding="0" cellspacing="0" width="600" style=" border-collapse: collapse; border: 1px solid #ECECEC; background-color: #fff;">
-                                  <tr>
-                                      <td style="position: relative;">
-                                          <div
-                                          class="company-logo-align"
-                                          style=" padding: 2rem 2rem 1rem 2rem;"
-                                          align="center">
-                                              <img src="https://leadersbridge.s3.amazonaws.com/site-assets/logo.png"/>
-                                          </div>
-                                          <h1 align="center" style="color: #021F4C; font-size: 30px; line-height: 40px; margin: 0 0 2rem 0;">Welcome</h1>
-                                      </td>
-                                  </tr>
+                              <tr>
+                              <td align="center" style="position: relative;">
+                                  <div
+                                  class="company-logo-align"
+                                  style=" padding: 2rem 2rem 1rem 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto;"
+                                  align="center">
+                                      <img  src="https://leadersbridge.s3.amazonaws.com/site-assets/logo.png" style= "margin:0 auto; width: 80px;height: 80px;cursor: pointer;"/>
+                                  </div>
+                              </td>
+                          </tr>
                               <tr>
                                   <td style="padding:  0 30px 30px 30px;">
                                       <span style="font-size: 16px; line-height: 22px; color: #323232; padding-bottom: 1.25rem; display: block;">Hello ${findUser.name},</span>
