@@ -198,6 +198,8 @@ module.exports = exports = {
       ])
         .skip(skip)
         .limit(limit);
+
+      console.log("UserDatatatatata", findSameSubjectUser);
       // // console.log("USER-->>", findSameSubjectUser.length);
 
       //   return res.send(findSameSubjectUser);

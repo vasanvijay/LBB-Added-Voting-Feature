@@ -941,7 +941,6 @@ module.exports = (server, logger) => {
             user,
           });
 
-        console.log("get-notification-count", notification);
         io.in(socket.id).emit("get-notification-count", {
           notification: notification,
         });
@@ -951,10 +950,6 @@ module.exports = (server, logger) => {
     });
 
     socket.on("get-notification-count-request", async function ({ user }) {
-      console.log(
-        "get-notification-count-requestcalledd------------------",
-        user
-      );
       try {
         const notificationCountData =
           await api4Notification.getNotificationCount.handler({

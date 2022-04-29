@@ -4,6 +4,7 @@ const messages = require("../../../json/messages.json");
 const logger = require("../../logger");
 const utils = require("../../utils");
 const moment = require("moment");
+const { ObjectId } = require("mongodb");
 
 // Get User by ID
 module.exports = exports = {
@@ -11,8 +12,14 @@ module.exports = exports = {
     let { user } = req;
     let { userId } = req.query;
     let criteria = {};
+    console.log("user222222222222222111111111111111111111111111111", userId);
 
-    if (user.userType === enums.USER_TYPE.USER) {
+    let Usertype = await global.models.GLOBAL.USER.find({
+      _id: ObjectId(userId),
+    });
+
+    console.log("Usertype111111111111122222", Usertype[0]?.userType);
+    if (Usertype[0]?.userType === enums.USER_TYPE.USER) {
       if (userId) {
         criteria = {
           _id: userId,
@@ -24,7 +31,7 @@ module.exports = exports = {
       }
     }
 
-    if (user.userType === enums.USER_TYPE.ADMIN) {
+    if (Usertype[0]?.userType === enums.USER_TYPE.ADMIN) {
       if (!userId) {
         criteria = {
           userType: enums.USER_TYPE.USER,
@@ -36,6 +43,8 @@ module.exports = exports = {
         };
       }
     }
+
+    console.log("criteria", criteria);
     try {
       let questionCount;
       let answerCount;
@@ -53,6 +62,8 @@ module.exports = exports = {
           model: "answer",
           select: "_id answer",
         });
+
+      console.log("findUser2122222222", findUser[0]);
       let count = await global.models.GLOBAL.USER.count(criteria);
       if (userId) {
         questionCount = await global.models.GLOBAL.QUESTION.count({

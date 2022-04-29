@@ -18,8 +18,6 @@ module.exports = exports = {
 
     const userData = await utils.getHeaderFromToken(user);
 
-    console.log();
-
     try {
       if (answerId) {
         const reportAbuse = await global.models.GLOBAL.USER.findOneAndUpdate(
@@ -45,7 +43,6 @@ module.exports = exports = {
             logPayload: false,
           };
 
-          console.log("reportAbuse----------", reportAbuse);
           // res
           //   .status(enums.HTTP_CODES.OK)
           //   .json(utils.createResponseObject(data4createResponseObject));
