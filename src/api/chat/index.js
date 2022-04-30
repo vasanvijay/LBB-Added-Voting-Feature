@@ -14,6 +14,7 @@ const unreadCount = require("./get-unread-message-count");
 const allChatRoom = require("./get-all-chat-room");
 const acceptRequest = require("./accept-request");
 const declineRequest = require("./decline-profile-access-request");
+const chatnotification = require("./get-chat-notification");
 
 module.exports = exports = {
   getAllChat,
@@ -32,4 +33,5 @@ module.exports = exports = {
   allChatRoom,
   acceptRequest,
   declineRequest,
+  chatnotification,
 };

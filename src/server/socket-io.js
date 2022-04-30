@@ -151,6 +151,21 @@ module.exports = (server, logger) => {
       }
     });
 
+    socket.on("chat-notification", async function (user) {
+      console.log("LASTMESSAGE1112222222222222", user);
+      try {
+        let chatnotification = await chatCtrl.chatnotification.handler(user);
+        // console.log("history", allChatRoom.payload.room);
+        io.in(socket.id).emit("chat-notification", {
+          room: chatnotification.payload.room,
+          userId: chatnotification.payload.userId,
+        });
+        console.log("Room data sent111", chatnotification.payload.room);
+      } catch (error) {
+        console.log("Error in finding Room ", error);
+      }
+    });
+
     socket.on(
       "new-message",
       async function ({ roomId, sender, message, type, parentMessageId }) {
