@@ -18,6 +18,8 @@ module.exports = exports = {
       if (filterType) {
         criteria["filterTypeId"] = filterType._id;
       }
+    } else {
+      criteria["filterTypeId"] = "6188f2c9603a571b33b0957d";
     }
     if (id) {
       criteria["_id"] = id;
