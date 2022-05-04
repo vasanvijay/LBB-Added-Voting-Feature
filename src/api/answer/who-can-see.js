@@ -18,7 +18,15 @@ module.exports = exports = {
       status: 1,
     });
 
-    if (everyoneAnswer.length == 0) {
+    let Authorcan = await global.models.GLOBAL.ANSWER.find({
+      question: ObjectId(questionId),
+      createdBy: ObjectId(userData.id),
+      status: 0,
+    });
+
+    console.log("everyoneAnswer", everyoneAnswer);
+
+    if (Authorcan.length != 0) {
       const data4createResponseObject = {
         req: {},
         result: -1,
@@ -27,12 +35,21 @@ module.exports = exports = {
         logPayload: false,
       };
       return data4createResponseObject;
-    } else {
+    } else if (everyoneAnswer.length != 0) {
       const data4createResponseObject = {
         req: {},
         result: -1,
         message: "success",
         payload: { message: "Only can see admin" },
+        logPayload: false,
+      };
+      return data4createResponseObject;
+    } else if (everyoneAnswer.length == 0 && Authorcan.length == 0) {
+      const data4createResponseObject = {
+        req: {},
+        result: -1,
+        message: "success",
+        payload: { message: "please check it" },
         logPayload: false,
       };
       return data4createResponseObject;
