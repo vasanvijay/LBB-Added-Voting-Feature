@@ -23,6 +23,7 @@ module.exports = exports = {
     }
     try {
       let token = await agora.generateToken(channelName);
+      // let token = await agora.generateToken(channelName);
       if (token) {
         const data4createResponseObject = {
           req: req,

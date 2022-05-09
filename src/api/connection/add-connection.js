@@ -71,7 +71,7 @@ module.exports = exports = {
               data: { title: "Leaderbridge" },
               notification: {
                 title: "New Connection Request!!!",
-                body: `${userData.subject} sent you a connection request.`,
+                body: `sent you a connection request.`,
               },
             },
             createdBy: userData.id,

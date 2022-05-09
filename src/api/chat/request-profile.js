@@ -11,10 +11,9 @@ const utils = require("../../utils");
 // Add Answer
 module.exports = exports = {
   // route handler
-  handler: async (req, res) => {
-    let user = await utils.getHeaderFromToken(req.user);
+  handler: async ({ user, id, roomId, typeOfRequest }) => {
+    let userData = await utils.getHeaderFromToken(user);
 
-    const { id } = req;
     if (!id) {
       const data4createResponseObject = {
         // req: req,
@@ -27,38 +26,45 @@ module.exports = exports = {
       // .status(enums.HTTP_CODES.BAD_REQUEST)
       // .json(utils.createResponseObject(data4createResponseObject));
     }
-
+    console.log("typeOfRequest", typeOfRequest);
     try {
       let findUser = await global.models.GLOBAL.USER.findOne({
         _id: id,
       });
       if (findUser) {
         let newRequestObj = {
-          requestBy: user.id,
+          requestBy: userData.id,
           requestTo: id,
           createdAt: Date.now(),
-          roomId: req.roomId,
-          typeOfRequest: req.typeOfRequest,
+          roomId: roomId,
+          typeOfRequest: typeOfRequest,
         };
         let newRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.create(
             newRequestObj
           );
 
-        // console.log("iusRequestCreated--->", newRequest);
         let notificationMsg;
-        if (typeOfReuest == "requestProfileAccess") {
-          notificationMsg =
-            "You have received request to access to view your profile.";
-        } else if (typeOfReuest == "requestAudioAccess") {
+        if (
+          typeOfRequest ||
+          newRequestObj?.typeOfRequest == "requestProfileAccess"
+        ) {
+          notificationMsg = "You have received a request to view your profile";
+        } else if (
+          typeOfRequest ||
+          newRequestObj?.typeOfRequest == "requestAudioAccess"
+        ) {
           notificationMsg = "You have received request for audio call.";
-        } else if (typeOfReuest == "requestVideoAccess") {
+        } else if (
+          typeOfRequest ||
+          newRequestObj?.typeOfRequest == "requestVideoAccess"
+        ) {
           notificationMsg = "You have received request for video call.";
         }
         let ntfObj = {
-          userId: user.id,
+          userId: userData.id,
           receiverId: id,
-          title: `Notification By ${user.id} to ${id}`,
+          title: `Notification By ${userData.id} to ${id}`,
           description: {
             data: { title: "Leaderbridge" },
             notification: {
@@ -66,8 +72,8 @@ module.exports = exports = {
               body: notificationMsg,
             },
           },
-          createdBy: user.id,
-          updatedBy: user.id,
+          createdBy: userData.id,
+          updatedBy: userData.id,
           createdAt: Date.now(),
         };
         let findToken = await global.models.GLOBAL.USER.findOne({

@@ -1053,6 +1053,9 @@ module.exports = (server, logger) => {
         conection: "get",
       });
 
+      io.emit("get-notification-count-request", { notification: true });
+      io.emit("get-notification-request", { notification: true });
+
       io.in(socket.id).emit("add-connection", {
         conection: conection,
       });

@@ -85,7 +85,7 @@ module.exports = exports = {
           data: { title: "Leaderbridge" },
           notification: {
             title: "New Message Request!!!",
-            body: ` Give you a chat message`,
+            body: `Give you a chat message`,
           },
         },
         createdBy: sender,

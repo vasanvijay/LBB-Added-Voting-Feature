@@ -12,6 +12,7 @@ module.exports = exports = {
     // try {
     let user = await utils.getHeaderFromToken(req.user);
     let chatRoom = [];
+
     chatRoom = await global.models.GLOBAL.CHAT_ROOM.find({
       participateIds: { $in: [user.id] },
     })
@@ -25,6 +26,8 @@ module.exports = exports = {
           "_id name subject profileImage currentRole email blockUser isOnline",
       })
       .lean();
+
+    console.log("chatRoom11111111", chatRoom);
 
     for (let i = 0; i < chatRoom.length; i++) {
       let unseenMessageCount = 0;
