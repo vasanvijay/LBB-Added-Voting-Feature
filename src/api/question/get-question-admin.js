@@ -1,40 +1,52 @@
 const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
+const ObjectId = require("mongodb").ObjectId;
 
 const logger = require("../../logger");
 const utils = require("../../utils");
+const moment = require("moment");
 
-// Retrieve and return all Category from the database.
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { type, id } = req.query;
-    let criteria = {};
-    if (type) {
-      let filterType = await global.models.GLOBAL.FILTER_TYPE.findOne(
-        { name: type },
-        { _id: 1 }
-      );
-      if (filterType) {
-        criteria["filterTypeId"] = filterType._id;
-      }
-    }
+    const { user } = req;
+    const { question } = req.query;
 
-    // else {
-    //   criteria["filterTypeId"] = "6188f2c9603a571b33b0957d";
-    // }
-    if (id) {
-      criteria["_id"] = id;
-    }
+    let criteria = {};
+
     try {
-      let filter = await global.models.GLOBAL.FILTER.find(criteria).sort({
-        createdAt: -1,
-      });
+      req.query.page = req.query.page ? req.query.page : 1;
+      let page = parseInt(req.query.page);
+      req.query.limit = req.query.limit ? req.query.limit : 10;
+      let limit = parseInt(req.query.limit);
+      let skip = (parseInt(req.query.page) - 1) * limit;
+      let count;
+      let quResult;
+
+      const questionDetais = await global.models.GLOBAL.QUESTION.find({})
+        .skip(skip)
+        .limit(limit)
+        .sort({
+          createdAt: -1,
+        })
+        .exec();
+
+      // today's Questions Count
+
+      //Questions Profile access
+
+      // Questions without profile Access
+
       const data4createResponseObject = {
         req: req,
         result: 0,
-        message: messages.SUCCESS,
-        payload: { filter },
+        message: messages.ITEM_FETCHED,
+        payload: {
+          questions: questionDetais,
+
+          page: page,
+          limit: limit,
+        },
         logPayload: false,
       };
       res

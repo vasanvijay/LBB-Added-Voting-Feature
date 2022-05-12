@@ -10,6 +10,12 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.getQuestion.handler
 );
+
+router.get(
+  "/get-question-admin",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Question.getQuestionAdmin.handler
+);
 router.get(
   "/reported/id=:userId",
   passport.authenticate(["jwt"], { session: false }),
