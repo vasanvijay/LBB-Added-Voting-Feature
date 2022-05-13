@@ -20,6 +20,11 @@ module.exports = exports = {
             },
           },
           {
+            $sort: {
+              createdAt: -1,
+            },
+          },
+          {
             $lookup: {
               from: "question",
               localField: "_id",
