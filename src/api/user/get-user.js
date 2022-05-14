@@ -80,9 +80,24 @@ module.exports = exports = {
           createdBy: user._id,
         });
       }
+
+      var today = new Date();
+      var MonthEnd = today.getMonth();
+      var Months = MonthEnd < 10 ? "0" + MonthEnd : MonthEnd;
+
+      var DateFormate =
+        today.getDate() < 10 ? "0" + today.getDate() : today.getDate();
+      var date = today.getFullYear() + "-" + Months + "-" + DateFormate;
+      var TimeMent =
+        today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
+      var time = today.getHours() + ":" + TimeMent + ":" + today.getSeconds();
+      var dateTime = date + " " + time;
+      var rrrrr = date + "T" + time + "Z";
+
       let TodayUser = await global.models.GLOBAL.USER.find({
         createdAt: {
-          $gte: moment(Date.now()).format("YYYY-MM-DD"),
+          $gte: new Date(today.getFullYear(), Months, DateFormate),
+          // $gte: rrrrr,
         },
       });
 
