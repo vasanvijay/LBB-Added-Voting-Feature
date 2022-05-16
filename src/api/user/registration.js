@@ -13,10 +13,11 @@ module.exports = exports = {
     email: Joi.string().required(),
     password: Joi.string().required(),
     deviceToken: Joi.string().allow(),
+    checkbox: Joi.allow(),
   }),
 
   handler: async (req, res) => {
-    const { email, name, password, deviceToken } = req.body;
+    const { email, name, password, deviceToken, checkbox } = req.body;
     console.log("req.body--------------------------new user", req.body);
     if (!email || !name || !password) {
       const data4createResponseObject = {
@@ -64,6 +65,7 @@ module.exports = exports = {
           name: name,
           password: password,
           deviceToken: deviceToken,
+          checkbox: checkbox,
           token: jwt.sign(data4token, jwtOptions.secretOrKey),
           createdAt: Date.now(),
         };
