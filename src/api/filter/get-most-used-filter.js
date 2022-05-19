@@ -27,6 +27,30 @@ module.exports = exports = {
       let topSubjects = newTopSubject.filter(function (el) {
         return el.length >= 1;
       });
+
+      // let topSubjects = await global.models.GLOBAL.QUESTION.aggregate([
+      //   {
+      //     $unwind: {
+      //       path: "$subject",
+      //     },
+      //   },
+      //   {
+      //     $group: {
+      //       _id: "$subject",
+      //       count: {
+      //         $sum: 1,
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $sort: {
+      //       count: -1,
+      //     },
+      //   },
+      //   {
+      //     $limit: 5,
+      //   },
+      // ]);
       const data4createResponseObject = {
         req: req,
         result: 0,
