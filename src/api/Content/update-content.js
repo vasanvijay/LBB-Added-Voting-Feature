@@ -49,6 +49,19 @@ module.exports = exports = {
         .json(utils.createResponseObject(data4createResponseObject));
     }
 
+    var today = new Date();
+    var MonthEnd = today.getMonth();
+    var Months = MonthEnd < 10 ? "0" + MonthEnd : MonthEnd;
+
+    var DateFormate =
+      today.getDate() < 10 ? "0" + today.getDate() : today.getDate();
+    var date = today.getFullYear() + "-" + Months + "-" + DateFormate;
+    var TimeMent =
+      today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
+    var time = today.getHours() + ":" + TimeMent + ":" + today.getSeconds();
+    var dateTime = date + " " + time;
+    var rrrrr = date + "T" + time + "Z";
+
     let updationCriteria = {};
 
     if (checkedData == true) {
@@ -60,9 +73,25 @@ module.exports = exports = {
 
     if (description) {
       updationCriteria.description = description;
+      updationCriteria.updatedAt = new Date(
+        today.getFullYear(),
+        Months,
+        DateFormate,
+        today.getHours(),
+        TimeMent,
+        today.getSeconds()
+      );
     }
     if (isActive !== undefined) {
       updationCriteria.isActive = isActive;
+      updationCriteria.updatedAt = new Date(
+        today.getFullYear(),
+        Months,
+        DateFormate,
+        today.getHours(),
+        TimeMent,
+        today.getSeconds()
+      );
     }
 
     console.log("updationCriteria", updationCriteria);
