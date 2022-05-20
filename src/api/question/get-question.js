@@ -50,7 +50,7 @@ module.exports = exports = {
       if (byUser) {
         quResult = await global.models.GLOBAL.QUESTION.find({
           ...criteria,
-
+          status: "active",
           createdBy: user._id,
         })
           .populate({
@@ -68,6 +68,7 @@ module.exports = exports = {
         count = await global.models.GLOBAL.QUESTION.count({
           ...criteria,
           createdBy: user._id,
+          status: "active",
         });
       } else if (!byUser && search) {
         // // console.log("SEARCH-->>", search);
@@ -103,6 +104,7 @@ module.exports = exports = {
           ],
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
+          status: "active",
           ...criteria,
         })
           .populate({
@@ -130,6 +132,7 @@ module.exports = exports = {
           ],
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
+          status: "active",
         });
       } else {
         // for (var i = 0; i < user.blockUser.length; i++) {
@@ -184,6 +187,7 @@ module.exports = exports = {
           console.log("quResult-->>>>>>>>>v", "quResult");
           quResult = await global.models.GLOBAL.QUESTION.find({
             ...criteria,
+            status: "active",
           })
             .populate({
               path: "createdBy",
@@ -214,6 +218,7 @@ module.exports = exports = {
             createdBy: { $nin: user.blockUser },
             createdBy: { $nin: user._id },
             reportAbuse: false,
+            status: "active",
           })
             .populate({
               path: "createdBy",
@@ -260,6 +265,7 @@ module.exports = exports = {
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
           ...criteria,
+          status: "active",
         });
       }
 
@@ -268,18 +274,21 @@ module.exports = exports = {
         createdAt: {
           $gte: moment(Date.now()).format("YYYY-MM-DD"),
         },
+        status: "active",
       });
 
       //Questions Profile access
       let QuestionProfileAccess = await global.models.GLOBAL.QUESTION.count({
         criteria,
         displayProfile: true,
+        status: "active",
       });
 
       // Questions without profile Access
       let QuestionProfileWithoutAccess =
         await global.models.GLOBAL.QUESTION.count({
           displayProfile: false,
+          status: "active",
         });
 
       let findConection = await global.models.GLOBAL.CONNECTION.find({
