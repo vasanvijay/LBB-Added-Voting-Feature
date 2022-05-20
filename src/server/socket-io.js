@@ -545,9 +545,10 @@ module.exports = (server, logger) => {
       }
     );
 
-    socket.on("delete-answer", async function ({ answerId }) {
+    socket.on("delete-answer", async function ({ answerId, user }) {
       let deleteAnswer = await api4Answer.deleteAnswer.handler({
         answerId: answerId,
+        userData: user,
       });
       io.in(socket.id).emit("delete-answer", deleteAnswer);
       io.emit("check-answer");

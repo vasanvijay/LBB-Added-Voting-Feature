@@ -8,7 +8,9 @@ const utils = require("../../utils");
 // Remove Answer
 module.exports = exports = {
   // route handler
-  handler: async ({ answerId }) => {
+  handler: async ({ answerId, userData }) => {
+    let user = await utils.getHeaderFromToken(userData);
+
     if (!answerId) {
       const data4createResponseObject = {
         // req: req,
@@ -29,6 +31,11 @@ module.exports = exports = {
         _id: answerExists.question,
       });
       if (findQuestion) {
+        const updatedQue = await global.models.GLOBAL.QUESTION.updateOne(
+          { _id: answerExists.question, createdBy: { $nin: user.id } },
+          { $inc: { response: -1 } },
+          { new: true }
+        );
         const deleteAnswer = await global.models.GLOBAL.ANSWER.findOneAndRemove(
           {
             _id: answerId,

@@ -91,6 +91,7 @@ module.exports = exports = {
         // console.log("abuseQuestion--->>", user.subject);
         quResult = await global.models.GLOBAL.QUESTION.find({
           question: { $regex: search, $options: "i" },
+
           $and: [
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
@@ -279,10 +280,11 @@ module.exports = exports = {
 
       //Questions Profile access
       let QuestionProfileAccess = await global.models.GLOBAL.QUESTION.count({
-        criteria,
         displayProfile: true,
         status: "active",
       });
+
+      console.log("QuestionProfileAccess", QuestionProfileAccess);
 
       // Questions without profile Access
       let QuestionProfileWithoutAccess =
@@ -290,6 +292,8 @@ module.exports = exports = {
           displayProfile: false,
           status: "active",
         });
+
+      let QuestionCount = await global.models.GLOBAL.QUESTION.count({});
 
       let findConection = await global.models.GLOBAL.CONNECTION.find({
         senderId: user._id,
@@ -428,6 +432,7 @@ module.exports = exports = {
           todaysCount: TodayQuestion,
           profileaccess: QuestionProfileAccess,
           withoutprofileaccess: QuestionProfileWithoutAccess,
+          questioncount: QuestionCount,
           page: page,
           limit: limit,
         },
