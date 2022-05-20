@@ -136,7 +136,7 @@ module.exports = exports = {
             answerCount,
             count,
             todaysCount: TodayUser.length,
-            totalmonth: users,
+            // totalmonth: users,
           },
           logPayload: false,
         };

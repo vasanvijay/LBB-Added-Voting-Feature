@@ -23,7 +23,11 @@ module.exports = exports = {
       let count;
       let quResult;
 
-      const questionDetais = await global.models.GLOBAL.QUESTION.find({})
+      const questionDetais = await global.models.GLOBAL.QUESTION.find({}).populate({
+        path: 'createdBy',
+        model: 'user',
+        select: '_id name',
+      })
         .skip(skip)
         .limit(limit)
         .sort({

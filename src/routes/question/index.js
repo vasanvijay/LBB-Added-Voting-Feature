@@ -18,7 +18,7 @@ router.get(
 );
 router.get(
   "/reported-question",
-  // passport.authenticate(["jwt"], { session: false }),
+  passport.authenticate(["jwt"], { session: false }),
   api4Question.getReportedQuestion.handler
 );
 
