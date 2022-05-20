@@ -33,13 +33,20 @@ console.log("questionIDDDDDDDDDDDDD", questionId);
           path: "abuseQuestion.questionId",
           model: "question",
           select: "_id question response view createdBy",
+          populate: {
+            path: "createdBy",
+            model: "user",
+            select: "_id name",
+          }
         });
         let reportedQuestions = [];
         let users = [];
+        
         getReportAbuse.forEach((user) => {
           if (user.abuseQuestion.length > 0) {
             users.push(user)
             user.abuseQuestion.forEach((question) => {
+              console.log("currQuestion", question);
               reportedQuestions.push(question);
             });
           }
@@ -104,7 +111,14 @@ console.log("questionIDDDDDDDDDDDDD", questionId);
         let users = [];
         getReportAbuse.forEach((user) => {
           if (user.abuseQuestion.length > 0) {
-            users.push(user)
+            let userObj = {
+              _id: user?._id,
+              name: user?.name,
+              profileImage: user?.profileImage,
+              email: user?.email,
+              region: user?.region
+            }
+            users.push(userObj)
             user.abuseQuestion.forEach((question) => {
               reportedQuestions.push(question);
             });
