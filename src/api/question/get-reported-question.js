@@ -8,7 +8,7 @@ const utils = require("../../utils");
 // Add category by admin
 module.exports = exports = {
   handler: async (req, res) => {
-    const { questionId } = req.query;
+    const { questionId, searchTerm, searchUser } = req.query;
     let questionExists = {};
     if(questionId){
       questionExists = await global.models.GLOBAL.QUESTION.findById(questionId);
@@ -26,7 +26,7 @@ module.exports = exports = {
       }
     }
 console.log("questionExists", questionExists);
-console.log("questionIDDDDDDDDDDDDD", questionId);
+console.log("questionExists", searchTerm);
     try {
       if(questionId === undefined){
         const getReportAbuse = await global.models.GLOBAL.USER.find({}).populate({
@@ -55,6 +55,10 @@ console.log("questionIDDDDDDDDDDDDD", questionId);
         const ids = reportedQuestions.map(o => o?.questionId?._id)
         // remove repeated questions from reportedQuestions array
         reportedQuestions = reportedQuestions.filter(({questionId}, index) => !ids.includes(questionId?._id, index + 1))
+
+        if(searchTerm != undefined ){
+          reportedQuestions = reportedQuestions.filter(question => question.questionId.question.toLowerCase().includes(searchTerm.toLowerCase()))
+        }
   
         // // populate question createdBy
         // let questions = [];
@@ -124,6 +128,10 @@ console.log("questionIDDDDDDDDDDDDD", questionId);
             });
           }
         });
+
+        if(searchUser != undefined ){
+          users = users.filter(user => user.name.toLowerCase().includes(searchUser.toLowerCase()))
+        }
         if (getReportAbuse) {
           const data4createResponseObject = {
             req: req,
