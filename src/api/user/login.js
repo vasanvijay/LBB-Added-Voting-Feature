@@ -55,7 +55,7 @@ module.exports = exports = {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: "Your account is inactivate. Please contact to Admin.",
+            message: "Your account is not active. Please contact admin on support@leaderbridge.com for activation and next steps",
             payload: {},
             logPayload: false,
             status: enums.HTTP_CODES.NOT_ACCEPTABLE,
