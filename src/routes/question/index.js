@@ -17,7 +17,7 @@ router.get(
   api4Question.getQuestionAdmin.handler
 );
 router.get(
-  "/reported/id=:userId",
+  "/reported-question",
   passport.authenticate(["jwt"], { session: false }),
   api4Question.getReportedQuestion.handler
 );
@@ -81,4 +81,5 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Question.searchQuestion.handler
 );
+
 module.exports = exports = router;
