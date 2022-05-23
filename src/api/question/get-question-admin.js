@@ -24,6 +24,11 @@ module.exports = exports = {
       let quResult;
 
       const questionDetais = await global.models.GLOBAL.QUESTION.find({})
+        .populate({
+          path: "createdBy",
+          model: "user",
+          select: "_id name subject profileImage currentRole",
+        })
         .skip(skip)
         .limit(limit)
         .sort({
