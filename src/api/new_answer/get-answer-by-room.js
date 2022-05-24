@@ -9,7 +9,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     try {
       let user = await utils.getHeaderFromToken(req.user);
-      console.log("user--------------------------------------", user);
+      console.log("user--------------------------------------", req.question);
       let findUser = await global.models.GLOBAL.USER.findOne({ _id: user.id });
       let abuseAnswerData = [];
       for (let i = 0; i < findUser.abuseAnswer.length; i++) {
@@ -17,10 +17,16 @@ module.exports = exports = {
       }
       let { roomId, roomListId, roomMakeid } = req;
       console.log("roomId--------12-122222----", roomId);
+      // let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
+      //   _id: roomId,
+      // });
+
       if (roomId && !roomListId && roomMakeid) {
         let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
           _id: roomId,
         });
+
+        console.log("@@@@@@@@@@@@@@@@@", findQuestion);
         let body = { status: 0 };
         if (findQuestion.createdBy == user.id) {
           body = {};
@@ -197,6 +203,8 @@ module.exports = exports = {
                 isFriend = checkRequestProfile == null ? "false" : "true";
               }
 
+              console.log("findQuestion", findQuestion);
+
               const data4createResponseObject = {
                 req: req,
                 result: 0,
@@ -205,6 +213,7 @@ module.exports = exports = {
                   answer: findAnswer,
                   request: findRequest,
                   isFriend: isFriend,
+                  response: findQuestion?.response,
                 },
                 logPayload: false,
               };
@@ -275,6 +284,7 @@ module.exports = exports = {
                   answer: findAnswer,
                   request: findRequest,
                   isFriend: isFriend,
+                  response: findQuestion?.response,
                 },
                 logPayload: false,
               };
@@ -386,6 +396,7 @@ module.exports = exports = {
                   answer: findAnswer,
                   request: findRequest,
                   isFriend: isFriend,
+                  response: findQuestion?.response,
                 },
                 logPayload: false,
               };
@@ -456,6 +467,7 @@ module.exports = exports = {
                   answer: findAnswer,
                   request: findRequest,
                   isFriend: isFriend,
+                  response: findQuestion?.response,
                 },
                 logPayload: false,
               };

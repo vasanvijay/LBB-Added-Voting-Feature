@@ -170,10 +170,6 @@ module.exports = exports = {
         Question = JSON.parse(JSON.stringify(Question));
         if (search) {
           let abcd = question[0]?.answerLater.filter((question) => {
-            console.log(
-              "createdBy--------------------vishv",
-              question.createdBy
-            );
             if (question.question.search(search) >= 0) {
               return question;
             }

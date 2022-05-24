@@ -11,8 +11,8 @@ module.exports = exports = {
   // route handler
   handler: async (req, res, f) => {
     // const { roomId } = req;
-    console.log("first-->>", res);
     let user = await utils.getHeaderFromToken(res);
+    console.log("user@@@@@@@@", user);
     try {
       // if (f == "user") {
       //   let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({
@@ -47,12 +47,6 @@ module.exports = exports = {
         { $addToSet: { seenBy: ObjectId(user.id) } }
       );
       // }
-      console.log(
-        "chat------------------------------>>",
-        // updateChat,
-        req,
-        user.id
-      );
 
       let chats = await global.models.GLOBAL.CHAT.find({
         roomId: req,
@@ -62,12 +56,7 @@ module.exports = exports = {
         select:
           "roomId sender message messageType type createdAt updatedAt sentTo deliveredTo",
       });
-      console.log(
-        "chat1------------------------------>>",
 
-        req,
-        user.id
-      );
       // console.log("CHAT-->kkkkk", chats);
       if (chats) {
         let findRoom = await global.models.GLOBAL.CHAT_ROOM.findOne({

@@ -43,6 +43,7 @@ module.exports = exports = {
       if (filter) {
         let Questions = [];
         if (search) {
+          console.log("@@@@@@@@@@@@@@", search);
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               abuseQuestion = [];
@@ -50,6 +51,36 @@ module.exports = exports = {
                 abuseQuestion.push(user.abuseQuestion[j].questionId);
               }
               // // console.log("Criteria ni moj", criteria);
+
+              let qids = await global.models.GLOBAL.QUESTION.aggregate([
+                {
+                  $lookup: {
+                    from: "user",
+                    localField: "createdBy",
+                    foreignField: "_id",
+                    as: "user",
+                  },
+                },
+                {
+                  $match: {
+                    "user.currentRole": {
+                      $regex: filter[i],
+                      $options: "i",
+                    },
+                  },
+                },
+                {
+                  $group: {
+                    _id: "createdBy",
+                    createdBy: {
+                      $push: "$_id",
+                    },
+                  },
+                },
+              ]);
+
+              console.log("qids", qids);
+
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
                 question: { $regex: search, $options: "i" },
@@ -58,8 +89,9 @@ module.exports = exports = {
                   { _id: { $nin: abuseQuestion } },
                   { _id: user._id },
                   { createdBy: { $nin: user.blockUser } },
-                  { "filter.options.optionName": filter[i] },
+                  // { "filter.options.optionName": filter[i] },
                   { reportAbuse: { $nin: true } },
+                  { _id: { $in: qids[0]?.createdBy } },
                 ],
               })
                 .populate({
@@ -115,6 +147,34 @@ module.exports = exports = {
           }
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
+              let qids = await global.models.GLOBAL.QUESTION.aggregate([
+                {
+                  $lookup: {
+                    from: "user",
+                    localField: "createdBy",
+                    foreignField: "_id",
+                    as: "user",
+                  },
+                },
+                {
+                  $match: {
+                    "user.currentRole": {
+                      $regex: filter[i],
+                      $options: "i",
+                    },
+                  },
+                },
+                {
+                  $group: {
+                    _id: "createdBy",
+                    createdBy: {
+                      $push: "$_id",
+                    },
+                  },
+                },
+              ]);
+
+              console.log("qids@@@@@@@", qids);
               // // console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 // $and: [
@@ -125,7 +185,8 @@ module.exports = exports = {
                   { createdBy: { $nin: user.blockUser } },
                   { createdBy: { $nin: user._id } },
                   { reportAbuse: { $nin: true } },
-                  { "filter.options.optionName": filter[i] },
+                  // { "filter.options.optionName": filter[i] },
+                  { _id: { $in: qids[0]?.createdBy } },
                 ],
                 ...criteria,
               })
@@ -135,6 +196,8 @@ module.exports = exports = {
                   select: "_id name subject profileImage currentRole",
                 })
                 .exec();
+
+              console.log("quResult@@@@@", quResult);
 
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {

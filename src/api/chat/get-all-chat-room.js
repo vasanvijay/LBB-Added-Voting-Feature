@@ -27,8 +27,6 @@ module.exports = exports = {
       })
       .lean();
 
-    console.log("chatRoom11111111", chatRoom);
-
     for (let i = 0; i < chatRoom.length; i++) {
       let unseenMessageCount = 0;
       let chat = await global.models.GLOBAL.CHAT.find({
@@ -36,11 +34,6 @@ module.exports = exports = {
       });
 
       for (let j = 0; j < chat.length; j++) {
-        console.log(
-          "chat[j].seenBy-->>",
-          typeof chat[j]?.seenBy[0],
-          typeof user.id
-        );
         if (`${chat[j]?.sender}` != user.id) {
           if (`${chat[j]?.seenBy[0]}` != user.id) {
             // if (chat[j].seenBy.indexOf(user.id) === -1) {
@@ -61,7 +54,6 @@ module.exports = exports = {
       logPayload: false,
     };
 
-    console.log("chatRoom--->>1234567890", chatRoom);
     return data4createResponseObject;
     // } catch (error) {
     //   const data4createResponseObject = {

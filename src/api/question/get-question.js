@@ -89,15 +89,54 @@ module.exports = exports = {
           abuseQuestion.push(user.abuseQuestion[i].questionId);
         }
         // console.log("abuseQuestion--->>", user.subject);
-        quResult = await global.models.GLOBAL.QUESTION.find({
-          question: { $regex: search, $options: "i" },
 
+        let qids = await global.models.GLOBAL.QUESTION.aggregate([
+          {
+            $lookup: {
+              from: "user",
+              localField: "createdBy",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+            $match: {
+              $or: [
+                {
+                  question: {
+                    $regex: search,
+                    $options: "i",
+                  },
+                },
+                {
+                  "user.currentRole": {
+                    $regex: search,
+                    $options: "i",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $group: {
+              _id: "createdBy",
+              createdBy: {
+                $push: "$_id",
+              },
+            },
+          },
+        ]);
+
+        console.log("qids--->>111", qids, search);
+        // question: { $regex: search, $options: "i" },
+        quResult = await global.models.GLOBAL.QUESTION.find({
           $and: [
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
             { createdBy: { $nin: user.blockUser } },
             { createdBy: { $nin: user._id } },
+            { _id: { $in: qids[0]?.createdBy } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },
@@ -119,6 +158,7 @@ module.exports = exports = {
             createdAt: -1,
           })
           .exec();
+
         count = await global.models.GLOBAL.QUESTION.count({
           question: { $regex: search, $options: "i" },
           $and: [

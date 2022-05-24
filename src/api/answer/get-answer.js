@@ -23,10 +23,46 @@ module.exports = exports = {
       let skip = (parseInt(req.query.page) - 1) * limit;
       let questionData = {};
       if (search) {
-        let findQuestions = await global.models.GLOBAL.QUESTION.find({
-          question: { $regex: search, $options: "i" },
-        }).distinct("_id");
-        questionData = { question: { $in: findQuestions } };
+        let qids = await global.models.GLOBAL.QUESTION.aggregate([
+          {
+            $lookup: {
+              from: "user",
+              localField: "createdBy",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          {
+            $match: {
+              $or: [
+                {
+                  question: {
+                    $regex: search,
+                    $options: "i",
+                  },
+                },
+                {
+                  "user.currentRole": {
+                    $regex: search,
+                    $options: "i",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $group: {
+              _id: "createdBy",
+              createdBy: {
+                $push: "$_id",
+              },
+            },
+          },
+        ]);
+        // let findQuestions = await global.models.GLOBAL.QUESTION.find({
+        //   question: { $regex: search, $options: "i" },
+        // }).distinct("_id");
+        questionData = { question: { $in: qids[0]?.createdBy } };
       }
 
       let questionArray = await global.models.GLOBAL.ANSWER.find(
