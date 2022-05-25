@@ -95,12 +95,14 @@ module.exports = exports = {
               },
             }
           );
+
           if (user.id != findQuestion.createdBy.toString()) {
             // console.log(
             //   user.id,
             //   findQuestion.createdBy,
             //   "-----------------vishv----------"
             // );
+
             let ntfObj = {
               userId: user.id,
               receiverId: findQuestion.createdBy,
@@ -109,7 +111,7 @@ module.exports = exports = {
                 data: { title: "Leaderbridge" },
                 notification: {
                   title: "Give Answer to your question!!!",
-                  body: `Replied To Your Answer ${findQuestion.question}`,
+                  body: `A ${user.currentRole} replied to your answer`,
                 },
               },
               createdBy: user.id,

@@ -46,20 +46,20 @@ module.exports = exports = {
 
         let notificationMsg;
         if (
-          typeOfRequest ||
+          typeOfRequest == "requestProfileAccess" ||
           newRequestObj?.typeOfRequest == "requestProfileAccess"
         ) {
           notificationMsg = "You have received a request to view your profile";
         } else if (
-          typeOfRequest ||
+          typeOfRequest == "requestAudioAccess" ||
           newRequestObj?.typeOfRequest == "requestAudioAccess"
         ) {
-          notificationMsg = "You have received request for audio call.";
+          notificationMsg = "You have received a request for audio call.";
         } else if (
-          typeOfRequest ||
+          typeOfRequest == "requestVideoAccess" ||
           newRequestObj?.typeOfRequest == "requestVideoAccess"
         ) {
-          notificationMsg = "You have received request for video call.";
+          notificationMsg = "You have received a request for video call.";
         }
         let ntfObj = {
           userId: userData.id,

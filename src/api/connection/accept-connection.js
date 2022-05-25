@@ -79,7 +79,7 @@ module.exports = exports = {
               data: { title: "Leaderbridge" },
               notification: {
                 title: "New Connection Request!!!",
-                body: " Accepted your connections request.",
+                body: `${userData.currentRole} accepted your connections request.`,
               },
             },
             createdBy: userData.id,

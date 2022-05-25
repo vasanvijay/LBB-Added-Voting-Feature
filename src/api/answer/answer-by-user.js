@@ -164,8 +164,7 @@ module.exports = exports = {
               .status(enums.HTTP_CODES.OK)
               .json(utils.createResponseObject(data4createResponseObject));
           } else if (receivedRequest) {
-            let text =
-              "You have received request to access to view your profile.";
+            let text = " You have received a request to view your profile.";
             const data4createResponseObject = {
               req: req,
               result: 0,

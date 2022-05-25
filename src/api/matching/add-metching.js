@@ -142,7 +142,7 @@ module.exports = exports = {
               data: { title: "Leaderbridge" },
               notification: {
                 title: "Matching Request Accepted!!!",
-                body: `accept your matching request.`,
+                body: `accepted your matching request.`,
               },
             },
             createdBy: user._id,
@@ -240,7 +240,7 @@ module.exports = exports = {
               data: { title: "Leaderbridge" },
               notification: {
                 title: "New Matching Request!!!",
-                body: `sent you the matching request.`,
+                body: `sent you a matching request.`,
               },
             },
             createdBy: user._id,

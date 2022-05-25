@@ -48,7 +48,7 @@ module.exports = exports = {
             data: { title: "Leaderbridge" },
             notification: {
               title: "New Request profile Access!!!",
-              body: `You have received request to access to view your profile in ${findQuestion.question}`,
+              body: `You have received a request to view your profile in ${findQuestion.question}`,
             },
           },
           createdBy: user.id,

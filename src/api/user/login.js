@@ -55,7 +55,8 @@ module.exports = exports = {
           const data4createResponseObject = {
             req: req,
             result: -1,
-            message: "Your account is not active. Please contact admin on support@leaderbridge.com for activation and next steps",
+            message:
+              "Your account is not active. Please contact admin on support@leaderbridge.com for activation and next steps",
             payload: {},
             logPayload: false,
             status: enums.HTTP_CODES.NOT_ACCEPTABLE,
@@ -115,6 +116,7 @@ module.exports = exports = {
                   abuseQuestion: findUser.abuseQuestion,
                   abuseAnswer: findUser.abuseAnswer,
                   scope: "login",
+                  currentRole: findUser.currentRole,
                 };
                 if (deviceToken) {
                   await global.models.GLOBAL.USER.findByIdAndUpdate(

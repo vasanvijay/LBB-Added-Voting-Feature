@@ -123,7 +123,7 @@ module.exports = exports = {
           userId: user._id,
           receiverId: questionBy,
           title: `Notification By ${user._id} to ${questionBy}`,
-          description: ` Give Answer to Your Question's ${findQuestion.question}`,
+          description: `A ${user.currentRole} gave answer to your question ${findQuestion.question}`,
           createdBy: user._id,
           updatedBy: user._id,
           question: question,
