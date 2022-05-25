@@ -45,6 +45,8 @@ module.exports = exports = {
           { createdBy: { $nin: user.blockUser, $nin: user._id } },
         ],
       });
+
+      console.log("ANSWER-LATER-COUNT", ans);
       // // console.log("ANS-->>", ans);
       cc = cc + ans;
       // // console.log("CC--->>", cc);

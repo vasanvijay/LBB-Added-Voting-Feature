@@ -172,6 +172,8 @@ module.exports = exports = {
           let abcd = question[0]?.answerLater.filter((question) => {
             if (question.question.search(search) >= 0) {
               return question;
+            } else if (question.user.currentRole.search(search) >= 0) {
+              return question;
             }
           });
           const data4createResponseObject = {

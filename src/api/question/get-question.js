@@ -160,12 +160,13 @@ module.exports = exports = {
           .exec();
 
         count = await global.models.GLOBAL.QUESTION.count({
-          question: { $regex: search, $options: "i" },
+          // question: { $regex: search, $options: "i" },
           $and: [
             { _id: { $nin: user.answerLater } },
             { _id: { $nin: user.removeQuestion } },
             { _id: { $nin: abuseQuestion } },
             { createdBy: { $nin: user.blockUser } },
+            { _id: { $in: qids[0]?.createdBy } },
           ],
           $or: [
             { "filter.options.optionName": { $exists: false } },

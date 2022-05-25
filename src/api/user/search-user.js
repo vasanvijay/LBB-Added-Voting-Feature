@@ -234,8 +234,8 @@ module.exports = exports = {
 
         distinctUser = await global.models.GLOBAL.USER.find(
           {
-            $and: [
-              { subject: { $regex: search, $options: "i" } },
+            $or: [
+              { currentRole: { $regex: search, $options: "i" } },
               {
                 $or: criteria,
               },

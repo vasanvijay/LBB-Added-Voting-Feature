@@ -103,14 +103,14 @@ module.exports = exports = {
 
       // convert to unix time to format utc time after code uncomment
 
-      // const users = await global.models.GLOBAL.USER.aggregate([
-      //   {
-      //     $group: {
-      //       _id: { $month: "$createdAt" },
-      //       users: { $sum: 1 },
-      //     },
-      //   },
-      // ]).sort({ _id: 1 });
+      const users = await global.models.GLOBAL.USER.aggregate([
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            users: { $sum: 1 },
+          },
+        },
+      ]).sort({ _id: 1 });
 
       if (!findUser) {
         const data4createResponseObject = {
@@ -136,7 +136,7 @@ module.exports = exports = {
             answerCount,
             count,
             todaysCount: TodayUser.length,
-            // totalmonth: users,
+            totalmonth: users,
           },
           logPayload: false,
         };
