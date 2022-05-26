@@ -10,7 +10,7 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { questionId, searchTerm, searchUser } = req.query;
     let questionExists = {};
-    if(questionId){
+    if (questionId) {
       questionExists = await global.models.GLOBAL.QUESTION.findById(questionId);
       if (!questionExists) {
         const data4createResponseObject = {
@@ -25,41 +25,49 @@ module.exports = exports = {
           .json(utils.createResponseObject(data4createResponseObject));
       }
     }
-console.log("questionExists", questionExists);
-console.log("questionExists", searchTerm);
+    console.log("questionExists", questionExists);
+    console.log("questionExists", searchTerm);
     try {
-      if(questionId === undefined){
-        const getReportAbuse = await global.models.GLOBAL.USER.find({}).populate({
+      if (questionId === undefined) {
+        const getReportAbuse = await global.models.GLOBAL.USER.find(
+          {}
+        ).populate({
           path: "abuseQuestion.questionId",
           model: "question",
-          select: "_id question response view createdBy",
+          select: "_id question response view createdBy status",
           populate: {
             path: "createdBy",
             model: "user",
             select: "_id name",
-          }
+          },
         });
         let reportedQuestions = [];
         let users = [];
-        
+
         getReportAbuse.forEach((user) => {
           if (user.abuseQuestion.length > 0) {
-            users.push(user)
+            users.push(user);
             user.abuseQuestion.forEach((question) => {
               console.log("currQuestion", question);
               reportedQuestions.push(question);
             });
           }
-        })
+        });
         // Get all question ids
-        const ids = reportedQuestions.map(o => o?.questionId?._id)
+        const ids = reportedQuestions.map((o) => o?.questionId?._id);
         // remove repeated questions from reportedQuestions array
-        reportedQuestions = reportedQuestions.filter(({questionId}, index) => !ids.includes(questionId?._id, index + 1))
+        reportedQuestions = reportedQuestions.filter(
+          ({ questionId }, index) => !ids.includes(questionId?._id, index + 1)
+        );
 
-        if(searchTerm != undefined ){
-          reportedQuestions = reportedQuestions.filter(question => question.questionId.question.toLowerCase().includes(searchTerm.toLowerCase()))
+        if (searchTerm != undefined) {
+          reportedQuestions = reportedQuestions.filter((question) =>
+            question.questionId.question
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+          );
         }
-  
+
         // // populate question createdBy
         // let questions = [];
         // for (let i = 0; i < reportedQuestions.length; i++) {
@@ -103,13 +111,15 @@ console.log("questionExists", searchTerm);
             .status(enums.HTTP_CODES.BAD_REQUEST)
             .json(utils.createResponseObject(data4createResponseObject));
         }
-      } else{
-        const getReportAbuse = await global.models.GLOBAL.USER.find({ "abuseQuestion.questionId" : ObjectId(questionId)}).populate({
+      } else {
+        const getReportAbuse = await global.models.GLOBAL.USER.find({
+          "abuseQuestion.questionId": ObjectId(questionId),
+        }).populate({
           path: "abuseQuestion.questionId",
           model: "question",
           select: "_id question response view createdBy",
         });
-        
+
         // console.log("questionID is heree", getReportAbuse)
         let reportedQuestions = [];
         let users = [];
@@ -120,24 +130,26 @@ console.log("questionExists", searchTerm);
               name: user?.name,
               profileImage: user?.profileImage,
               email: user?.email,
-              region: user?.region
-            }
-            users.push(userObj)
+              region: user?.region,
+            };
+            users.push(userObj);
             user.abuseQuestion.forEach((question) => {
               reportedQuestions.push(question);
             });
           }
         });
 
-        if(searchUser != undefined ){
-          users = users.filter(user => user.name.toLowerCase().includes(searchUser.toLowerCase()))
+        if (searchUser != undefined) {
+          users = users.filter((user) =>
+            user.name.toLowerCase().includes(searchUser.toLowerCase())
+          );
         }
         if (getReportAbuse) {
           const data4createResponseObject = {
             req: req,
             result: 0,
             message: messages.ITEM_FETCHED,
-            payload: {  users },
+            payload: { users },
             logPayload: false,
           };
           res
@@ -155,10 +167,7 @@ console.log("questionExists", searchTerm);
             .status(enums.HTTP_CODES.BAD_REQUEST)
             .json(utils.createResponseObject(data4createResponseObject));
         }
-
       }
-    
-      
     } catch (error) {
       logger.error(
         `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
