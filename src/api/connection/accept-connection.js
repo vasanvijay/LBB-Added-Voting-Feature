@@ -146,7 +146,20 @@ module.exports = exports = {
           };
 
           let newMessage = await global.models.GLOBAL.CHAT.create(chat);
+          let lastMessageObj = {
+            messageId: newMessage._id,
+            message: newMessage.message,
+            createdAt: Date.now(),
+          };
 
+          let addLastMessage =
+            await global.models.GLOBAL.CHAT_ROOM.findOneAndUpdate(
+              {
+                _id: chatRoom._id,
+              },
+              { $set: { lastMessage: lastMessageObj } },
+              { new: true }
+            );
           await global.models.GLOBAL.CONNECTION.findByIdAndRemove({
             _id: connectionId,
           });

@@ -26,11 +26,11 @@ module.exports = exports = {
       // .status(enums.HTTP_CODES.BAD_REQUEST)
       // .json(utils.createResponseObject(data4createResponseObject));
     }
-    console.log("typeOfRequest", typeOfRequest);
     try {
       let findUser = await global.models.GLOBAL.USER.findOne({
         _id: id,
       });
+
       if (findUser) {
         let newRequestObj = {
           requestBy: userData.id,

@@ -63,12 +63,17 @@ module.exports = exports = {
                 },
                 {
                   $match: {
-                    "user.currentRole": {
-                      $regex: filter[i],
-                      $options: "i",
-                    },
+                    "user.currentRole": filter[i],
                   },
                 },
+                // {
+                //   $match: {
+                //     "user.currentRole": {
+                //       $regex: filter[i],
+                //       $options: "i",
+                //     },
+                //   },
+                // },
                 {
                   $group: {
                     _id: "createdBy",
@@ -158,12 +163,17 @@ module.exports = exports = {
                 },
                 {
                   $match: {
-                    "user.currentRole": {
-                      $regex: filter[i],
-                      $options: "i",
-                    },
+                    "user.currentRole": filter[i],
                   },
                 },
+                // {
+                //   $match: {
+                //     "user.currentRole": {
+                //       $regex: filter[i],
+                //       $options: "i",
+                //     },
+                //   },
+                // },
                 {
                   $group: {
                     _id: "createdBy",

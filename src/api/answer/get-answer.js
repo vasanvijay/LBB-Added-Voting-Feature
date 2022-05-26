@@ -21,6 +21,7 @@ module.exports = exports = {
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
+      console.log("answerByMeXXXXXXXXXXXXXXXXXX", limit, page);
       let questionData = {};
       if (search) {
         let qids = await global.models.GLOBAL.QUESTION.aggregate([
@@ -227,7 +228,7 @@ module.exports = exports = {
           result: 0,
           message: messages.SUCCESS,
           payload: {
-            questions: Answers,
+            questions: Answers.slice((page - 1) * limit, page * limit),
             count: Answers.length,
             page,
             limit,

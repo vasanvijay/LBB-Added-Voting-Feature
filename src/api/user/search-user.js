@@ -246,7 +246,7 @@ module.exports = exports = {
       } else if (search) {
         distinctUser = await global.models.GLOBAL.USER.find(
           {
-            subject: { $regex: search, $options: "i" },
+            currentRole: { $regex: search, $options: "i" },
           },
           { password: 0 }
         );

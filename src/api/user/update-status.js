@@ -17,22 +17,36 @@ module.exports = exports = {
     let { user } = req;
     let { userId, status } = req.params;
 
-    let updateUser;
-
     try {
       let updateUser;
       if (user.userType === enums.USER_TYPE.ADMIN) {
-        updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
-          { _id: userId },
-          {
-            $set: {
-              updatedAt: Date.now(),
-              updatedBy: user.email,
-              status: status,
+        if (status) {
+          updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+            { _id: userId },
+            {
+              $set: {
+                updatedAt: Date.now(),
+                updatedBy: user.email,
+                status: status,
+                message: "",
+                text: "",
+              },
             },
-          },
-          { new: true }
-        );
+            { new: true }
+          );
+        } else {
+          updateUser = await global.models.GLOBAL.USER.findByIdAndUpdate(
+            { _id: userId },
+            {
+              $set: {
+                updatedAt: Date.now(),
+                updatedBy: user.email,
+                status: status,
+              },
+            },
+            { new: true }
+          );
+        }
       }
 
       if (!updateUser) {
