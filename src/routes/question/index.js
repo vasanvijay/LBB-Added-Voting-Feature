@@ -39,6 +39,11 @@ router.post(
   validate("body", api4Question.reportQuestion.validation),
   api4Question.reportQuestion.handler
 );
+router.get(
+  "/accept-reported-question",
+  // passport.authenticate(["jwt"], { session: false }),
+  api4Question.acceptReportedQuestion.handler
+);
 
 // PUT Method
 router.put(
