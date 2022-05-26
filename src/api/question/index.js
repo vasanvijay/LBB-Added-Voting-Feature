@@ -11,7 +11,7 @@ const acceptAbuse = require("./accept-abuse-reason");
 const declineRequest = require("./decline-abuse-request");
 const searchQuestion = require("./get-search-api");
 const getQuestionAdmin = require("./get-question-admin");
-const acceptReportedQuestion = require('./accept-reported-question')
+const acceptReportedQuestion = require("./accept-reported-question")
 
 module.exports = exports = {
   createQuestion,
