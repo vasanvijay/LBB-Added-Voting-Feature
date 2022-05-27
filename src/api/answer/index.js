@@ -18,6 +18,7 @@ const declineAbuse = require("./decline-abuse-request-answer");
 const everyoneAnswer = require("./answer-everyone");
 const onlyAdmin = require("./answer-admin");
 const WhoCanseeAnswer = require("./who-can-see");
+const getAbuseQuestion = require("./get-abuse-question");
 
 module.exports = exports = {
   addAnswer,
@@ -40,4 +41,5 @@ module.exports = exports = {
   everyoneAnswer,
   onlyAdmin,
   WhoCanseeAnswer,
+  getAbuseQuestion,
 };

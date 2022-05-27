@@ -10,6 +10,13 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4Answer.getAnswer.handler
 );
+
+router.get(
+  "/get-abuse-question",
+  passport.authenticate(["jwt"], { session: false }),
+  api4Answer.getAbuseQuestion.handler
+);
+
 router.get(
   "/later",
   passport.authenticate(["jwt"], { session: false }),

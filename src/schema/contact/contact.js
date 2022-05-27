@@ -5,6 +5,8 @@ module.exports = (connection) => {
     email: String,
     subject: String,
     message: String,
+    adminmessage: String,
+    adminsubject: String,
     status: { type: Boolean, default: true },
     reply: { type: Boolean, default: false },
     userType: { type: String, default: "user" },
