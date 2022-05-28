@@ -112,6 +112,62 @@ module.exports = exports = {
         },
       ]).sort({ _id: 1 });
 
+      for (let i = 0; i < users?.length; i++) {
+        // if (users[i]?._id == new Date().getMonth() + 1) {
+        //   users.splice(i, 1);
+        // }
+
+        if (users[i]?._id === 1) {
+          users[i]._id = "Jan";
+        }
+        if (users[i]?._id === 2) {
+          users[i]._id = "Fab";
+        }
+
+        if (users[i]?._id === 3) {
+          users[i]._id = "Mar";
+        }
+
+        if (users[i]?._id === 4) {
+          users[i]._id = "Apr";
+        }
+
+        if (users[i]?._id === 5) {
+          users[i]._id = "May";
+        }
+
+        if (users[i]?._id === 6) {
+          users[i]._id = "Jun";
+        }
+
+        if (users[i]?._id === 7) {
+          users[i]._id = "Jul";
+        }
+
+        if (users[i]?._id === 8) {
+          users[i]._id = "Aug";
+        }
+
+        if (users[i]?._id === 9) {
+          users[i]._id = "Sep";
+        }
+
+        if (users[i]?._id === 10) {
+          users[i]._id = "Oct";
+        }
+
+        if (users[i]?._id === 11) {
+          users[i]._id = "Nov";
+        }
+
+        if (users[i]?._id === 12) {
+          users[i]._id = "Dec";
+        }
+
+        console.log("datasheet", users[i]?._id);
+        // settotalMonthName(totalmonth[i]?._id)
+      }
+
       if (!findUser) {
         const data4createResponseObject = {
           req: req,
