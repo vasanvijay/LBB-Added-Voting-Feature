@@ -41,6 +41,7 @@ module.exports = exports = {
             select: "_id question response",
           },
         });
+
         let reportedQuestions = [];
         let users = [];
 
@@ -48,17 +49,21 @@ module.exports = exports = {
           if (user.abuseAnswer.length > 0) {
             users.push(user);
             user.abuseAnswer.forEach((question) => {
-              console.log("currQuestion", question);
-              reportedQuestions.push(question);
+              console.log("currQuestion", question.answerId);
+              if (question.answerId) {
+                reportedQuestions.push(question);
+              }
             });
           }
         });
         // Get all question ids
+
+        console.log("reportedQuestions", reportedQuestions);
         const ids = reportedQuestions.map((o) => o?.questionId?._id);
         // remove repeated questions from reportedQuestions array
-        reportedQuestions = reportedQuestions.filter(
-          ({ questionId }, index) => !ids.includes(questionId?._id, index + 1)
-        );
+        // reportedQuestions = reportedQuestions.filter(
+        //   ({ questionId }, index) => !ids.includes(questionId?._id, index + 1)
+        // );
 
         if (searchTerm != undefined) {
           reportedQuestions = reportedQuestions.filter((question) =>
