@@ -83,7 +83,10 @@ module.exports = exports = {
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-                </head>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+                    <script src="https://kit.fontawesome.com/b7ecb94de9.js" crossorigin="anonymous"></script>
+
+                    </head>
                 <style>
                     body {
                         font-family: 'Ubuntu', sans-serif;
@@ -104,6 +107,7 @@ module.exports = exports = {
                 </style>
                 
                 <body style="margin: 0; padding: 0;">
+                
                     <table cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 20px 0 30px 0;">
@@ -143,9 +147,17 @@ module.exports = exports = {
                                           <p align="center" style="color: #585d6a; font-size: 14px; margin: 0;">
                                             If you have any query, feel free to contact us at support@leaderbridge.com.
                                           </p>
+
+
+                                          <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material-rounded/24/000000/facebook-new.png"/><a  target="_blank" href="https://m.facebook.com/leaderbridge/?ref=py_c">Facebook</a></p> 
+                                          <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material/24/000000/linkedin--v1.png"/><a  target="_blank" href="https://www.linkedin.com/company/leader-bridge">Linkedin</a></p>
+                                          <p style="display: flex;align-items: center;"><img src="https://img.icons8.com/material-rounded/24/000000/instagram-new.png"/><a  target="_blank" href="https://www.instagram.com/leaderbridge1/">Instagram</a></p>
                                         </td>
+                                     
                                     </tr>
-                                  
+                                    
+                                   
+
                                 </table>
                             </td>
                         </tr>
