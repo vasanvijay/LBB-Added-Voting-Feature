@@ -20,6 +20,16 @@ module.exports = exports = {
         .sort({
           createdAt: -1,
         });
+
+      if (req.query.search) {
+        let ContactType = await global.models.GLOBAL.CONTACT.find({
+          $text: { $search: req.query.search },
+        }).sort({
+          createdAt: -1,
+        });
+
+        console.log("req.query.search", req.query.search);
+      }
       const data4createResponseObject = {
         req: req,
         result: 0,
