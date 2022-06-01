@@ -20,26 +20,42 @@ module.exports = exports = {
         .sort({
           createdAt: -1,
         });
-
+      let SearchData;
       if (req.query.search) {
-        let ContactType = await global.models.GLOBAL.CONTACT.find({
-          $text: { $search: req.query.search },
+        SearchData = await global.models.GLOBAL.CONTACT.find({
+          // $text: { $search: req.query.search },
+          name: { $regex: req.query.search, $options: "i" },
+          // email: { $regex: req.query.search, $options: "i" },
         }).sort({
           createdAt: -1,
         });
 
-        console.log("req.query.search", req.query.search);
+        console.log("req.query.search", SearchData);
       }
-      const data4createResponseObject = {
-        req: req,
-        result: 0,
-        message: messages.SUCCESS,
-        payload: { ContactType },
-        logPayload: false,
-      };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+
+      if (req.query.search) {
+        const data4createResponseObject = {
+          req: req,
+          result: 0,
+          message: messages.SUCCESS,
+          payload: { SearchData },
+          logPayload: false,
+        };
+        res
+          .status(enums.HTTP_CODES.OK)
+          .json(utils.createResponseObject(data4createResponseObject));
+      } else {
+        const data4createResponseObject = {
+          req: req,
+          result: 0,
+          message: messages.SUCCESS,
+          payload: { ContactType },
+          logPayload: false,
+        };
+        res
+          .status(enums.HTTP_CODES.OK)
+          .json(utils.createResponseObject(data4createResponseObject));
+      }
     } catch (error) {
       logger.error(
         `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
