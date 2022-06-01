@@ -11,13 +11,15 @@ module.exports = exports = {
   validation: Joi.object({
     name: Joi.string().allow(),
     email: Joi.string().allow(),
-    subject: Joi.string().allow(),
+    company: Joi.string().allow(),
     message: Joi.string().allow(),
+    extension: Joi.string().allow(),
+    // number: Joi.boolean().allow(),
   }),
 
   handler: async (req, res) => {
-    const { email, name, subject, message } = req.body;
-    if (!email || !name || !subject || !message) {
+    const { email, name, message, company, number, extension } = req.body;
+    if (!email || !name || !company || !message || !number || !extension) {
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -53,7 +55,9 @@ module.exports = exports = {
         let userRegistration = {
           email: email,
           name: name,
-          subject: subject,
+          company: company,
+          number: number,
+          extension: extension,
           message: message,
           createdAt: Date.now(),
         };

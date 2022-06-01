@@ -3,7 +3,9 @@ module.exports = (connection) => {
   const userSchema = new mongoose.Schema({
     name: String,
     email: String,
-    subject: String,
+    company: String,
+    extension: String,
+    number: String,
     message: String,
     adminmessage: String,
     adminsubject: String,
