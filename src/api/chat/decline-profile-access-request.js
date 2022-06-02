@@ -4,6 +4,7 @@ const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
+const { sendPushNotification } = require("../../middlewares/pushNotification");
 const utils = require("../../utils");
 
 // Add category by admin
@@ -46,6 +47,62 @@ module.exports = exports = {
               new: true,
             }
           );
+
+        // let notificationMsg;
+        // if (req.Notification == "request") {
+        //   notificationMsg = `${user.currentRole} rejected your chat request.`;
+        // } else if (req.Notification == "audio") {
+        //   notificationMsg = `${user.currentRole} rejected your audio call  request.`;
+        // } else if (req.Notification == "video") {
+        //   notificationMsg = `${user.currentRole} rejected your video call request.`;
+        // }
+
+        let notificationMsg;
+        if (req.Notification == "request") {
+          notificationMsg = `Your Chat Request is Rejected by ${user.currentRole}`;
+        } else if (req.Notification == "audio") {
+          notificationMsg = `Your Audio call Request is Rejected by ${user.currentRole}`;
+        } else if (req.Notification == "video") {
+          notificationMsg = `Your Video call Request is Rejected by ${user.currentRole}`;
+        }
+
+        // if (notificationMsg) {
+        let ntfObj = {
+          userId: user.id,
+          receiverId: findRequest.requestBy,
+          title: `Notification By ${user.id} to ${findRequest.requestBy}`,
+          description: {
+            data: { title: "Leaderbridge" },
+            notification: {
+              title: "Rejected Request!!!",
+              body: notificationMsg,
+            },
+          },
+          createdBy: user.id,
+          updatedBy: user.id,
+          createdAt: Date.now(),
+        };
+
+        let findToken = await global.models.GLOBAL.USER.findOne({
+          _id: findRequest.requestBy,
+        });
+
+        let notification = await global.models.GLOBAL.NOTIFICATION.create(
+          ntfObj
+        );
+
+        console.log("findToken", findToken);
+        // try {
+        if (findToken.deviceToken !== "1234") {
+          let data = {
+            payload: ntfObj.description,
+            firebaseToken: findToken.deviceToken,
+          };
+          sendPushNotification(data);
+          // res.status(200).send({
+          //   msg: "Notification sent successfully!",
+          // });
+        }
 
         const data4createResponseObject = {
           req: req,

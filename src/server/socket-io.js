@@ -137,7 +137,7 @@ module.exports = (server, logger) => {
     });
 
     socket.on("chat-room", async function (user) {
-      console.log("LAST MESSAGE------------->>>>>>", user);
+      // console.log("LAST MESSAGE------------->>>>>>", user);
       try {
         let allChatRoom = await chatCtrl.allChatRoom.handler(user);
         // console.log("history", allChatRoom.payload.room);
@@ -145,7 +145,7 @@ module.exports = (server, logger) => {
           room: allChatRoom.payload.room,
           userId: allChatRoom.payload.userId,
         });
-        console.log("Room data sent", allChatRoom.payload.room);
+        // console.log("Room data sent", allChatRoom.payload.room);
       } catch (error) {
         console.log("Error in finding Room ", error);
       }
@@ -160,7 +160,7 @@ module.exports = (server, logger) => {
           room: chatnotification.payload.room,
           userId: chatnotification.payload.userId,
         });
-        console.log("Room data sent111", chatnotification.payload.room);
+        // console.log("Room data sent111", chatnotification.payload.room);
       } catch (error) {
         console.log("Error in finding Room ", error);
       }
@@ -222,7 +222,7 @@ module.exports = (server, logger) => {
         let answerRoom = await answerCtrl.getAnswerRoom.handler(user, question);
         // console.log("ROOM--->>>", answerRoom.payload.room);
         io.in(socket.id).emit("answer-room", answerRoom.payload.room);
-        console.log("room data sent");
+        // console.log("room data sent");
       } catch (error) {
         console.log("Error in finding Chats ", error);
       }
@@ -315,13 +315,9 @@ module.exports = (server, logger) => {
           id: id,
           roomId: roomId,
         });
-        console.log(
-          "New Request Socket---->>",
-          addNewRequest.payload.newRequest
-        );
+
         io.in(socket.id).emit("new-request", addNewRequest.payload.newRequest);
         io.emit("check-answer");
-        console.log("request add success.");
       } catch (error) {
         console.log("Error in adding request ", error);
       }
@@ -339,16 +335,12 @@ module.exports = (server, logger) => {
             roomId: roomId,
             typeOfRequest: typeOfRequest,
           });
-          console.log(
-            "addNewRequestInChat----->",
-            addNewRequestInChat.payload.newRequest
-          );
+
           io.in(socket.id).emit(
             "new-request-chat",
             addNewRequestInChat.payload.newRequest
           );
           io.emit("check-answer");
-          console.log("request add success.");
         } catch (error) {
           console.log("Error in adding request ", error);
         }
@@ -366,16 +358,12 @@ module.exports = (server, logger) => {
             requestId: requestId,
             questionId: questionId,
           });
-          console.log(
-            "Accept Request Socket---->>",
-            aacceptRequest.payload.updateRequest
-          );
+
           io.in(socket.id).emit(
             "accept-request",
             aacceptRequest.payload.updateRequest
           );
           io.emit("check-answer");
-          console.log("request accepted successfully.");
         } catch (error) {
           console.log("Error in accepting request ", error);
         }
@@ -385,24 +373,26 @@ module.exports = (server, logger) => {
     //Accept Request in Chat
     socket.on(
       "accept-request-chat",
-      async function ({ user, requestId, status }) {
+      async function ({ user, requestId, status, Notification }) {
         try {
+          console.log("EEEEEEEEEEEEEEE", user);
           let aacceptRequest = await chatCtrl.acceptRequest.handler({
             user: user,
-
             requestId: requestId,
             status: status,
+            Notification: Notification,
           });
-          console.log(
-            "Accept Request in Chat Socket---->>",
-            aacceptRequest.payload.updateRequest
-          );
+
+          console.log("aacceptRequest", aacceptRequest);
+
+          io.emit("get-notification-count-request", { notification: true });
+          io.emit("get-notification-request", { notification: true });
+
           io.in(socket.id).emit(
             "accept-request-chat",
             aacceptRequest.payload.updateRequest
           );
           io.emit("check-answer");
-          console.log("request accepted successfully.");
         } catch (error) {
           console.log("Error in accepting request ", error);
         }
@@ -420,16 +410,12 @@ module.exports = (server, logger) => {
             requestId: requestId,
             questionId: questionId,
           });
-          console.log(
-            "decline Request Socket---->>",
-            declineRequest.payload.updateRequest
-          );
+
           io.in(socket.id).emit(
             "decline-request",
             declineRequest.payload.updateRequest
           );
           io.emit("check-answer");
-          console.log("request reject successfully.");
         } catch (error) {
           console.log("Error in declining request ", error);
         }
@@ -437,34 +423,36 @@ module.exports = (server, logger) => {
     );
 
     //Decline Request in Chat
-    socket.on("decline-request-chat", async function ({ user, requestId }) {
-      // console.log("add-answer------------->>>>>>", user);
-      try {
-        let declineRequest = await chatCtrl.declineRequest.handler({
-          user: user,
-          requestId: requestId,
-        });
-        console.log(
-          "Decline Request in Chat Socket---->>",
-          declineRequest.payload.updateRequest
-        );
-        io.in(socket.id).emit(
-          "decline-request-chat",
-          declineRequest.payload.updateRequest
-        );
-        io.emit("check-answer");
-        console.log("request rejected successfully.");
-      } catch (error) {
-        console.log("Error in declining request ", error);
+    socket.on(
+      "decline-request-chat",
+      async function ({ user, requestId, Notification }) {
+        // console.log("add-answer------------->>>>>>", user);
+        try {
+          let declineRequest = await chatCtrl.declineRequest.handler({
+            user: user,
+            requestId: requestId,
+            Notification: Notification,
+          });
+
+          io.emit("get-notification-count-request", { notification: true });
+          io.emit("get-notification-request", { notification: true });
+
+          io.in(socket.id).emit(
+            "decline-request-chat",
+            declineRequest.payload.updateRequest
+          );
+          io.emit("check-answer");
+        } catch (error) {
+          console.log("Error in declining request ", error);
+        }
       }
-    });
+    );
 
     // Socket "Join-Profile"
     socket.on("join-profile", async function ({ profileId }) {
       socket.profileId = String(profileId);
       activeUsers.add(String(profileId));
       socket.join(String(profileId));
-      console.log("join-profile");
       io.in(socket.id).emit("user join profile");
     });
 
@@ -472,9 +460,6 @@ module.exports = (server, logger) => {
     socket.on(
       "connectCall",
       async function ({ channelName, otherId, isForVideoCall, token }) {
-        console.log("channelname on connectcall...", channelName);
-        console.log("otherid on connectcall...", otherId);
-        console.log("token on connectcall...", token);
         let findToken = await global.models.GLOBAL.USER.findOne({
           _id: otherId,
         });
@@ -483,7 +468,6 @@ module.exports = (server, logger) => {
           _id: channelName,
         });
         delete loginUser.password;
-        console.log("findToken", findToken);
         const desc = {
           data: { title: "Leaderbridge" },
           notification: {
@@ -511,7 +495,6 @@ module.exports = (server, logger) => {
           };
           io.in(String(channelName)).emit("onCallRequest", data);
           io.in(String(otherId)).emit("onCallRequest", data);
-          console.log("data on connectcall...", data);
         }
       }
     );
@@ -520,10 +503,6 @@ module.exports = (server, logger) => {
     socket.on(
       "acceptCall",
       async function ({ channelName, otherId, isForVideoCall, token }) {
-        console.log("chanel name................. Accept", channelName);
-        console.log("otherId............++++++++++Accept", otherId);
-        console.log("isForVideoCall------------->", isForVideoCall);
-        console.log("token...........++++++++++++ accept", token);
         const res = {
           msg: "call accepted",
           channelName: String(channelName),
@@ -533,8 +512,6 @@ module.exports = (server, logger) => {
         };
         io.in(String(channelName)).emit("onAcceptCall", res);
         io.in(String(otherId)).emit("onAcceptCall", res);
-        console.log("channelNameonAcceptCall...................", res);
-        console.log("otherIdonAcceptCall...................", res);
       }
     );
 
@@ -696,7 +673,6 @@ module.exports = (server, logger) => {
               },
             }
           );
-          console.log("Answer Exists", editAnswer);
 
           if (editAnswer) {
             const data4createResponseObject = {
@@ -706,7 +682,6 @@ module.exports = (server, logger) => {
               payload: {},
               logPayload: false,
             };
-            console.log("edit-answer", editAnswer);
             io.in(socket.id).emit("edit-answer", editAnswer);
             io.emit("check-answer");
             // res
@@ -741,7 +716,6 @@ module.exports = (server, logger) => {
     socket.on("check-answer", async function () {});
 
     socket.on("star-messages", async function ({ messageId, userId, star }) {
-      console.log("star-messages---------1", star);
       try {
         if (messageId) {
           let starMessage;
@@ -762,7 +736,6 @@ module.exports = (server, logger) => {
               }
             );
           } else {
-            console.log("star-messages", star);
             starMessage = await global.models.GLOBAL.CHAT.findByIdAndUpdate(
               {
                 _id: messageId,
@@ -820,41 +793,31 @@ module.exports = (server, logger) => {
     });
 
     socket.on("error", function (err) {
-      console.log("received error from socket:", socket.id);
       console.log(err);
     });
 
     // conection connected
 
     socket.on("connection-connected", async function ({ user }) {
-      console.log("connection-connected======", user);
       const conection = await api4Connection.getConnected.handler({ user });
-      console.log("connection-connected", conection);
       io.in(socket.id).emit("connection-connected", {
         conection: conection,
       });
     });
 
     socket.on("connection-received", async function ({ user }) {
-      console.log("connection-received======", user);
       const conection = await api4Connection.getConnectionreceived.handler({
         user,
       });
-      console.log("connection-received", conection);
       io.in(socket.id).emit("connection-received", {
         conection: conection,
       });
     });
 
     socket.on("connection-received-sent", async function ({ user }) {
-      console.log("connection-received-sent======", user);
       const conection = await api4Connection.getConnectionsent.handler({
         user,
       });
-      console.log(
-        "connection-received-sent=====================================",
-        conection
-      );
       io.in(socket.id).emit("connection-received-sent", {
         conection: conection,
       });
@@ -863,21 +826,15 @@ module.exports = (server, logger) => {
     socket.on(
       "accept-connection",
       async function ({ user, accepted, receiverId, connectionId }) {
-        console.log("accept-connection======", receiverId);
         const conection = await api4Connection.acceptConnection.handler({
           user,
           accepted,
           receiverId,
           connectionId,
         });
-        console.log("accept-connection", conection);
         const conectionsent = await api4Connection.getConnectionsent.handler({
           user,
         });
-        console.log(
-          "connection-received-sent=====================================",
-          conection
-        );
         io.in(socket.id).emit("connection-received-sent", {
           conection: conectionsent,
         });
@@ -885,14 +842,12 @@ module.exports = (server, logger) => {
           await api4Connection.getConnectionreceived.handler({
             user,
           });
-        console.log("connection-received", conection);
         io.in(socket.id).emit("connection-received", {
           conection: conectionreceived,
         });
         const conectionConected = await api4Connection.getConnected.handler({
           user,
         });
-        console.log("connection-connected", conection);
         io.in(socket.id).emit("connection-connected", {
           conection: conectionConected,
         });
@@ -922,7 +877,6 @@ module.exports = (server, logger) => {
           await api4Connection.getConnectionreceived.handler({
             user,
           });
-        console.log("connection-received", conection);
         io.in(socket.id).emit("connection-received", {
           conection: conectionreceived,
         });
@@ -947,7 +901,6 @@ module.exports = (server, logger) => {
           user,
         });
 
-        console.log("get-notification", notification);
         io.in(socket.id).emit("get-notification", {
           notification: notification,
         });
@@ -981,10 +934,6 @@ module.exports = (server, logger) => {
             user,
           });
 
-        console.log(
-          "get-notification-countcalled----------------",
-          notificationCountData
-        );
         io.in(socket.id).emit("get-notification-count", {
           notification: notificationCountData,
         });
@@ -1026,15 +975,10 @@ module.exports = (server, logger) => {
         remove,
         removeId,
       });
-      console.log("accept-deeeeeee-connection", conection);
 
       const conectionConected = await api4Connection.getConnected.handler({
         user,
       });
-      console.log(
-        "ytytytytytytytyt==============",
-        conectionConected.payload.connection
-      );
       io.in(socket.id).emit("connection-connected", {
         conection: conectionConected,
       });
@@ -1088,8 +1032,6 @@ module.exports = (server, logger) => {
       io.emit("connection-received", {
         conection: "get",
       });
-
-      console.log("withdraw-request", withdraw);
     });
 
     socket.on("unblock-user", async function ({ user, userId }) {
@@ -1119,7 +1061,6 @@ module.exports = (server, logger) => {
     });
 
     socket.on("get-block-user", async function ({ user, query }) {
-      console.log("get-block-user", user);
       const blockedUser = await api4User.getBlockuser.handler({
         user,
         query,
@@ -1133,7 +1074,6 @@ module.exports = (server, logger) => {
     });
 
     socket.on("unblock-user", async function ({ user, userId }) {
-      console.log("unblock-user--------", userId);
       const unblock = await api4User.unBlockUser.handler({
         user,
         userId,
@@ -1154,7 +1094,6 @@ module.exports = (server, logger) => {
         user,
         userId,
       });
-      console.log("getBlockUser.payload------->", blockedUser.payload);
       io.in(socket.id).emit("get-block-status", {
         blockedUser: blockedUser,
       });
@@ -1194,7 +1133,6 @@ module.exports = (server, logger) => {
         questionId,
       });
 
-      // console.log("who-can-see", WhoSee);
       io.in(socket.id).emit("who-can-see", {
         WhoSee: WhoSee,
       });
@@ -1205,7 +1143,6 @@ module.exports = (server, logger) => {
         questionId,
       });
 
-      console.log("answer-room-admin", AnswerRoomAdmin);
       io.in(socket.id).emit("answer-room-admin", {
         AnswerRoomAdmin: AnswerRoomAdmin,
       });
@@ -1216,7 +1153,6 @@ module.exports = (server, logger) => {
         roomId,
       });
 
-      console.log("get-answer-admin", AnswerRoomAdmin);
       io.in(socket.id).emit("get-answer-admin", {
         AnswerRoomAdmin: AnswerRoomAdmin,
       });

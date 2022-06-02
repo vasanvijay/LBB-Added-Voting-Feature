@@ -4,6 +4,7 @@ const enums = require("../../../json/enums.json");
 const messages = require("../../../json/messages.json");
 
 const logger = require("../../logger");
+const { sendPushNotification } = require("../../middlewares/pushNotification");
 const utils = require("../../utils");
 
 // Add category by admin
@@ -13,6 +14,7 @@ module.exports = exports = {
     let user = await utils.getHeaderFromToken(req.user);
     // console.log("id-----d-d-d-d", req.status);
     const { requestId } = req;
+    console.log("id-----d-d-d-d", requestId);
     if (!requestId) {
       const data4createResponseObject = {
         // req: req,
@@ -31,7 +33,10 @@ module.exports = exports = {
         await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
           _id: requestId,
         });
-      // console.log("findRequestfindRequestfindRequest", findRequest);
+
+      console.log("findRequest", findRequest);
+
+      console.log("findRequestfindRequestfindRequest", req.Notification);
       if (findRequest) {
         let updateRequest =
           await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findByIdAndUpdate(
@@ -49,6 +54,62 @@ module.exports = exports = {
               new: true,
             }
           );
+
+        // if (req.Notification == "")
+        if (req.Notification) {
+          let notificationMsg;
+          if (req.Notification == "request") {
+            notificationMsg = `Your Chat Request is Accepted by ${user.currentRole}`;
+          } else if (req.Notification == "audio") {
+            notificationMsg = `Your Audio call Request is Accepted by ${user.currentRole}`;
+          } else if (req.Notification == "video") {
+            notificationMsg = `Your Video call Request is Accepted by ${user.currentRole}`;
+          }
+
+          // if (notificationMsg) {
+          let ntfObj = {
+            userId: user.id,
+            receiverId: findRequest.requestBy,
+            title: `Notification By ${user.id} to ${findRequest.requestBy}`,
+            description: {
+              data: { title: "Leaderbridge" },
+              notification: {
+                title: "Accept Request!!!",
+                body: notificationMsg,
+              },
+            },
+            createdBy: user.id,
+            updatedBy: user.id,
+            createdAt: Date.now(),
+          };
+
+          console.log("ntfObj@@@", ntfObj);
+
+          let findToken = await global.models.GLOBAL.USER.findOne({
+            _id: findRequest.requestBy,
+          });
+
+          console.log("@@@@@@@@", findToken);
+
+          let notification = await global.models.GLOBAL.NOTIFICATION.create(
+            ntfObj
+          );
+          console.log("notification!@", notification);
+          // try {
+          if (findToken.deviceToken !== "1234") {
+            let data = {
+              payload: ntfObj.description,
+              firebaseToken: findToken.deviceToken,
+            };
+            sendPushNotification(data);
+            // res.status(200).send({
+            //   msg: "Notification sent successfully!",
+            // });
+          }
+        }
+
+        // }
+
         const data4createResponseObject = {
           // req: req,
           result: 0,

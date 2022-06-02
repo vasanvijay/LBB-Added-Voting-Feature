@@ -128,17 +128,17 @@ module.exports = exports = {
                             <table align='center' border='0' cellpadding='0' cellspacing='0' role='presentation' style='width:100%;'>
                               <tbody>
                                 <tr>
-                                  <td style='direction:ltr;font-size:0px;padding-left: 300px;text-align:center;vertical-align:top;'>
+                                  <td style='direction:ltr;font-size:0px;text-align:center;vertical-align:top;'>
                                     <!--[if mso | IE]>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:top;width:600px;">
                     <![endif]-->
           
           
-                                    <img alt='LoGo Here' height='80' src='https://7cmg-objects.s3.us-east-2.amazonaws.com/7cmg-logo.jpg' style='border:0;display:block;font-size:13px;height: 90px;;outline:none;text-decoration:none;width: 90px;;' width='60' />
+                                    <img alt='LoGo Here' height='80' src='https://leadersbridge.s3.amazonaws.com/site-assets/logo.png' style='border:0;display:block;font-size:13px;height: 90px;;outline:none;text-decoration:none;width: 90px; margin: 0 auto' width='60' />
                                     <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='vertical-align:top;' width='100%'>
                                 
                                           <div style='color:#000000;font-family:Open Sans, Arial, sans-serif;font-size:15px;line-height:22px;font-weight: 70;'>
-                                          <h1 style="margin-right:250px">${subject}</h1>
+                                          <h1 style="text-align: center; line-height: 60px; padding-left: 0; margin:0">${subject}</h1>
                                           </div>
                                  
                                   
@@ -150,7 +150,7 @@ module.exports = exports = {
                                               <tbody>
                                                 <tr>
                                                   <td style='width:230px;'>
-                                                    <a href='# Logo Url' target='_blank'>
+                                                    <a href='https://leadersbridge.s3.amazonaws.com/site-assets/logo.png' target='_blank'>
                                                     </a>
                                                   </td>
                                                 </tr>
@@ -188,7 +188,7 @@ module.exports = exports = {
                                         <tr>
                                           <td  style='font-size:0px;padding:10px 25px;word-break:break-word;'>
                                             <div style='color:#000000;font-family:Open Sans, Arial, sans-serif;font-size:10px;line-height:22px;'>
-                                            <p>Hi ${name}</p>
+                                            <p >Hi ${name}</p>
           
           
                                             <h3>Your query is :</h3>
@@ -196,7 +196,7 @@ module.exports = exports = {
                                             <p>${message}</p>     
           
           
-                                            <h4>Our Customer Support Team will get back to you as soon as possible.</h4>
+                                             <h4>Our Customer Support Team will get back to you as soon as possible.</h4>
           
                                             <p>Regards</p>
                                             <p>LeaderBridge Team</p>
@@ -210,8 +210,11 @@ module.exports = exports = {
                                               <p>If you have any questions, feel free message us at <a href="support@leaderbridge.com">support@leaderbridge.com.</a></p>
                                             <p>All rights reserved LeaderBridge® .  </p>
                                          
-          
+                                            <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material-rounded/24/000000/facebook-new.png"/><a  target="_blank" href="https://m.facebook.com/leaderbridge/?ref=py_c">Facebook</a></p> 
+                                            <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material/24/000000/linkedin--v1.png"/><a  target="_blank" href="https://www.linkedin.com/company/leader-bridge">Linkedin</a></p>
+                                            <p style="display: flex;align-items: center;"><img src="https://img.icons8.com/material-rounded/24/000000/instagram-new.png"/><a  target="_blank" href="https://www.instagram.com/leaderbridge1/">Instagram</a></p>
                                          </div>
+                                       
                                           </td>
                                         </tr>
                                       </table>

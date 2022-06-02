@@ -86,9 +86,9 @@ module.exports = exports = {
             firebaseToken: findToken.deviceToken,
           };
           sendPushNotification(data);
-          res.status(200).send({
-            msg: "Notification sent successfully!",
-          });
+          // res.status(200).send({
+          //   msg: "Notification sent successfully!",
+          // });
         }
         // res.status(200).send({
         //   msg: "Notification sent successfully!",
