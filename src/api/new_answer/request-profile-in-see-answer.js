@@ -71,7 +71,7 @@ module.exports = exports = {
               payload: ntfObj.description,
               firebaseToken: findToken.deviceToken,
             };
-            // sendPushNotification(data);
+            sendPushNotification(data);
             return (data4createResponseObject = {
               req: req,
               result: 0,

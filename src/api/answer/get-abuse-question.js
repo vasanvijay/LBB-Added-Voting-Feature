@@ -10,8 +10,10 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { questionId, searchTerm, searchUser } = req.query;
     let questionExists = {};
+
+    console.log("questionId###########", questionId);
     if (questionId) {
-      questionExists = await global.models.GLOBAL.QUESTION.findById(questionId);
+      questionExists = await global.models.GLOBAL.ANSWER.findById(questionId);
       if (!questionExists) {
         const data4createResponseObject = {
           req: req,
@@ -118,10 +120,10 @@ module.exports = exports = {
         }
       } else {
         const getReportAbuse = await global.models.GLOBAL.USER.find({
-          "abuseQuestion.questionId": ObjectId(questionId),
+          "abuseAnswer.answerId": ObjectId(questionId),
         }).populate({
-          path: "abuseQuestion.questionId",
-          model: "question",
+          path: "abuseAnswer.answerId",
+          model: "answer",
           select: "_id question response view createdBy",
         });
 

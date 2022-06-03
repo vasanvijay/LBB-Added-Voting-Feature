@@ -135,7 +135,6 @@ module.exports = exports = {
                   firebaseToken: findToken.deviceToken,
                 };
 
-                console.log("data--->>@@@@@@@", data);
                 sendPushNotification(data);
                 // res?.status(200).send({
                 //   msg: "Notification sent successfully!",
