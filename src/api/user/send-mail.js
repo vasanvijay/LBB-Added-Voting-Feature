@@ -74,7 +74,7 @@ module.exports = exports = {
           let info = await transporter.sendMail({
             from: process.env.EMAIL,
             to: findUser[i].email,
-            subject: "LeaderBridge | OTP To Verify Your Email",
+            subject: "LeaderBridge",
             html: `<!DOCTYPE html>
             <html lang="en">
             
