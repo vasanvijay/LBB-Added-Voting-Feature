@@ -30,6 +30,7 @@ module.exports = (connection) => {
     lastLogin: { type: Date, default: Date.now },
     token: { type: String, default: null },
     status: { type: Boolean, default: true },
+    isSubmit: { type: Boolean, default: false },
     message: { type: String, default: null },
     text: { type: String, default: null },
     organizationName: { type: String, default: null },

@@ -3,6 +3,7 @@ const userLogin = require("./login");
 const getUser = require("./get-user");
 const verifyCode = require("./verify-code");
 const verifyEmail = require("./verify-email");
+const sendEmail = require("./send-mail");
 const updateUSer = require("./update-user");
 const updateStatus = require("./update-status");
 const getAllUser = require("./get-all-user");
@@ -23,6 +24,8 @@ const sendMailForWrokEmail = require("./sent-mail-work-email");
 const agoraToken = require("./agora-token");
 const verifyWorkEmail = require("./verify-work-email");
 const updateOnlineStatus = require("./update-online-status");
+const formsubmit = require("./Form-submit");
+const submiteduser = require("./submited-user");
 
 module.exports = exports = {
   userRegistration,
@@ -30,6 +33,7 @@ module.exports = exports = {
   getUser,
   verifyCode,
   verifyEmail,
+  sendEmail,
   updateUSer,
   updateStatus,
   getAllUser,
@@ -50,4 +54,6 @@ module.exports = exports = {
   sendMailForWrokEmail,
   getBlockstatus,
   updateOnlineStatus,
+  formsubmit,
+  submiteduser,
 };

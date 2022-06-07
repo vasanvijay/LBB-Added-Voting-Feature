@@ -127,13 +127,15 @@ module.exports = exports = {
               ntfObj
             );
 
-            console.log("notification--->>@@@@", findToken?.deviceToken);
+            console.log("notification--->>@@@@", findToken);
             try {
-              if (findToken.deviceToken !== "1234") {
+              if (findToken.deviceToken) {
                 let data = {
                   payload: ntfObj.description,
                   firebaseToken: findToken.deviceToken,
                 };
+
+                console.log("data--->>", data);
 
                 sendPushNotification(data);
                 // res?.status(200).send({

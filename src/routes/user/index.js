@@ -16,6 +16,12 @@ router.get(
   passport.authenticate(["jwt"], { session: false }),
   api4User.getAllUser.handler
 );
+
+router.get(
+  "/submited-user",
+  // passport.authenticate(["jwt"], { session: false }),
+  api4User.submiteduser.handler
+);
 // get all users chose type is only user
 router.get(
   "/all-users",
@@ -83,6 +89,15 @@ router.put(
   validate("body", api4User.verifyEmail.validation),
   api4User.verifyEmail.handler
 );
+
+// get send mail
+
+router.post(
+  "/send-mail",
+  // validate("body", api4User.verifyEmail.validation),
+  api4User.sendEmail.handler
+);
+
 router.put(
   "/verify-code",
   validate("body", api4User.verifyCode.validation),
@@ -102,6 +117,12 @@ router.put(
   "/update-status/id=:userId&status=:status",
   passport.authenticate(["jwt"], { session: false }),
   api4User.updateStatus.handler
+);
+
+router.put(
+  "/form-submit/id=:userId&status=:status",
+  // passport.authenticate(["jwt"], { session: false }),
+  api4User.formsubmit.handler
 );
 router.put(
   "/block/id=:userId",
