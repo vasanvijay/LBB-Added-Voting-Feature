@@ -100,6 +100,7 @@ module.exports = exports = {
               updatedAt: 1,
               lastLogin: 1,
               matched: 1,
+              isSubmit: 1,
               questionCount: {
                 $size: "$questionList",
               },
