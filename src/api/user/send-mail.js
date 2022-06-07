@@ -84,7 +84,6 @@ module.exports = exports = {
                 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
                 <script src="https://kit.fontawesome.com/b7ecb94de9.js" crossorigin="anonymous"></script>
-      
                 </head>
             <style>
                 body {
@@ -126,8 +125,8 @@ module.exports = exports = {
                                         <div class="user-information" 
                                         style="padding: 25px; background-color: #021f4c; width: 91.6%;"
                                         >
-                                        <p align="center" style="color: #fff; font-size: 30px; font-weight: 500; margin: 0 0 1rem 0;">Welcome to LeaderBridge®</p>
-                                        <span align="center" style="display: block; font-size: 16px; color: #fff;">Thank you for signing up on LeaderBridge®</span>
+                                        <p align="center" style="color: #fff; font-size: 30px; font-weight: 500; margin: 0 0 1rem 0;">LeaderBridge®</p>
+                                        <span align="center" style="display: block; font-size: 16px; color: #fff;"></span>
                                         </div>
                                       
                                     </td> 
@@ -142,7 +141,7 @@ module.exports = exports = {
                                                                                 <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Based on what we have learned during the past two years, we are re-tooling the platform and focusing it on the founders of startups and early-stage companies.
       
       </p>
-      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${findUser?._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
+      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${findUser[i]?._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
                                 
                                       <h6 style="font-size: 12px; color: #585d6a; margin: 0;  margin-top: 0;">Thank you again for your participation,</h6>
                 <h6 style="font-size: 30px; color: #585d6a; margin: 16px 0;">John</h6>
