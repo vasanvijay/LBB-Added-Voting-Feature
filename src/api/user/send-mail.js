@@ -74,7 +74,7 @@ module.exports = exports = {
           let info = await transporter.sendMail({
             from: process.env.EMAIL,
             to: findUser[i].email,
-            subject: "LeaderBridge",
+            subject: "LeaderBridge | Opt-in Request",
             html: `<!DOCTYPE html>
             <html lang="en">
             
@@ -141,10 +141,10 @@ module.exports = exports = {
                                                                                 <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Based on what we have learned during the past two years, we are re-tooling the platform and focusing it on the founders of startups and early-stage companies.
       
       </p>
-      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${findUser[i]?._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
+      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${findUser[i]._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
                                 
                                       <h6 style="font-size: 12px; color: #585d6a; margin: 0;  margin-top: 0;">Thank you again for your participation,</h6>
-                <h6 style="font-size: 30px; color: #585d6a; margin: 16px 0;">John</h6>
+                <h6 style="font-size: 15px; color: #585d6a; margin: 12px 0;">John</h6>
                                     <p style="font-size: 14px; color: #585d6a;">John Behr</p>
                                                                                                   <p style="font-size: 14px; color: #585d6a; margin: 0;  margin-top: 0;">Founder and CEO</p>
                                     </td>
@@ -155,11 +155,12 @@ module.exports = exports = {
                                         If you have any query, feel free to contact us at support@leaderbridge.com.
                                       </p>
       
-      
+                      <div style="display: flex;column-gap:16px;margin-top:20px; justify-content: center">
                                       <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material-rounded/24/000000/facebook-new.png"/><a  target="_blank" href="https://m.facebook.com/leaderbridge/?ref=py_c">Facebook</a></p> 
                                       <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material/24/000000/linkedin--v1.png"/><a  target="_blank" href="https://www.linkedin.com/company/leader-bridge">Linkedin</a></p>
                                       <p style="display: flex;align-items: center;"><img src="https://img.icons8.com/material-rounded/24/000000/instagram-new.png"/><a  target="_blank" href="https://www.instagram.com/leaderbridge1/">Instagram</a></p>
-                                    </td>
+                                      </div>
+      </td>
                                  
                                 </tr>
                                 
