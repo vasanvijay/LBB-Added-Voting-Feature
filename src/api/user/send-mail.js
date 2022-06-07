@@ -142,7 +142,7 @@ module.exports = exports = {
                                                                                 <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Based on what we have learned during the past two years, we are re-tooling the platform and focusing it on the founders of startups and early-stage companies.
       
       </p>
-      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/[[uid]]">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
+      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${findUser?._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
                                 
                                       <h6 style="font-size: 12px; color: #585d6a; margin: 0;  margin-top: 0;">Thank you again for your participation,</h6>
                 <h6 style="font-size: 30px; color: #585d6a; margin: 16px 0;">John</h6>
