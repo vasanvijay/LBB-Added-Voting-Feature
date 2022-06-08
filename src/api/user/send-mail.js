@@ -15,15 +15,15 @@ module.exports = exports = {
 
   // route handler
   handler: async (req, res) => {
-    let { html } = req.body;
+    let { html, users } = req.body;
     let code = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
     // // console.log("Code---------->>>", code);
     // const locale = utils.getLocale(req);
     let entry;
     // If codes already exists for this email in the database delete them
-    let findUser = await global.models.GLOBAL.USER.find({
-      //   $or: [{ email: { $eq: email } }],
-    });
+    // let findUser = await global.models.GLOBAL.USER.find({
+    //   //   $or: [{ email: { $eq: email } }],
+    // });
 
     console.log("findUser---------->>>", html);
 
@@ -52,7 +52,8 @@ module.exports = exports = {
 
     // When USE_TEST_PIN is true (config.json)
     try {
-      if (FFF) {
+      console.log("users---------->>>", users);
+      if (users.length > 0) {
         // console.log("MAIL SENDING");
         let transporter = nodemailer.createTransport({
           host: process.env.HOST,
@@ -64,16 +65,16 @@ module.exports = exports = {
           },
         });
 
-        for (let i = 0; i < findUser.length; i++) {
+        for (let i = 0; i < users.length; i++) {
           await global.models.GLOBAL.USER.findByIdAndUpdate(
-            { _id: findUser[i]._id },
+            { _id: users[i]._id },
             { $set: { isSubmit: false } }
           );
-          html = html.replace(/\[\[name\]\]/g, findUser[i].email);
-          html = html.replace(/\[\[uid\]\]/g, findUser[i]._id);
+          // html = html.replace(/\[\[name\]\]/g, users[i].email);
+          // html = html.replace(/\[\[uid\]\]/g, users[i]._id);
           let info = await transporter.sendMail({
             from: process.env.EMAIL,
-            to: findUser[i].email,
+            to: users[i].email,
             subject: "LeaderBridge | Opt-in Request",
             html: `<!DOCTYPE html>
             <html lang="en">
@@ -136,16 +137,16 @@ module.exports = exports = {
                                     <td style="padding: 3rem 2rem 2rem 2rem;">
                                       <h6 align="center" style="color: #585d6a; font-size: 30px; ">Dear LeaderBridge Member,
       </h6>
-                                      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">I want to thank you for joining the LeaderBridge community and participating in our project.
+                                      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 rem 0;">I want to thank you for joining the LeaderBridge community and participating in our project.
       </p>
-                                                                                <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">Based on what we have learned during the past two years, we are re-tooling the platform and focusing it on the founders of startups and early-stage companies.
+                                                                                <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 rem 0;">Based on what we have learned during the past two years, we are re-tooling the platform and focusing it on the founders of startups and early-stage companies.
       
       </p>
-      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 2rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${findUser[i]._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
+      <p style="color: #585d6a; font-size: 14px; margin: 2.50rem 0 rem 0;">To make this transition we will close access to the site on Sunday, June 12, 2022, and close all accounts.  If you are a founder and would like to stay on the new LeaderBridge, please <a href="https://app.leaderbridge.rejoicehub.com/active/${users[i]._id}">click here</a> to choose to keep your account and we will let you know when the new version of LeaderBridge goes live.
                                 
-                                      <h6 style="font-size: 12px; color: #585d6a; margin: 0;  margin-top: 0;">Thank you again for your participation,</h6>
+                                      <h6 style="font-size: 13px; color: #585d6a; margin: 0;  margin-top: 0;">Thank you again for your participation,</h6>
                 <h6 style="font-size: 15px; color: #585d6a; margin: 0 0; padding-top:8px">John</h6>
-                                    <p style="font-size: 14px; color: #585d6a; margin:0">John Behr</p>
+                                    <p style="font-size: 14px; color: #585d6a; margin:0;">John Behr</p>
                                                                                                   <p style="font-size: 14px; color: #585d6a; margin: 0;  margin-top: 0;">Founder and CEO</p>
                                     </td>
                                 </tr>
@@ -155,7 +156,7 @@ module.exports = exports = {
                                         If you have any query, feel free to contact us at support@leaderbridge.com.
                                       </p>
       
-                      <div style="display: flex;column-gap:16px;margin-top:20px; justify-content: center">
+                      <div style="display: flex;column-gap:16px;margin-top:20px; justify-content: center;padding-left:107px">
                                       <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material-rounded/24/000000/facebook-new.png"/><a  target="_blank" href="https://m.facebook.com/leaderbridge/?ref=py_c">Facebook</a></p> 
                                       <p style="display: flex;align-items: center;" ><img src="https://img.icons8.com/material/24/000000/linkedin--v1.png"/><a  target="_blank" href="https://www.linkedin.com/company/leader-bridge">Linkedin</a></p>
                                       <p style="display: flex;align-items: center;"><img src="https://img.icons8.com/material-rounded/24/000000/instagram-new.png"/><a  target="_blank" href="https://www.instagram.com/leaderbridge1/">Instagram</a></p>
