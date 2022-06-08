@@ -28,7 +28,7 @@ module.exports = exports = {
               updatedAt: Date.now(),
               //   updatedBy: user.email,
               status: status,
-              isSubmit: "Yes",
+              isSubmit: status == true ? "Yes" : "No",
               message: "",
               text: "",
             },
@@ -42,7 +42,8 @@ module.exports = exports = {
             $set: {
               updatedAt: Date.now(),
               //   updatedBy: user.email,
-              isSubmit: "No",
+
+              isSubmit: status == true ? "Yes" : "No",
               status: status,
             },
           },
