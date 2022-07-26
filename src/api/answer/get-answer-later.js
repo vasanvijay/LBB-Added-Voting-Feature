@@ -21,8 +21,7 @@ module.exports = exports = {
         .populate({
           path: "answerLater",
           model: "question",
-          select:
-            "_id question response filter status view displayProfile allowConnectionRequest createdAt createdBy",
+          select: "_id question response filter status view displayProfile allowConnectionRequest createdAt createdBy downVote upVote rating",
           populate: {
             path: "createdBy",
             model: "user",
@@ -60,7 +59,7 @@ module.exports = exports = {
         let pandingConnection = await global.models.GLOBAL.CONNECTION.find({
           receiverId: user._id,
         });
-        const conectIdExist = (id) => {
+        const connectIdExist = (id) => {
           return user.accepted.length
             ? user.accepted.some(function (el) {
                 return el.toString() == id.toString();
@@ -95,17 +94,19 @@ module.exports = exports = {
             }
           );
 
-          if (conectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
+          if (connectIdExist(question[0]?.answerLater[i].createdBy?._id)) {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
-              allowConnectionRequest:
-                question[0]?.answerLater[i].allowConnectionRequest,
+              allowConnectionRequest: question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
+              rating: question[0]?.answerLater[i].rating,
+              upVote: question[0]?.answerLater[i].upVote,
+              downVote: question[0]?.answerLater[i].downVote,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
               isFriend: "true",
@@ -116,32 +117,34 @@ module.exports = exports = {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
-              allowConnectionRequest:
-                question[0]?.answerLater[i].allowConnectionRequest,
+              allowConnectionRequest: question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
+              rating: question[0]?.answerLater[i].rating,
+              upVote: question[0]?.answerLater[i].upVote,
+              downVote: question[0]?.answerLater[i].downVote,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
               reach: await reachCount(question[0]?.answerLater[i]),
               isFriend: "sent",
             };
             Question.push(questionObj);
-          } else if (
-            pandingIdExist(question[0]?.answerLater[i].createdBy?._id)
-          ) {
+          } else if (pandingIdExist(question[0]?.answerLater[i].createdBy?._id)) {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
-              allowConnectionRequest:
-                question[0]?.answerLater[i].allowConnectionRequest,
+              allowConnectionRequest: question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
+              rating: question[0]?.answerLater[i].rating,
+              upVote: question[0]?.answerLater[i].upVote,
+              downVote: question[0]?.answerLater[i].downVote,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
               reach: await reachCount(question[0]?.answerLater[i]),
@@ -152,13 +155,15 @@ module.exports = exports = {
             let questionObj = {
               _id: question[0]?.answerLater[i]._id,
               displayProfile: question[0]?.answerLater[i].displayProfile,
-              allowConnectionRequest:
-                question[0]?.answerLater[i].allowConnectionRequest,
+              allowConnectionRequest: question[0]?.answerLater[i].allowConnectionRequest,
               view: question[0]?.answerLater[i].view,
               response: question[0]?.answerLater[i].response,
               status: question[0]?.answerLater[i].status,
               question: question[0]?.answerLater[i].question,
               filter: question[0]?.answerLater[i].filter,
+              rating: question[0]?.answerLater[i].rating,
+              upVote: question[0]?.answerLater[i].upVote,
+              downVote: question[0]?.answerLater[i].downVote,
               createdAt: question[0]?.answerLater[i].createdAt,
               createdBy: createdBy,
               reach: await reachCount(question[0]?.answerLater[i]),
@@ -188,9 +193,7 @@ module.exports = exports = {
             },
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
         } else {
           const data4createResponseObject = {
             req: req,
@@ -204,9 +207,7 @@ module.exports = exports = {
             },
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
         const data4createResponseObject = {
@@ -216,14 +217,10 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.NOT_FOUND)
-          .json(utils.createResponseObject(data4createResponseObject));
+        res.status(enums.HTTP_CODES.NOT_FOUND).json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -231,9 +228,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

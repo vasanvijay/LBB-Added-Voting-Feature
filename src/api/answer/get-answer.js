@@ -11,9 +11,9 @@ module.exports = exports = {
     const { user } = req;
     const { search } = req.query;
     const { answerByMe } = req.query;
-    // console.log("answerByM========================e", answerByMe);
-    console.log("answerByMeXXXXXXXXXXXXXXXXXX", answerByMe);
-    console.log("answerByMeXXXXXXXXXXXXXXXXXX", user);
+    // console.log("answerByMe ========================", answerByMe);
+    // console.log("answerByMe XXXXXXXXXXXXXXXXXX", answerByMe);
+    // console.log("answerByMe XXXXXXXXXXXXXXXXXX", user);
     try {
       let Answers = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -21,7 +21,7 @@ module.exports = exports = {
       req.query.limit = req.query.limit ? req.query.limit : 10;
       let limit = parseInt(req.query.limit);
       let skip = (parseInt(req.query.page) - 1) * limit;
-      console.log("answerByMeXXXXXXXXXXXXXXXXXX", limit, page);
+      // console.log("answerByMeXXXXXXXXXXXXXXXXXX", limit, page);
       let questionData = {};
       if (search) {
         let qids = await global.models.GLOBAL.QUESTION.aggregate([
@@ -64,11 +64,10 @@ module.exports = exports = {
         //   question: { $regex: search, $options: "i" },
         // }).distinct("_id");
         questionData = { question: { $in: qids[0]?.createdBy } };
+        console.log("CHAT =================>   ", questionData);
       }
 
-      let questionArray = await global.models.GLOBAL.ANSWER.find(
-        questionData
-      ).distinct("question", { $and: [{ createdBy: user._id }] });
+      let questionArray = await global.models.GLOBAL.ANSWER.find(questionData).distinct("question", { $and: [{ createdBy: user._id }] });
       let optionNames = [];
       let reachCount = async (question) => {
         for (let k = 0; k < question.filter.length; k++) {
@@ -93,23 +92,15 @@ module.exports = exports = {
         abuseQuestion.push(user.abuseQuestion[i].questionId);
       }
       let answer = [];
-      console.log("questionArray[i]xxxxxxx", questionArray[i]);
+      // console.log("questionArray[i]xxxxxxx", questionArray[i]);
       for (let i = 0; i < questionArray.length; i++) {
         let ans = await global.models.GLOBAL.QUESTION.findOne({
-          $and: [
-            { _id: questionArray[i] },
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { status: { $in: "active" } },
-            { createdBy: { $nin: [...user.blockUser, user._id] } },
-          ],
+          $and: [{ _id: questionArray[i] }, { _id: { $nin: user.answerLater } }, { _id: { $nin: user.removeQuestion } }, { _id: { $nin: abuseQuestion } }, { status: { $in: "active" } }, { createdBy: { $nin: [...user.blockUser, user._id] } }],
         })
           .populate({
             path: "createdBy",
             model: "user",
-            select:
-              "_id name subject profileImage currentRole countryOfResidence",
+            select: "_id name subject profileImage currentRole countryOfResidence ",
           })
           .sort({
             createdAt: -1,
@@ -161,6 +152,9 @@ module.exports = exports = {
               status: answer[i].status,
               question: answer[i].question,
               filter: answer[i].filter,
+              rating: answer[i].rating,
+              downVote: answer[i].downVote,
+              upVote: answer[i].upVote,
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "true",
@@ -178,6 +172,9 @@ module.exports = exports = {
               status: answer[i].status,
               question: answer[i].question,
               filter: answer[i].filter,
+              rating: answer[i].rating,
+              downVote: answer[i].downVote,
+              upVote: answer[i].upVote,
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "sent",
@@ -195,6 +192,9 @@ module.exports = exports = {
               status: answer[i].status,
               question: answer[i].question,
               filter: answer[i].filter,
+              rating: answer[i].rating,
+              downVote: answer[i].downVote,
+              upVote: answer[i].upVote,
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "pending",
@@ -212,6 +212,9 @@ module.exports = exports = {
               status: answer[i].status,
               question: answer[i].question,
               filter: answer[i].filter,
+              rating: answer[i].rating,
+              downVote: answer[i].downVote,
+              upVote: answer[i].upVote,
               createdAt: answer[i].createdAt,
               createdBy: answer[i].createdBy,
               isFriend: "false",
@@ -235,14 +238,10 @@ module.exports = exports = {
           },
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -250,9 +249,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

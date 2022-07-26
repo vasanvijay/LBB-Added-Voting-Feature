@@ -70,6 +70,8 @@ module.exports = (connection) => {
     notificationSound: { type: Boolean, default: true },
     messageSound: { type: Boolean, default: true },
     deviceToken: { type: String, default: "1234" },
+    votedQuestions: [{ type: String, default: [] }],
+    votedAnswers: [{ type: String, default: [] }],
   });
   return connection.model("user", userSchema, "user");
 };

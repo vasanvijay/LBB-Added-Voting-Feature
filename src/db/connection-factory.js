@@ -10,14 +10,7 @@ module.exports = function (config) {
 
   this.getConnection = async (domain, db) => {
     // logger.info("ConnectionFactory#getConnection - domain: " + domain +  ", db: " + db);
-    if (
-      isEmpty(domain) ||
-      isEmpty(config.MONGODB[domain]) ||
-      typeof config.MONGODB[domain] === "undefined" ||
-      isEmpty(db) ||
-      typeof db === "undefined" ||
-      isEmpty(db.NAME)
-    ) {
+    if (isEmpty(domain) || isEmpty(config.MONGODB[domain]) || typeof config.MONGODB[domain] === "undefined" || isEmpty(db) || typeof db === "undefined" || isEmpty(db.NAME)) {
       throw new InvalidArgumentsError("Domain/DB cannot be empty!");
     }
 
@@ -26,9 +19,7 @@ module.exports = function (config) {
 
     // Check if we already created a connection - if yes, return that, else, create a new connection, store and return.
     if (this.connections[connectionName]) {
-      logger.info(
-        `Connection to database (domain: ${domain}, db: ${db.NAME}) successful!`
-      );
+      logger.info(`Connection to database (domain: ${domain}, db: ${db.NAME}) successful!`);
       return this.connections[connectionName];
     } else {
       let connection = await mongoose.createConnection(
@@ -45,36 +36,20 @@ module.exports = function (config) {
         }
       );
 
-      connection.on("connected", () =>
-        logger.info(
-          `Connection to database (domain: ${domain}, db: ${db.NAME}) successful!`
-        )
-      );
-      connection.on("error", (error) =>
-        logger.error(
-          `Connection to database (domain: ${domain}, db: ${db.NAME}) failed! Error: ${error.message}\n${error.stack}`
-        )
-      );
-      connection.on("disconnected", () =>
-        logger.info(
-          `Connection to database (domain: ${domain}, db: ${db.NAME}) terminated!`
-        )
-      );
+      connection.on("connected", () => logger.info(`Connection to database (domain: ${domain}, db: ${db.NAME}) successful!`));
+      connection.on("error", (error) => logger.error(`Connection to database (domain: ${domain}, db: ${db.NAME}) failed! Error: ${error.message}\n${error.stack}`));
+      connection.on("disconnected", () => logger.info(`Connection to database (domain: ${domain}, db: ${db.NAME}) terminated!`));
 
       /* If the Node process ends, close the Mongoose connection */
       process.on("SIGINT", () => {
         connection.close(function () {
-          logger.error(
-            `Connection to database (domain: ${domain}, db: ${db.NAME}) terminated on SIGINT!`
-          );
+          logger.error(`Connection to database (domain: ${domain}, db: ${db.NAME}) terminated on SIGINT!`);
           process.exit(0);
         });
       });
 
       this.connections[connectionName] = connection;
-      logger.info(
-        `Connection to database (domain: ${domain}, db: ${db.NAME}) successful!`
-      );
+      logger.info(`Connection to database (domain: ${domain}, db: ${db.NAME}) successful!`);
 
       return this.connections[connectionName];
     }

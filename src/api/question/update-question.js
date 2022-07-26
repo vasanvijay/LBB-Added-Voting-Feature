@@ -20,8 +20,8 @@ module.exports = exports = {
   handler: async (req, res) => {
     const { user } = req;
     const { questionId } = req.params;
-    const { question, displayProfile, allowConnectionRequest, filter } =
-      req.body;
+    const { question, displayProfile, allowConnectionRequest, filter } = req.body;
+
     if (!question) {
       const data4createResponseObject = {
         req: req,
@@ -30,27 +30,24 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
     }
 
     try {
-      const updateQuestion =
-        await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
-          { _id: questionId },
-          {
-            $set: {
-              question: question,
-              displayProfile: displayProfile,
-              allowConnectionRequest: allowConnectionRequest,
-              filter: filter,
-              updatedAt: Date.now(),
-              updatedBy: user._id,
-            },
+      const updateQuestion = await global.models.GLOBAL.QUESTION.findByIdAndUpdate(
+        { _id: questionId },
+        {
+          $set: {
+            question: question,
+            displayProfile: displayProfile,
+            allowConnectionRequest: allowConnectionRequest,
+            filter: filter,
+            updatedAt: Date.now(),
+            updatedBy: user._id,
           },
-          { new: true }
-        );
+        },
+        { new: true }
+      );
       const data4createResponseObject = {
         req: req,
         result: 0,
@@ -58,13 +55,9 @@ module.exports = exports = {
         payload: { updateQuestion },
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -72,9 +65,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

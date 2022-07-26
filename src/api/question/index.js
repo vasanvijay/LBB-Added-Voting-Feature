@@ -11,8 +11,9 @@ const acceptAbuse = require("./accept-abuse-reason");
 const declineRequest = require("./decline-abuse-request");
 const searchQuestion = require("./get-search-api");
 const getQuestionAdmin = require("./get-question-admin");
-const acceptReportedQuestion = require("./accept-reported-question")
-
+const acceptReportedQuestion = require("./accept-reported-question");
+const voteQuestion = require("./vote-question");
+const getQuestionById = require("./get-question-by-Id");
 module.exports = exports = {
   createQuestion,
   getQuestion,
@@ -27,5 +28,7 @@ module.exports = exports = {
   declineRequest,
   searchQuestion,
   getQuestionAdmin,
-  acceptReportedQuestion
+  acceptReportedQuestion,
+  voteQuestion,
+  getQuestionById,
 };

@@ -32,25 +32,14 @@ functions.config4hashes = {
 };
 
 /* create response-wrapper object */
-functions.createResponseObject = ({
-  req,
-  result = 0,
-  message = "",
-  payload = {},
-  logPayload = false,
-  status,
-}) => {
+functions.createResponseObject = ({ req, result = 0, message = "", payload = {}, logPayload = false, status }) => {
   let payload2log = {};
   if (logPayload) {
     payload2log = flatten({ ...payload });
   }
 
   let messageToLog = `RES [${req.requestId}] [${req.method}] ${req.originalUrl}`;
-  messageToLog +=
-    (!_.isEmpty(message) ? `\n${message}` : "") +
-    (!_.isEmpty(payload) && logPayload
-      ? `\npayload: ${JSON.stringify(payload2log, null, 4)}`
-      : "");
+  messageToLog += (!_.isEmpty(message) ? `\n${message}` : "") + (!_.isEmpty(payload) && logPayload ? `\npayload: ${JSON.stringify(payload2log, null, 4)}` : "");
 
   if (result < 0 && (result !== -50 || result !== -51)) {
     logger.error(messageToLog);
@@ -65,9 +54,7 @@ functions.createResponseObject = ({
 functions.isLocal = () => process.env.APP_ENVIRONMENT.toLowerCase() === "local";
 
 /* Return true if the app is in production mode */
-functions.isProduction = () =>
-  process.env.APP_ENVIRONMENT.toLowerCase() === "production" ||
-  process.env.APP_ENVIRONMENT.toLowerCase() === "prod";
+functions.isProduction = () => process.env.APP_ENVIRONMENT.toLowerCase() === "production" || process.env.APP_ENVIRONMENT.toLowerCase() === "prod";
 
 /* Return true if the app is in production mode */
 functions.isTest = () => process.env.APP_ENVIRONMENT.toLowerCase() === "test";
@@ -106,16 +93,7 @@ functions.serviceImageUploadS3 = multer({
     },
     key: function (req, file, cb) {
       // console.log("file[0]", file);
-      cb(
-        null,
-        "leader-bridge/service/" +
-          "-" +
-          "ser" +
-          "-" +
-          Date.now().toString() +
-          "." +
-          file.mimetype.split("/")[file.mimetype.split("/").length - 1]
-      );
+      cb(null, "leader-bridge/service/" + "-" + "ser" + "-" + Date.now().toString() + "." + file.mimetype.split("/")[file.mimetype.split("/").length - 1]);
     },
     shouldTransform: function (req, file, cb) {
       cb(null, /^image/i.test(file.mimetype));
@@ -151,10 +129,7 @@ functions.mediaDeleteS3 = function (filename, callback) {
 };
 
 functions.uploadBase = async function (profileImage, subject) {
-  const base64Data = Buffer.from(
-    profileImage.replace(/^data:image\/\w+;base64,/, ""),
-    "base64"
-  );
+  const base64Data = Buffer.from(profileImage.replace(/^data:image\/\w+;base64,/, ""), "base64");
   const type = profileImage.split(";")[0].split("/")[1];
   const params = {
     Bucket: process.env.bucket,

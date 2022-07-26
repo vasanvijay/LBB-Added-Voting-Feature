@@ -50,9 +50,7 @@ module.exports = (app, logger) => {
 
   // Async error handler
   app.use((error, req, res) => {
-    logger.error(
-      `${req.originalUrl} - Error caught by error-handler (router.js): ${error.message}\n${error.stack}`
-    );
+    logger.error(`${req.originalUrl} - Error caught by error-handler (router.js): ${error.message}\n${error.stack}`);
     const data4responseObject = {
       req: req,
       result: -999,
@@ -61,8 +59,6 @@ module.exports = (app, logger) => {
       logPayload: false,
     };
 
-    return res
-      .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-      .json(createResponseObject(data4responseObject));
+    return res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(createResponseObject(data4responseObject));
   });
 };

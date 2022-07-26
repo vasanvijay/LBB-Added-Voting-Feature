@@ -32,7 +32,7 @@ module.exports = exports = {
     try {
       let abuseQuestion = [];
       const { filter } = req.body;
-      console.log("11111111111111111", filter);
+      // console.log("11111111111111111", filter);
       let distinctQue;
       const QuestionsArray = [];
       req.query.page = req.query.page ? req.query.page : 1;
@@ -43,7 +43,7 @@ module.exports = exports = {
       if (filter) {
         let Questions = [];
         if (search) {
-          console.log("@@@@@@@@@@@@@@", search);
+          // console.log("@@@@@@@@@@@@@@", search);
           for (let i = 0; i < filter.length; i++) {
             if (filter[i] != "") {
               abuseQuestion = [];
@@ -51,7 +51,6 @@ module.exports = exports = {
                 abuseQuestion.push(user.abuseQuestion[j].questionId);
               }
               // // console.log("Criteria ni moj", criteria);
-
               let qids = await global.models.GLOBAL.QUESTION.aggregate([
                 {
                   $lookup: {
@@ -84,7 +83,7 @@ module.exports = exports = {
                 },
               ]);
 
-              console.log("qids", qids);
+              // console.log("qids", qids);
 
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 ...criteria,
@@ -114,10 +113,8 @@ module.exports = exports = {
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
                   //add if already not in array
-                  let found = Questions.find(
-                    (q) => q._id.toString() == quResult[j]._id.toString()
-                  );
-                  console.log("---hgffgfg", found);
+                  let found = Questions.find((q) => q._id.toString() == quResult[j]._id.toString());
+                  // console.log("---hgffgfg", found);
                   if (found == null) {
                     Questions.push(quResult[j]);
                   }
@@ -125,26 +122,22 @@ module.exports = exports = {
               }
             }
           }
-          distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map(
-            (id) => {
-              return {
-                _id: id,
-                question: Questions.find((aid) => aid._id === id).question,
-                allowConnectionRequest: Questions.find((aid) => aid._id === id)
-                  .allowConnectionRequest,
-                displayProfile: Questions.find((aid) => aid._id === id)
-                  .displayProfile,
-                view: Questions.find((aid) => aid._id === id).view,
-                response: Questions.find((aid) => aid._id === id).response,
-                status: Questions.find((aid) => aid._id === id).status,
-                filter: Questions.find((aid) => aid._id === id).filter,
-                createdAt: Questions.find((aid) => aid._id === id).createdAt,
-                createdBy: Questions.find((aid) => aid._id === id).createdBy,
-              };
-            }
-          );
+          distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map((id) => {
+            return {
+              _id: id,
+              question: Questions.find((aid) => aid._id === id).question,
+              allowConnectionRequest: Questions.find((aid) => aid._id === id).allowConnectionRequest,
+              displayProfile: Questions.find((aid) => aid._id === id).displayProfile,
+              view: Questions.find((aid) => aid._id === id).view,
+              response: Questions.find((aid) => aid._id === id).response,
+              status: Questions.find((aid) => aid._id === id).status,
+              filter: Questions.find((aid) => aid._id === id).filter,
+              createdAt: Questions.find((aid) => aid._id === id).createdAt,
+              createdBy: Questions.find((aid) => aid._id === id).createdBy,
+            };
+          });
         } else if (!byUser) {
-          console.log("111111111111", byUser);
+          // console.log("111111111111", byUser);
 
           abuseQuestion = [];
           for (let j = 0; j < user.abuseQuestion.length; j++) {
@@ -184,7 +177,7 @@ module.exports = exports = {
                 },
               ]);
 
-              console.log("qids@@@@@@@", qids);
+              // console.log("qids@@@@@@@", qids);
               // // console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
                 // $and: [
@@ -207,15 +200,13 @@ module.exports = exports = {
                 })
                 .exec();
 
-              console.log("quResult@@@@@", quResult);
+              // console.log("quResult@@@@@", quResult);
 
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
                   //add if already not in array
-                  let found = Questions.find(
-                    (q) => q._id.toString() == quResult[j]._id.toString()
-                  );
-                  console.log("---hgffgfg", found);
+                  let found = Questions.find((q) => q._id.toString() == quResult[j]._id.toString());
+                  // console.log("---hgffgfg", found);
                   if (found == null) {
                     Questions.push(quResult[j]);
                   }
@@ -226,25 +217,21 @@ module.exports = exports = {
           Questions = new Set(Questions);
           //set to array
           Questions = Array.from(Questions);
-          console.log("Questions------------------------", Questions);
-          distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map(
-            (id) => {
-              return {
-                _id: id,
-                question: Questions.find((aid) => aid._id === id).question,
-                allowConnectionRequest: Questions.find((aid) => aid._id === id)
-                  .allowConnectionRequest,
-                displayProfile: Questions.find((aid) => aid._id === id)
-                  .displayProfile,
-                view: Questions.find((aid) => aid._id === id).view,
-                response: Questions.find((aid) => aid._id === id).response,
-                status: Questions.find((aid) => aid._id === id).status,
-                filter: Questions.find((aid) => aid._id === id).filter,
-                createdAt: Questions.find((aid) => aid._id === id).createdAt,
-                createdBy: Questions.find((aid) => aid._id === id).createdBy,
-              };
-            }
-          );
+          // console.log("Questions------------------------", Questions);
+          distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map((id) => {
+            return {
+              _id: id,
+              question: Questions.find((aid) => aid._id === id).question,
+              allowConnectionRequest: Questions.find((aid) => aid._id === id).allowConnectionRequest,
+              displayProfile: Questions.find((aid) => aid._id === id).displayProfile,
+              view: Questions.find((aid) => aid._id === id).view,
+              response: Questions.find((aid) => aid._id === id).response,
+              status: Questions.find((aid) => aid._id === id).status,
+              filter: Questions.find((aid) => aid._id === id).filter,
+              createdAt: Questions.find((aid) => aid._id === id).createdAt,
+              createdBy: Questions.find((aid) => aid._id === id).createdBy,
+            };
+          });
         } else {
           abuseQuestion = [];
           for (let j = 0; j < user.abuseQuestion.length; j++) {
@@ -255,15 +242,7 @@ module.exports = exports = {
             if (filter[i] != "") {
               // // console.log("criteria ni", criteria);
               let quResult = await global.models.GLOBAL.QUESTION.find({
-                $and: [
-                  { _id: { $nin: user.answerLater } },
-                  { _id: { $nin: user.removeQuestion } },
-                  { _id: { $nin: abuseQuestion } },
-                  { createdBy: { $nin: user.blockUser } },
-                  { createdBy: user._id },
-                  { reportAbuse: { $nin: true } },
-                  { "filter.options.optionName": filter[i] },
-                ],
+                $and: [{ _id: { $nin: user.answerLater } }, { _id: { $nin: user.removeQuestion } }, { _id: { $nin: abuseQuestion } }, { createdBy: { $nin: user.blockUser } }, { createdBy: user._id }, { reportAbuse: { $nin: true } }, { "filter.options.optionName": filter[i] }],
               })
                 .populate({
                   path: "createdBy",
@@ -280,10 +259,8 @@ module.exports = exports = {
               for (let j = 0; j < quResult.length; j++) {
                 if (quResult[j] != null) {
                   //add if already not in array
-                  let found = Questions.find(
-                    (q) => q._id.toString() == quResult[j]._id.toString()
-                  );
-                  console.log("---hgffgfg", found);
+                  let found = Questions.find((q) => q._id.toString() == quResult[j]._id.toString());
+                  // console.log("---hgffgfg", found);
                   if (found == null) {
                     Questions.push(quResult[j]);
                   }
@@ -293,25 +270,21 @@ module.exports = exports = {
           }
           //set to array
           Questions = Array.from(Questions);
-          console.log("Questionsvvvvvvvvvvvvvvvvvvvvvvvvvv-", Questions);
-          distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map(
-            (id) => {
-              return {
-                _id: id,
-                question: Questions.find((aid) => aid._id === id).question,
-                allowConnectionRequest: Questions.find((aid) => aid._id === id)
-                  .allowConnectionRequest,
-                displayProfile: Questions.find((aid) => aid._id === id)
-                  .displayProfile,
-                view: Questions.find((aid) => aid._id === id).view,
-                response: Questions.find((aid) => aid._id === id).response,
-                status: Questions.find((aid) => aid._id === id).status,
-                filter: Questions.find((aid) => aid._id === id).filter,
-                createdAt: Questions.find((aid) => aid._id === id).createdAt,
-                createdBy: Questions.find((aid) => aid._id === id).createdBy,
-              };
-            }
-          );
+          // console.log("Questionsvvvvvvvvvvvvvvvvvvvvvvvvvv-", Questions);
+          distinctQue = Array.from(new Set(Questions.map((q) => q._id))).map((id) => {
+            return {
+              _id: id,
+              question: Questions.find((aid) => aid._id === id).question,
+              allowConnectionRequest: Questions.find((aid) => aid._id === id).allowConnectionRequest,
+              displayProfile: Questions.find((aid) => aid._id === id).displayProfile,
+              view: Questions.find((aid) => aid._id === id).view,
+              response: Questions.find((aid) => aid._id === id).response,
+              status: Questions.find((aid) => aid._id === id).status,
+              filter: Questions.find((aid) => aid._id === id).filter,
+              createdAt: Questions.find((aid) => aid._id === id).createdAt,
+              createdBy: Questions.find((aid) => aid._id === id).createdBy,
+            };
+          });
         }
         let findConection = await global.models.GLOBAL.CONNECTION.find({
           senderId: user._id,
@@ -377,9 +350,7 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
       }
       const data4createResponseObject = {
         req: req,
@@ -393,13 +364,9 @@ module.exports = exports = {
         },
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -407,9 +374,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

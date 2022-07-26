@@ -14,7 +14,7 @@ module.exports = exports = {
         question: { $regex: search, $options: "i" },
       });
 
-      console.log("folder=========--->>", folder);
+      // console.log("folder=========--->>", folder);
       let data4createResponseObject = {
         req: req,
         result: 0,
@@ -22,9 +22,7 @@ module.exports = exports = {
         payload: folder,
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
       logger.error("Error in get folder list", error);
       const data4createResponseObject = {
@@ -34,9 +32,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

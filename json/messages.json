@@ -26,12 +26,12 @@
   "ITEM_INSERTED": "Added successfully",
   "ITEM_NOT_FOUND": "Sorry! The requested resource could not be found!",
   "EMPTY": "Sorry, the Verification form is empty.So Please Fill the verification form first then try again",
-  "ITEM_UPDATED": "updated successfully",
+  "ITEM_UPDATED": "Updated successfully",
   "ITEM_NOT_UPDATED": "Sorry! The requested resource could not be updated!",
   "METHOD_NOT_ALLOWED": "Method doesn't exist or is not allowed.",
   "NOT_ALLOWED": "Sorry, the action you tried to perform is not allowed.\nIf you feel this is not correct, kindly call support.",
   "NOT_FOUND": "Sorry, no entry could be found for the specified criteria.\nIf you feel this is not correct, kindly call support.",
-  "PASSWORD_UPDATED": "New password updated",
+  "PASSWORD_UPDATED": "New password updated.",
   "SUCCESS": "Success",
   "USER_DOES_NOT_EXIST": "User does not exist",
   "ADMIN_DOES_NOT_EXIST": "Admin does not exist",
@@ -58,5 +58,8 @@
   "INCORRECT_PASSWORD": "Please Enter Correct Password and Try Again",
   "USER_DEACTIVATE": "Your Account Deactivated Successfully",
   "USER_BLOCK": "User Block Successfully",
-  "USER_UNBLOCK": "User Un-Block Successfully"
+  "USER_UNBLOCK": "User Un-Block Successfully",
+  "QUESTION_ALREADY_VOTED": "You already voted this question.",
+  "ANSWER_ALREADY_VOTED": "You already voted this answer.",
+  "VOTE_SUCCESS": "Voted Successfully."
 }

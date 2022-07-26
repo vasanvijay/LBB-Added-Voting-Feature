@@ -15,9 +15,9 @@ module.exports = exports = {
     const { byUser } = req.query;
     const { search } = req.query;
 
-    console.log("User------------------------question", question);
+    // console.log("User------------------------question", question);
 
-    console.log("users-------", user);
+    // console.log("users-------", user);
     let criteria = {};
     if (byUser) {
       criteria = {
@@ -37,7 +37,7 @@ module.exports = exports = {
         _id: ObjectId(question),
       };
     }
-    console.log("CRITERIA--->>", criteria);
+    // console.log("CRITERIA--->>", criteria);
     try {
       req.query.page = req.query.page ? req.query.page : 1;
       let page = parseInt(req.query.page);
@@ -46,7 +46,7 @@ module.exports = exports = {
       let skip = (parseInt(req.query.page) - 1) * limit;
       let count;
       let quResult;
-      let questionDetais = [];
+      let questionDetails = [];
       if (byUser) {
         quResult = await global.models.GLOBAL.QUESTION.find({
           ...criteria,
@@ -64,7 +64,7 @@ module.exports = exports = {
             createdAt: -1,
           })
           .exec();
-        console.log("byUser-------", quResult);
+        // console.log("byUser-------", quResult);
         count = await global.models.GLOBAL.QUESTION.count({
           ...criteria,
           createdBy: user._id,
@@ -127,21 +127,11 @@ module.exports = exports = {
           },
         ]);
 
-        console.log("qids--->>111", qids, search);
+        // console.log("qids--->>111", qids, search);
         // question: { $regex: search, $options: "i" },
         quResult = await global.models.GLOBAL.QUESTION.find({
-          $and: [
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { createdBy: { $nin: user.blockUser } },
-            { createdBy: { $nin: user._id } },
-            { _id: { $in: qids[0]?.createdBy } },
-          ],
-          $or: [
-            { "filter.options.optionName": { $exists: false } },
-            { "filter.options.optionName": { $in: user.subject } },
-          ],
+          $and: [{ _id: { $nin: user.answerLater } }, { _id: { $nin: user.removeQuestion } }, { _id: { $nin: abuseQuestion } }, { createdBy: { $nin: user.blockUser } }, { createdBy: { $nin: user._id } }, { _id: { $in: qids[0]?.createdBy } }],
+          $or: [{ "filter.options.optionName": { $exists: false } }, { "filter.options.optionName": { $in: user.subject } }],
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
           status: "active",
@@ -161,17 +151,8 @@ module.exports = exports = {
 
         count = await global.models.GLOBAL.QUESTION.count({
           // question: { $regex: search, $options: "i" },
-          $and: [
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { createdBy: { $nin: user.blockUser } },
-            { _id: { $in: qids[0]?.createdBy } },
-          ],
-          $or: [
-            { "filter.options.optionName": { $exists: false } },
-            { "filter.options.optionName": { $in: user.subject } },
-          ],
+          $and: [{ _id: { $nin: user.answerLater } }, { _id: { $nin: user.removeQuestion } }, { _id: { $nin: abuseQuestion } }, { createdBy: { $nin: user.blockUser } }, { _id: { $in: qids[0]?.createdBy } }],
+          $or: [{ "filter.options.optionName": { $exists: false } }, { "filter.options.optionName": { $in: user.subject } }],
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
           status: "active",
@@ -188,10 +169,7 @@ module.exports = exports = {
           abuseQuestion.push(user.abuseQuestion[i].questionId);
         }
 
-        let questionArray = await global.models.GLOBAL.ANSWER.find().distinct(
-          "question",
-          { $and: [{ createdBy: user._id }] }
-        );
+        let questionArray = await global.models.GLOBAL.ANSWER.find().distinct("question", { $and: [{ createdBy: user._id }] });
 
         user.subject.push(user.currentRole);
         user.subject.push(user.region);
@@ -226,7 +204,7 @@ module.exports = exports = {
         //   reportAbuse: false,
         // }
         if (question) {
-          console.log("quResult-->>>>>>>>>v", "quResult");
+          // console.log("quResult-->>>>>>>>>v", "quResult");
           quResult = await global.models.GLOBAL.QUESTION.find({
             ...criteria,
             status: "active",
@@ -244,19 +222,8 @@ module.exports = exports = {
             .exec();
         } else {
           quResult = await global.models.GLOBAL.QUESTION.find({
-            $and: [
-              { _id: { $nin: user.answerLater } },
-              { _id: { $nin: user.removeQuestion } },
-              { _id: { $nin: abuseQuestion } },
-              { _id: { $nin: questionArray } },
-              { createdBy: { $nin: user.blockUser } },
-              { createdBy: { $nin: user._id } },
-              criteria,
-            ],
-            $or: [
-              { "filter.options.optionName": { $exists: false } },
-              { "filter.options.optionName": { $in: user.subject } },
-            ],
+            $and: [{ _id: { $nin: user.answerLater } }, { _id: { $nin: user.removeQuestion } }, { _id: { $nin: abuseQuestion } }, { _id: { $nin: questionArray } }, { createdBy: { $nin: user.blockUser } }, { createdBy: { $nin: user._id } }, criteria],
+            $or: [{ "filter.options.optionName": { $exists: false } }, { "filter.options.optionName": { $in: user.subject } }],
             createdBy: { $nin: user.blockUser },
             createdBy: { $nin: user._id },
             reportAbuse: false,
@@ -275,7 +242,7 @@ module.exports = exports = {
             .exec();
         }
 
-        console.log("quResult-->>>>>>>>>v", quResult);
+        // console.log("quResult-->>>>>>>>>v", quResult);
         // if (criteria) {
         //   console.log("im in criteria", criteria);
         //   quResult = await global.models.GLOBAL.QUESTION.find(criteria)
@@ -294,16 +261,8 @@ module.exports = exports = {
         //   console.log("quResult--", quResult);
         // }
         count = await global.models.GLOBAL.QUESTION.count({
-          $and: [
-            { _id: { $nin: user.answerLater } },
-            { _id: { $nin: user.removeQuestion } },
-            { _id: { $nin: abuseQuestion } },
-            { createdBy: { $nin: user.blockUser } },
-          ],
-          $or: [
-            { "filter.options.optionName": { $exists: false } },
-            { "filter.options.optionName": { $in: user.subject } },
-          ],
+          $and: [{ _id: { $nin: user.answerLater } }, { _id: { $nin: user.removeQuestion } }, { _id: { $nin: abuseQuestion } }, { createdBy: { $nin: user.blockUser } }],
+          $or: [{ "filter.options.optionName": { $exists: false } }, { "filter.options.optionName": { $in: user.subject } }],
           createdBy: { $nin: user.blockUser, $nin: user._id },
           reportAbuse: false,
           ...criteria,
@@ -325,14 +284,13 @@ module.exports = exports = {
         status: "active",
       });
 
-      console.log("QuestionProfileAccess", QuestionProfileAccess);
+      // console.log("QuestionProfileAccess", QuestionProfileAccess);
 
       // Questions without profile Access
-      let QuestionProfileWithoutAccess =
-        await global.models.GLOBAL.QUESTION.count({
-          displayProfile: false,
-          status: "active",
-        });
+      let QuestionProfileWithoutAccess = await global.models.GLOBAL.QUESTION.count({
+        displayProfile: false,
+        status: "active",
+      });
 
       let QuestionCount = await global.models.GLOBAL.QUESTION.count({});
 
@@ -367,7 +325,7 @@ module.exports = exports = {
 
       let optionNames = [];
       let reachCount = async (question) => {
-        for (let k = 0; k < question.filter.length; k++) {
+        for (let k = 0; k < question.filter?.length; k++) {
           question?.filter[k]?.options?.map(async (item) => {
             optionNames.push(item.optionName);
           });
@@ -380,7 +338,7 @@ module.exports = exports = {
             .count()
             .then((ress) => ress);
 
-          console.log("22211122121121221211111", users);
+          // console.log("22211122121121221211111", users);
           // // console.log("USER-->>", users);
           if (users == 0) {
             return await global.models.GLOBAL.USER.count();
@@ -393,7 +351,7 @@ module.exports = exports = {
       };
 
       for (let i = 0; i < quResult.length; i++) {
-        console.log("quResult[i]", quResult[i]);
+        // console.log("quResult[i]", quResult[i]);
         if (quResult[i].createdBy != null) {
           if (conectIdExist(quResult[i]?.createdBy?._id)) {
             let questionObj = {
@@ -404,13 +362,16 @@ module.exports = exports = {
               status: quResult[i].status,
               question: quResult[i].question,
               filter: quResult[i]?.filter,
+              rating: quResult[i]?.rating,
+              upVote: quResult[i]?.upVote,
+              downVote: quResult[i]?.downVote,
               createdAt: quResult[i].createdAt,
               userName: quResult[i].createdBy.name,
               createdBy: quResult[i].createdBy,
               isFriend: "true",
               reach: await reachCount(quResult[i]),
             };
-            questionDetais.push(questionObj);
+            questionDetails.push(questionObj);
           } else if (sentIdExist(quResult[i].createdBy._id)) {
             let questionObj = {
               _id: quResult[i]._id,
@@ -420,13 +381,16 @@ module.exports = exports = {
               status: quResult[i].status,
               question: quResult[i].question,
               filter: quResult[i]?.filter,
+              rating: quResult[i]?.rating,
+              upVote: quResult[i]?.upVote,
+              downVote: quResult[i]?.downVote,
               createdAt: quResult[i].createdAt,
               userName: quResult[i].createdBy.name,
               createdBy: quResult[i].createdBy,
               isFriend: "sent",
               reach: await reachCount(quResult[i]),
             };
-            questionDetais.push(questionObj);
+            questionDetails.push(questionObj);
           } else if (pandingIdExist(quResult[i].createdBy._id)) {
             let questionObj = {
               _id: quResult[i]._id,
@@ -436,13 +400,16 @@ module.exports = exports = {
               status: quResult[i].status,
               question: quResult[i].question,
               filter: quResult[i]?.filter,
+              rating: quResult[i]?.rating,
+              upVote: quResult[i]?.upVote,
+              downVote: quResult[i]?.downVote,
               createdAt: quResult[i].createdAt,
               userName: quResult[i].createdBy.name,
               createdBy: quResult[i].createdBy,
               isFriend: "pending",
               reach: await reachCount(quResult[i]),
             };
-            questionDetais.push(questionObj);
+            questionDetails.push(questionObj);
           } else {
             let questionObj = {
               _id: quResult[i]._id,
@@ -452,13 +419,16 @@ module.exports = exports = {
               status: quResult[i].status,
               question: quResult[i].question,
               filter: quResult[i]?.filter,
+              rating: quResult[i]?.rating,
+              upVote: quResult[i]?.upVote,
+              downVote: quResult[i]?.downVote,
               createdAt: quResult[i].createdAt,
               userName: quResult[i].createdBy.name,
               createdBy: quResult[i].createdBy,
               isFriend: "false",
               reach: await reachCount(quResult[i]),
             };
-            questionDetais.push(questionObj);
+            questionDetails.push(questionObj);
           }
         }
       }
@@ -468,7 +438,7 @@ module.exports = exports = {
         result: 0,
         message: messages.ITEM_FETCHED,
         payload: {
-          questions: questionDetais,
+          questions: questionDetails,
           count: count,
           todaysCount: TodayQuestion,
           profileaccess: QuestionProfileAccess,
@@ -479,13 +449,9 @@ module.exports = exports = {
         },
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -493,9 +459,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

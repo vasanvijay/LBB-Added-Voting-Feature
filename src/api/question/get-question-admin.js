@@ -23,7 +23,7 @@ module.exports = exports = {
       let count;
       let quResult;
 
-      const questionDetais = await global.models.GLOBAL.QUESTION.find({})
+      const questionDetails = await global.models.GLOBAL.QUESTION.find({})
         .populate({
           path: "createdBy",
           model: "user",
@@ -47,20 +47,16 @@ module.exports = exports = {
         result: 0,
         message: messages.ITEM_FETCHED,
         payload: {
-          questions: questionDetais,
+          questions: questionDetails,
 
           page: page,
           limit: limit,
         },
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.OK)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -68,9 +64,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };
