@@ -40,8 +40,7 @@ module.exports = exports = {
           }).populate({
             path: "createdBy",
             model: "user",
-            select:
-              "_id name subject profileImage currentRole countryOfResidence",
+            select: "_id name subject profileImage currentRole countryOfResidence",
           });
           findAnswer = await global.models.GLOBAL.ANSWER.aggregate([
             {
@@ -109,6 +108,9 @@ module.exports = exports = {
                 isStar: "$all.isStar",
                 roomId: "$all.roomId",
                 answer: "$all.answer",
+                rating: "$all.rating",
+                upVote: "$all.upVote",
+                downVote: "$all.downVote",
                 createdBy: "$all.createdBy",
                 question: "$all.question",
                 createdAt: "$all.createdAt",
@@ -168,22 +170,19 @@ module.exports = exports = {
               //     select:
               //       "_id name email region currentRole subject profileImage countryOfResidence",
               //   });
-              let findRequest =
-                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-                  roomId: ObjectId(roomMakeid),
+              let findRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                roomId: ObjectId(roomMakeid),
+              })
+                .populate({
+                  path: "requestTo",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
                 })
-                  .populate({
-                    path: "requestTo",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  })
-                  .populate({
-                    path: "requestBy",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  });
+                .populate({
+                  path: "requestBy",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
+                });
 
               let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
                 senderId: user.id,
@@ -194,11 +193,10 @@ module.exports = exports = {
               if (checkRequest) {
                 isFriend = "pending";
               } else {
-                const checkRequestProfile =
-                  await global.models.GLOBAL.USER.findOne({
-                    _id: user.id,
-                    accepted: findRoom.createdBy,
-                  });
+                const checkRequestProfile = await global.models.GLOBAL.USER.findOne({
+                  _id: user.id,
+                  accepted: findRoom.createdBy,
+                });
 
                 isFriend = checkRequestProfile == null ? "false" : "true";
               }
@@ -243,22 +241,19 @@ module.exports = exports = {
               //     select:
               //       "_id name email region currentRole subject profileImage countryOfResidence",
               //   });
-              let findRequest =
-                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-                  roomId: ObjectId(roomMakeid),
+              let findRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                roomId: ObjectId(roomMakeid),
+              })
+                .populate({
+                  path: "requestTo",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
                 })
-                  .populate({
-                    path: "requestTo",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  })
-                  .populate({
-                    path: "requestBy",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  });
+                .populate({
+                  path: "requestBy",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
+                });
 
               let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
                 senderId: user.id,
@@ -268,11 +263,10 @@ module.exports = exports = {
               if (checkRequest) {
                 isFriend = "pending";
               } else {
-                const checkRequestProfile =
-                  await global.models.GLOBAL.USER.findOne({
-                    _id: user.id,
-                    accepted: findRoom.createdBy,
-                  });
+                const checkRequestProfile = await global.models.GLOBAL.USER.findOne({
+                  _id: user.id,
+                  accepted: findRoom.createdBy,
+                });
 
                 isFriend = checkRequestProfile == null ? "false" : "true";
               }
@@ -311,8 +305,7 @@ module.exports = exports = {
           }).populate({
             path: "createdBy",
             model: "user",
-            select:
-              "_id name subject profileImage currentRole countryOfResidence",
+            select: "_id name subject profileImage currentRole countryOfResidence",
           });
 
           if (!findAnswer.length < 0) {
@@ -353,22 +346,19 @@ module.exports = exports = {
               //     select:
               //       "_id name email region currentRole subject profileImage countryOfResidence",
               //   });
-              let findRequest =
-                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-                  roomId: ObjectId(roomMakeid),
+              let findRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                roomId: ObjectId(roomMakeid),
+              })
+                .populate({
+                  path: "requestTo",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
                 })
-                  .populate({
-                    path: "requestTo",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  })
-                  .populate({
-                    path: "requestBy",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  });
+                .populate({
+                  path: "requestBy",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
+                });
 
               let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
                 senderId: user.id,
@@ -379,11 +369,10 @@ module.exports = exports = {
               if (checkRequest) {
                 isFriend = "pending";
               } else {
-                const checkRequestProfile =
-                  await global.models.GLOBAL.USER.findOne({
-                    _id: user.id,
-                    accepted: findRoom.createdBy,
-                  });
+                const checkRequestProfile = await global.models.GLOBAL.USER.findOne({
+                  _id: user.id,
+                  accepted: findRoom.createdBy,
+                });
 
                 isFriend = checkRequestProfile == null ? "false" : "true";
               }
@@ -426,22 +415,19 @@ module.exports = exports = {
               //     select:
               //       "_id name email region currentRole subject profileImage countryOfResidence",
               //   });
-              let findRequest =
-                await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
-                  roomId: ObjectId(roomMakeid),
+              let findRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.find({
+                roomId: ObjectId(roomMakeid),
+              })
+                .populate({
+                  path: "requestTo",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
                 })
-                  .populate({
-                    path: "requestTo",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  })
-                  .populate({
-                    path: "requestBy",
-                    model: "user",
-                    select:
-                      "_id name email region currentRole subject profileImage countryOfResidence",
-                  });
+                .populate({
+                  path: "requestBy",
+                  model: "user",
+                  select: "_id name email region currentRole subject profileImage countryOfResidence",
+                });
 
               let checkRequest = await global.models.GLOBAL.CONNECTION.findOne({
                 senderId: user.id,
@@ -451,11 +437,10 @@ module.exports = exports = {
               if (checkRequest) {
                 isFriend = "pending";
               } else {
-                const checkRequestProfile =
-                  await global.models.GLOBAL.USER.findOne({
-                    _id: user.id,
-                    accepted: findRoom.createdBy,
-                  });
+                const checkRequestProfile = await global.models.GLOBAL.USER.findOne({
+                  _id: user.id,
+                  accepted: findRoom.createdBy,
+                });
 
                 isFriend = checkRequestProfile == null ? "false" : "true";
               }
@@ -486,9 +471,7 @@ module.exports = exports = {
         }
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
