@@ -6,7 +6,6 @@ const initMiddleware = require("./middlewares");
 const initRouter = require("./router");
 const http = require("http");
 const webSocket = require("./socket-io");
-
 global.config = {};
 global.limits = {};
 global.models = {};

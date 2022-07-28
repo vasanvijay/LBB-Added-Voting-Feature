@@ -19,6 +19,7 @@ module.exports = exports = {
     const { user } = req;
     const { question } = req.params;
     const { answer } = req.body;
+
     if (!question || !answer) {
       const data4createResponseObject = {
         req: req,
@@ -27,9 +28,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      return res
-        .status(enums.HTTP_CODES.BAD_REQUEST)
-        .json(utils.createResponseObject(data4createResponseObject));
+      return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
     }
 
     try {
@@ -38,6 +37,7 @@ module.exports = exports = {
       let findQuestion = await global.models.GLOBAL.QUESTION.findOne({
         _id: question,
       });
+
       if (findQuestion) {
         const id = findQuestion._id;
         const answerBy = user._id;
@@ -69,18 +69,16 @@ module.exports = exports = {
             answerBy: user._id,
             answerAt: Date.now(),
           };
-          let updateAnswer =
-            await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
-              { _id: ObjectID(answerRoom._id) },
-              {
-                $push: {
-                  answer: roomAnswer,
-                },
+          let updateAnswer = await global.models.GLOBAL.ANSWER_ROOM.findOneAndUpdate(
+            { _id: ObjectID(answerRoom._id) },
+            {
+              $push: {
+                answer: roomAnswer,
               },
-              { new: true }
-            );
+            },
+            { new: true }
+          );
           if (updateAnswer) {
-            // // console.log("UPDATED----->>>>", updateAnswer);
           }
         } else {
           let addAnswer = {
@@ -105,12 +103,7 @@ module.exports = exports = {
           answerRoom = await global.models.GLOBAL.ANSWER_ROOM.create(roomObj);
         }
 
-        // console.log("UserIDDDD--->>", user._id);
-        await global.models.GLOBAL.QUESTION.updateOne(
-          { _id: question, createdBy: { $nin: user._id } },
-          { $inc: { response: 1 } },
-          { new: true }
-        );
+        await global.models.GLOBAL.QUESTION.updateOne({ _id: question, createdBy: { $nin: user._id } }, { $inc: { response: 1 } }, { new: true });
         await global.models.GLOBAL.USER.findOneAndUpdate(
           { _id: user._id },
           {
@@ -130,9 +123,7 @@ module.exports = exports = {
           createdAt: Date.now(),
         };
 
-        let notification = await global.models.GLOBAL.NOTIFICATION.create(
-          ntfObj
-        );
+        let notification = await global.models.GLOBAL.NOTIFICATION.create(ntfObj);
         const data4createResponseObject = {
           req: req,
           result: 0,
@@ -140,9 +131,7 @@ module.exports = exports = {
           payload: { newAnswer },
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.OK)
-          .json(utils.createResponseObject(data4createResponseObject));
+        res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
       } else {
         const data4createResponseObject = {
           req: req,
@@ -151,14 +140,10 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-          .json(utils.createResponseObject(data4createResponseObject));
+        res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -166,9 +151,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

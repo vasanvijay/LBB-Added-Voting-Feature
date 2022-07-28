@@ -28,7 +28,6 @@ module.exports = exports = {
         },
         { new: true }
       );
-      console.log(updateAnswer, "AdminDatatatatatat");
       if (updateAnswer) {
         const data4createResponseObject = {
           req: req,

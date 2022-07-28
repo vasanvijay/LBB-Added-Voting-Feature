@@ -6,7 +6,6 @@ const passport = require("passport");
 
 // GET Method
 router.get("/", passport.authenticate(["jwt"], { session: false }), api4Answer.getAnswer.handler);
-router.get("/answers", passport.authenticate(["jwt"], { session: false }), api4Answer.getAnswers.handler);
 router.get("/get-abuse-question", passport.authenticate(["jwt"], { session: false }), api4Answer.getAbuseQuestion.handler);
 router.get("/later", passport.authenticate(["jwt"], { session: false }), api4Answer.getAnswerLater.handler);
 router.get("/:question", passport.authenticate(["jwt"], { session: false }), api4Answer.getAnswerByQuestion.handler);

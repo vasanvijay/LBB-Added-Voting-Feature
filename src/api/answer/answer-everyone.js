@@ -8,19 +8,13 @@ const utils = require("../../utils");
 module.exports = exports = {
   handler: async (req, res) => {
     const { user, questionId, status } = req;
-    console.log("User------------------------", user);
     // const userData = utils.getHeaderFromToken(user);
-    // console.log("UserData------------------------", userData.id);
     let everyone = await global.models.GLOBAL.ANSWER.find({
       question: ObjectId(questionId),
       createdBy: ObjectId(user),
     });
 
-    console.log("Everyone------------------------", everyone);
-
     if (everyone) {
-      // console.log("questionId---------------------------", questionId);
-      // console.log("userData.id", userData);
       let updateAnswer = await global.models.GLOBAL.ANSWER.updateMany(
         {
           question: ObjectId(questionId),
@@ -32,7 +26,7 @@ module.exports = exports = {
           },
         }
       );
-      console.log(updateAnswer, "updateAnswer");
+      // console.log(updateAnswer, "updateAnswer");
       if (updateAnswer) {
         const data4createResponseObject = {
           req: req,

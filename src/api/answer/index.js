@@ -20,7 +20,7 @@ const onlyAdmin = require("./answer-admin");
 const WhoCanseeAnswer = require("./who-can-see");
 const getAbuseQuestion = require("./get-abuse-question");
 const voteAnswer = require("./vote-answer");
-const getAnswers = require("./get-answers");
+
 module.exports = exports = {
   addAnswer,
   getAnswer,
@@ -44,5 +44,4 @@ module.exports = exports = {
   WhoCanseeAnswer,
   getAbuseQuestion,
   voteAnswer,
-  getAnswers,
 };

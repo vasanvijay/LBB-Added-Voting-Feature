@@ -64,7 +64,7 @@ module.exports = exports = {
         //   question: { $regex: search, $options: "i" },
         // }).distinct("_id");
         questionData = { question: { $in: qids[0]?.createdBy } };
-        console.log("CHAT =================>   ", questionData);
+        // console.log("CHAT =================>   ", questionData);
       }
 
       let questionArray = await global.models.GLOBAL.ANSWER.find(questionData).distinct("question", { $and: [{ createdBy: user._id }] });

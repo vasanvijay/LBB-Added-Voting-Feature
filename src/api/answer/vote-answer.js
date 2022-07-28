@@ -8,9 +8,10 @@ const utils = require("../../utils");
 module.exports = exports = {
   // route handler
   handler: async (req, res) => {
-    const { user } = req;
     const { answerId, upVote, downVote } = req.params;
-    rating = upVote - downVote;
+    // console.log(answerId);
+    const { user } = req;
+    let rating = upVote - downVote;
 
     try {
       const currentUser = await global.models.GLOBAL.USER.findById({ _id: user._id });

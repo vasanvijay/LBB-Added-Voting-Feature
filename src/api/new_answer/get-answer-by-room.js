@@ -1,6 +1,5 @@
 const { ObjectId } = require("mongodb");
 const messages = require("../../../json/messages.json");
-
 const logger = require("../../logger");
 const utils = require("../../utils");
 
@@ -42,6 +41,7 @@ module.exports = exports = {
             model: "user",
             select: "_id name subject profileImage currentRole countryOfResidence",
           });
+          // console.log("1st <==============>", findAnswer);
           findAnswer = await global.models.GLOBAL.ANSWER.aggregate([
             {
               $match: {
@@ -124,6 +124,7 @@ module.exports = exports = {
               },
             },
           ]);
+
           // .populate({
           //   path: "createdBy",
           //   model: "user",

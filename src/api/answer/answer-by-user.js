@@ -28,7 +28,6 @@ module.exports = exports = {
         for (let i = 0; i < user.abuseAnswer.length; i++) {
           abuseAnswer.push(ObjectId(user.abuseAnswer[i].answerId));
         }
-        // // console.log("ABUSE--->>", abuseAnswer);
         let findRoom = await global.models.GLOBAL.ANSWER_ROOM.find({
           participateIds: {
             $size: participateIds.length,
@@ -110,34 +109,22 @@ module.exports = exports = {
             $sort: { "data.createdAt": -1 },
           },
         ]);
-        // // console.log("ANSWER-->>", answerRoom[0]?.data[0]?.answer?.answerBy);
         // for (let i = 0; i < answerRoom.length; i++) {
-        //   // console.log("I-->>", i);
         // }
-        let findRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
-            $and: [
-              { requestBy: user._id },
-              { requestTo: answerRoom[0]?.data[0]?.answer?.answerBy },
-            ],
-          }).populate({
-            path: "requestBy",
-            model: "user",
-            select:
-              "_id name email region currentRole subject profileImage countryOfResidence",
-          });
-        let receivedRequest =
-          await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
-            $and: [
-              { requestBy: answerRoom[0]?.data[0]?.answer?.answerBy },
-              { requestTo: user._id },
-            ],
-          }).populate({
-            path: "requestTo",
-            model: "user",
-            select:
-              "_id name email region currentRole subject profileImage countryOfResidence",
-          });
+        let findRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+          $and: [{ requestBy: user._id }, { requestTo: answerRoom[0]?.data[0]?.answer?.answerBy }],
+        }).populate({
+          path: "requestBy",
+          model: "user",
+          select: "_id name email region currentRole subject profileImage countryOfResidence",
+        });
+        let receivedRequest = await global.models.GLOBAL.REQUEST_PROFILE_ACCESS.findOne({
+          $and: [{ requestBy: answerRoom[0]?.data[0]?.answer?.answerBy }, { requestTo: user._id }],
+        }).populate({
+          path: "requestTo",
+          model: "user",
+          select: "_id name email region currentRole subject profileImage countryOfResidence",
+        });
         let staredCount = await global.models.GLOBAL.ANSWER_ROOM.count({
           $and: [
             {
@@ -160,9 +147,7 @@ module.exports = exports = {
               payload: { answerRoom, text, request: findRequest, staredCount },
               logPayload: false,
             };
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
+            res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
           } else if (receivedRequest) {
             let text = " You have received a request to view your profile.";
             const data4createResponseObject = {
@@ -177,9 +162,7 @@ module.exports = exports = {
               },
               logPayload: false,
             };
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
+            res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
           } else {
             const data4createResponseObject = {
               req: req,
@@ -188,9 +171,7 @@ module.exports = exports = {
               payload: { answerRoom, staredCount },
               logPayload: false,
             };
-            res
-              .status(enums.HTTP_CODES.OK)
-              .json(utils.createResponseObject(data4createResponseObject));
+            res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
           }
         } else {
           const data4createResponseObject = {
@@ -200,9 +181,7 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
         const data4createResponseObject = {
@@ -212,14 +191,10 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        res
-          .status(enums.HTTP_CODES.NOT_FOUND)
-          .json(utils.createResponseObject(data4createResponseObject));
+        res.status(enums.HTTP_CODES.NOT_FOUND).json(utils.createResponseObject(data4createResponseObject));
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -227,9 +202,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

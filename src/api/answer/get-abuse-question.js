@@ -11,7 +11,7 @@ module.exports = exports = {
     const { questionId, searchTerm, searchUser } = req.query;
     let questionExists = {};
 
-    console.log("questionId###########", questionId);
+    // console.log("questionId###########", questionId);
     if (questionId) {
       questionExists = await global.models.GLOBAL.ANSWER.findById(questionId);
       if (!questionExists) {
@@ -22,18 +22,14 @@ module.exports = exports = {
           payload: {},
           logPayload: false,
         };
-        return res
-          .status(enums.HTTP_CODES.BAD_REQUEST)
-          .json(utils.createResponseObject(data4createResponseObject));
+        return res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
       }
     }
-    console.log("questionExists", questionExists);
-    console.log("questionExists", searchTerm);
+    // console.log("questionExists", questionExists);
+    // console.log("questionExists", searchTerm);
     try {
       if (questionId === undefined) {
-        const getReportAbuse = await global.models.GLOBAL.USER.find(
-          {}
-        ).populate({
+        const getReportAbuse = await global.models.GLOBAL.USER.find({}).populate({
           path: "abuseAnswer.answerId",
           model: "answer",
           select: "_id isUpdated isAbuse isStar status answer question",
@@ -51,7 +47,7 @@ module.exports = exports = {
           if (user.abuseAnswer.length > 0) {
             users.push(user);
             user.abuseAnswer.forEach((question) => {
-              console.log("currQuestion", question.answerId);
+              // console.log("currQuestion", question.answerId);
               if (question.answerId) {
                 reportedQuestions.push(question);
               }
@@ -60,7 +56,7 @@ module.exports = exports = {
         });
         // Get all question ids
 
-        console.log("reportedQuestions", reportedQuestions);
+        // console.log("reportedQuestions", reportedQuestions);
         const ids = reportedQuestions.map((o) => o?.questionId?._id);
         // remove repeated questions from reportedQuestions array
         // reportedQuestions = reportedQuestions.filter(
@@ -68,11 +64,7 @@ module.exports = exports = {
         // );
 
         if (searchTerm != undefined) {
-          reportedQuestions = reportedQuestions.filter((question) =>
-            question.questionId.question
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())
-          );
+          reportedQuestions = reportedQuestions.filter((question) => question.questionId.question.toLowerCase().includes(searchTerm.toLowerCase()));
         }
 
         // // populate question createdBy
@@ -103,9 +95,7 @@ module.exports = exports = {
             payload: { reportedQuestions, users },
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
         } else {
           const data4createResponseObject = {
             req: req,
@@ -114,9 +104,7 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.BAD_REQUEST)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
         }
       } else {
         const getReportAbuse = await global.models.GLOBAL.USER.find({
@@ -147,9 +135,7 @@ module.exports = exports = {
         });
 
         if (searchUser != undefined) {
-          users = users.filter((user) =>
-            user.name.toLowerCase().includes(searchUser.toLowerCase())
-          );
+          users = users.filter((user) => user.name.toLowerCase().includes(searchUser.toLowerCase()));
         }
         if (getReportAbuse) {
           const data4createResponseObject = {
@@ -159,9 +145,7 @@ module.exports = exports = {
             payload: { users },
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.OK)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.OK).json(utils.createResponseObject(data4createResponseObject));
         } else {
           const data4createResponseObject = {
             req: req,
@@ -170,15 +154,11 @@ module.exports = exports = {
             payload: {},
             logPayload: false,
           };
-          res
-            .status(enums.HTTP_CODES.BAD_REQUEST)
-            .json(utils.createResponseObject(data4createResponseObject));
+          res.status(enums.HTTP_CODES.BAD_REQUEST).json(utils.createResponseObject(data4createResponseObject));
         }
       }
     } catch (error) {
-      logger.error(
-        `${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`
-      );
+      logger.error(`${req.originalUrl} - Error encountered: ${error.message}\n${error.stack}`);
       const data4createResponseObject = {
         req: req,
         result: -1,
@@ -186,9 +166,7 @@ module.exports = exports = {
         payload: {},
         logPayload: false,
       };
-      res
-        .status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR)
-        .json(utils.createResponseObject(data4createResponseObject));
+      res.status(enums.HTTP_CODES.INTERNAL_SERVER_ERROR).json(utils.createResponseObject(data4createResponseObject));
     }
   },
 };

@@ -9,9 +9,9 @@ const utils = require("../../utils");
 module.exports = exports = {
   //Router Handler
   handler: async ({ user, questionId }) => {
-    console.log("UserData------------------------123", questionId);
+    // console.log("UserData------------------------123", questionId);
     const userData = await utils.getHeaderFromToken(user);
-    console.log("UserData------------------------", userData.id);
+    // console.log("UserData------------------------", userData.id);
     let everyoneAnswer = await global.models.GLOBAL.ANSWER.find({
       question: ObjectId(questionId),
       createdBy: ObjectId(userData.id),
@@ -24,7 +24,7 @@ module.exports = exports = {
       status: 0,
     });
 
-    console.log("everyoneAnswer", everyoneAnswer);
+    // console.log("everyoneAnswer", everyoneAnswer);
 
     if (Authorcan.length != 0) {
       const data4createResponseObject = {
